@@ -8,13 +8,13 @@ import ListSkeletal from "../components/list_skeletal_loader";
 export default function Account() {
   const [loading, setLoading] = useState(true);
   const [updateLoading, setUpdateLoading] = useState(false);
-  const [orders, setOrders] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState("");
+  const [orders, setOrders]: any = useState([]);
+  const [selectedOrder, setSelectedOrder]:any = useState("");
   const [openModal, setOpenModal] = useState(false);
 
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = async ({ status }) => {
+  const onSubmit = async ({ status }: any) => {
     setUpdateLoading(true);
     const { error } = await supabase
       .from("orders")
@@ -67,7 +67,7 @@ export default function Account() {
             </Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
-            {orders.map((order) => (
+            {orders.map((order:any) => (
               <Table.Row
                 key={order.id}
                 className="bg-white dark:border-gray-700 dark:bg-gray-800"

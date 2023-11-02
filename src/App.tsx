@@ -1,17 +1,17 @@
 import { Router, Link } from "wouter";
-import { logo } from "./assets";
+import { logo } from "./assets/index.ts";
 
 import "./App.css";
 
-import PageRouter from "./components/router.jsx";
-import Seo from "./components/seo.jsx";
+import PageRouter from "./components/router.tsx";
+import Seo from "./components/seo.tsx";
 
 import { animated } from "react-spring";
 import { useWiggle } from "./hooks/wiggle";
 
 // Home function that is reflected across the site
 export default function Home() {
-  const [style, trigger] = useWiggle({ x: 5, y: 5, scale: 1 });
+  const [style, trigger] : any= useWiggle({ x: 5, y: 5, scale: 1 });
 
   return (
     <Router>
@@ -30,7 +30,7 @@ export default function Home() {
         {/* Router specifies which component to insert here as the main content */}
         <PageRouter />
       </main>
-      {/* Footer links to Home and About, Link elements matched in router.jsx */}
+      {/* Footer links to Home and About, Link elements matched in router.tsx */}
     </Router>
   );
 }
