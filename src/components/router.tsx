@@ -1,5 +1,4 @@
-import * as React from "react";
-import { Switch, Route, Router } from "wouter";
+import { Switch, Route } from "wouter";
 import About from "../pages/about";
 import Orders from "../pages/orders";
 
