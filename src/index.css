@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --color-bg: #FFFFA0;
-  --color-text-main: #000000;
+  /* --color-bg: #FFFFA0; */
+  /* --color-text-main: #000000;
   --color-primary: #AFECE0;
   --wrapper-height: 85vh;
-  --image-max-width: 320px;
+  --image-max-width: 320px; */
   --font-family: "HK Grotesk";
   --font-family-header: "HK Grotesk";
 }
