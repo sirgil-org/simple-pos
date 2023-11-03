@@ -121,6 +121,14 @@ export default function Account() {
                 <Label htmlFor="ready">Ready</Label>
               </div>
               <div className="flex items-center gap-2">
+                <Radio
+                  {...register("status")}
+                  id="collected"
+                  value="collected"
+                />
+                <Label htmlFor="collected">Collected</Label>
+              </div>
+              <div className="flex items-center gap-2">
                 <Radio id="cancelled" value="cancelled" />
                 <Label htmlFor="cancelled">Cancelled</Label>
               </div>
