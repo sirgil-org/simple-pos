@@ -5,8 +5,10 @@ const config: CapacitorConfig = {
   appName: 'hotspot-admin',
   webDir: 'build',
   server: {
-    androidScheme: 'https'
-  }
+    androidScheme: 'https',
+    url: 'http://192.168.178.27:3000',
+    cleartext: true,
+  },
 };
 
 export default config;
