@@ -60,14 +60,13 @@ export default function Account() {
   };
 
   useEffect(() => {
-    console.log("******* effect");
     async function getOrders() {
       setLoading(true);
 
       const { data, error } = await supabase.from("orders").select();
 
       if (error) {
-        console.warn(error);
+        toast.warn(error.message || "Could not fetch orders...")
       } else if (data) {
         setOrders(data);
       }
