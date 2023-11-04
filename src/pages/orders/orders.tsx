@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { supabase } from "../../supabase_client";
+import { toast } from "react-toastify";
 
 import { Modal, Label, Radio, Spinner } from "flowbite-react";
 import { useForm } from "react-hook-form";
@@ -59,7 +60,8 @@ export default function Account() {
   };
 
   useEffect(() => {
-    async function getProfile() {
+    console.log("******* effect");
+    async function getOrders() {
       setLoading(true);
 
       const { data, error } = await supabase.from("orders").select();
@@ -73,7 +75,21 @@ export default function Account() {
       setLoading(false);
     }
 
-    getProfile();
+    getOrders();
+  }, []);
+
+  useMemo(() => {
+    supabase
+      .channel("todos")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "orders" },
+        (data) => {
+          setOrders((prev) => [...prev, data.new]);
+          toast.info("New order received!");
+        }
+      )
+      .subscribe();
   }, []);
 
   return (
