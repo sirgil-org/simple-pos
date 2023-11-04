@@ -1,4 +1,4 @@
-import { Modal, Table } from "flowbite-react";
+import { Modal } from "flowbite-react";
 import moment from "moment";
 
 export default function OrderInfo({
