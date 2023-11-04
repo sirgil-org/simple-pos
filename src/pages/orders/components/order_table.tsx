@@ -7,8 +7,7 @@ export default function OrderTable({
   status,
 }: any) {
   return (
-   <div>
-     <div className="h-[500px] overflow-y-auto">
+    <div className="max-h-[500px] overflow-y-auto">
       <Table striped hoverable className="table-auto">
         <caption className="p-5 text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800">
           {status} Orders ({orders.length})
@@ -45,6 +44,5 @@ export default function OrderTable({
         </Table.Body>
       </Table>
     </div>
-   </div>
   );
 }
