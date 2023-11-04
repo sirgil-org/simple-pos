@@ -25,20 +25,26 @@ export default function OrderTable({
           {orders.map((order: any) => (
             <Table.Row
               key={order.id}
-              className="bg-white dark:border-gray-700 dark:bg-gray-800"
+              className="bg-white dark:border-gray-700 dark:bg-gray-800 cursor-pointer"
+              onClick={() => {
+                setSelectedOrder(order);
+                setOpenModal("order-info-modal");
+              }}
             >
               <Table.Cell>{order.order_number}</Table.Cell>
               <Table.Cell>{order.order_number}</Table.Cell>
               <Table.Cell>
                 {/* <Moment date={new Date()} fromNow /> */}
-               {moment(order.created_at).fromNow() }
+                {moment(order.created_at).fromNow()}
               </Table.Cell>
               <Table.Cell>
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setSelectedOrder(order);
-                    setOpenModal(true);
+                    setOpenModal("order-status-modal");
                   }}
+
                 >
                   Edit
                 </button>
