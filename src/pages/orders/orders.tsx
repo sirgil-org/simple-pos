@@ -6,13 +6,14 @@ import { useForm } from "react-hook-form";
 import ListSkeletal from "../../components/list_skeletal_loader";
 import OrderTable from "./components/order_table";
 import moment from "moment";
+import OrderInfo from "./order_info";
 
 export default function Account() {
   const [loading, setLoading] = useState(true);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [orders, setOrders]: any = useState([]);
   const [selectedOrder, setSelectedOrder]: any = useState("");
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState(undefined);
 
   const { register, handleSubmit } = useForm();
 
@@ -125,7 +126,20 @@ export default function Account() {
         </>
       )}
 
-      <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
+      {selectedOrder && (
+        <OrderInfo
+          selectedOrder={selectedOrder}
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+        />
+      )}
+
+      <Modal
+        dismissible
+        show={openModal === "order-status-modal"}
+        onClose={() => setOpenModal(undefined)}
+        size="md"
+      >
         <Modal.Header>#{selectedOrder.order_number}</Modal.Header>
         <Modal.Body>
           <form id="change-status-form" onSubmit={handleSubmit(onSubmit)}>
