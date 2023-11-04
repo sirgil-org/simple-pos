@@ -1,6 +1,6 @@
 import { Switch, Route } from "wouter";
 import About from "../pages/about";
-import Orders from "../pages/orders";
+import Orders from "../pages/orders/orders";
 
 
 const routes = () => (
