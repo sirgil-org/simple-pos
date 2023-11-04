@@ -5,6 +5,7 @@ import { Modal, Label, Radio, Spinner } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import ListSkeletal from "../../components/list_skeletal_loader";
 import OrderTable from "./components/order_table";
+import moment from "moment";
 
 export default function Account() {
   const [loading, setLoading] = useState(true);
@@ -16,10 +17,26 @@ export default function Account() {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async ({ status }: any) => {
+    let to_update: any = { status };
+
+    switch (status) {
+      case "ready":
+        to_update.completed_at = moment();
+        break;
+
+      case "collected":
+        to_update.collected_at = moment();
+        break;
+
+      case "cancelled":
+        to_update.cancelled_at = moment();
+        break;
+    }
+
     setUpdateLoading(true);
     const { error } = await supabase
       .from("orders")
-      .update({ status })
+      .update(to_update)
       .eq("id", selectedOrder.id)
       .order("created", { ascending: false });
 
