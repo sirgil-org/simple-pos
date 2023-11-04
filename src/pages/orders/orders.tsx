@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
-import { supabase } from "../supabase_client";
+import { supabase } from "../../supabase_client";
 
 import { Table, Modal, Label, Radio, Spinner } from "flowbite-react";
 import { useForm } from "react-hook-form";
-import ListSkeletal from "../components/list_skeletal_loader";
+import ListSkeletal from "../../components/list_skeletal_loader";
+import OrderTable from "./components/order_table";
 
 export default function Account() {
   const [loading, setLoading] = useState(true);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [orders, setOrders]: any = useState([]);
-  const [selectedOrder, setSelectedOrder]:any = useState("");
+  const [selectedOrder, setSelectedOrder]: any = useState("");
   const [openModal, setOpenModal] = useState(false);
 
   const { register, handleSubmit } = useForm();
@@ -19,7 +20,8 @@ export default function Account() {
     const { error } = await supabase
       .from("orders")
       .update({ status })
-      .eq("id", selectedOrder.id);
+      .eq("id", selectedOrder.id)
+      .order('created', { ascending: false });
 
     setUpdateLoading(false);
     if (error) {
@@ -52,45 +54,68 @@ export default function Account() {
       {loading ? (
         <ListSkeletal />
       ) : (
-        <Table striped hoverable className="table-auto">
-          <caption className="p-5 text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800">
-            Browse Orders
-          </caption>
-          <Table.Head>
-            <Table.HeadCell>Order number</Table.HeadCell>
-            <Table.HeadCell>Phone number</Table.HeadCell>
-            <Table.HeadCell>Items</Table.HeadCell>
-            <Table.HeadCell>Status</Table.HeadCell>
-            <Table.HeadCell>Created</Table.HeadCell>
-            <Table.HeadCell>
-              <span className="sr-only">Edit</span>
-            </Table.HeadCell>
-          </Table.Head>
-          <Table.Body className="divide-y">
-            {orders.map((order:any) => (
-              <Table.Row
-                key={order.id}
-                className="bg-white dark:border-gray-700 dark:bg-gray-800"
-              >
-                <Table.Cell>{order.order_number}</Table.Cell>
-                <Table.Cell>{order.phone_number}</Table.Cell>
-                <Table.Cell>{order.order_number}</Table.Cell>
-                <Table.Cell>{order.status}</Table.Cell>
-                <Table.Cell>{order.created_at}</Table.Cell>
-                <Table.Cell>
-                  <button
-                    onClick={() => {
-                      setSelectedOrder(order);
-                      setOpenModal(true);
-                    }}
-                  >
-                    Edit
-                  </button>
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
+        <>
+          <div className="flex overflow-x-auto space-x-5 mb-[50px]">
+            <OrderTable
+              orders={orders.filter((order:any)=>order.status === "waiting")}
+              setSelectedOrder={setSelectedOrder}
+              setOpenModal={setOpenModal}
+              status="Waiting"
+            />
+            <OrderTable
+              orders={orders.filter((order:any)=>order.status === "preparing")}
+              setSelectedOrder={setSelectedOrder}
+              setOpenModal={setOpenModal}
+              status="Preparing"
+            />
+
+            <OrderTable
+              orders={orders.filter((order:any)=>order.status === "ready")}
+              setSelectedOrder={setSelectedOrder}
+              setOpenModal={setOpenModal}
+              status="Ready"
+            />
+          </div>
+          <Table striped hoverable className="table-auto">
+            <caption className="p-5 text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+              Browse Orders
+            </caption>
+            <Table.Head>
+              <Table.HeadCell>Order number</Table.HeadCell>
+              <Table.HeadCell>Phone number</Table.HeadCell>
+              <Table.HeadCell>Items</Table.HeadCell>
+              <Table.HeadCell>Status</Table.HeadCell>
+              <Table.HeadCell>Created</Table.HeadCell>
+              <Table.HeadCell>
+                <span className="sr-only">Edit</span>
+              </Table.HeadCell>
+            </Table.Head>
+            <Table.Body className="divide-y">
+              {orders.map((order: any) => (
+                <Table.Row
+                  key={order.id}
+                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                >
+                  <Table.Cell>{order.order_number}</Table.Cell>
+                  <Table.Cell>{order.phone_number}</Table.Cell>
+                  <Table.Cell>{order.order_number}</Table.Cell>
+                  <Table.Cell>{order.status}</Table.Cell>
+                  <Table.Cell>{order.created_at}</Table.Cell>
+                  <Table.Cell>
+                    <button
+                      onClick={() => {
+                        setSelectedOrder(order);
+                        setOpenModal(true);
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        </>
       )}
 
       <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
