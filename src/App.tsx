@@ -11,7 +11,7 @@ import { useWiggle } from "./hooks/wiggle";
 
 // Home function that is reflected across the site
 export default function Home() {
-  const [style, trigger] : any= useWiggle({ x: 5, y: 5, scale: 1 });
+  const [style, trigger]: any = useWiggle({ x: 5, y: 5, scale: 1 });
 
   return (
     <Router>
