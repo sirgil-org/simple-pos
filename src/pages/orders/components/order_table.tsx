@@ -1,4 +1,5 @@
 import { Table } from "flowbite-react";
+import moment from "moment";
 
 export default function OrderTable({
   orders,
@@ -28,7 +29,10 @@ export default function OrderTable({
             >
               <Table.Cell>{order.order_number}</Table.Cell>
               <Table.Cell>{order.order_number}</Table.Cell>
-              <Table.Cell>{order.created_at}</Table.Cell>
+              <Table.Cell>
+                {/* <Moment date={new Date()} fromNow /> */}
+               {moment(order.created_at).fromNow() }
+              </Table.Cell>
               <Table.Cell>
                 <button
                   onClick={() => {

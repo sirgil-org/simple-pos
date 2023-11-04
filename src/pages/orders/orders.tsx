@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../supabase_client";
 
-import { Table, Modal, Label, Radio, Spinner } from "flowbite-react";
+import { Modal, Label, Radio, Spinner } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import ListSkeletal from "../../components/list_skeletal_loader";
 import OrderTable from "./components/order_table";
