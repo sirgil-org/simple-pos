@@ -16,7 +16,7 @@ export default function OrderTable({
         <Table.Head>
           <Table.HeadCell>Order number</Table.HeadCell>
           <Table.HeadCell>Items</Table.HeadCell>
-          <Table.HeadCell>Duration</Table.HeadCell>
+          <Table.HeadCell>Created</Table.HeadCell>
           <Table.HeadCell>
             <span className="sr-only">Edit</span>
           </Table.HeadCell>
