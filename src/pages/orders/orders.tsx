@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
+import addNotification from 'react-push-notification';
 
 import { Modal, Label, Radio, Spinner } from "flowbite-react";
 import { useForm } from "react-hook-form";
@@ -86,6 +87,12 @@ export default function Account() {
         (data) => {
           setOrders((prev) => [...prev, data.new]);
           toast.info("New order received!");
+          addNotification({
+            title: 'Notice',
+            subtitle: 'You\ve received an order...',
+            theme: 'darkblue',
+            native: true // when using native, your OS will handle theming.
+        });
         }
       )
       .subscribe();
