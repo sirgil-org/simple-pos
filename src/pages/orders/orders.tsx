@@ -23,7 +23,16 @@ export default function Account() {
       .eq("id", selectedOrder.id)
       .order("created", { ascending: false });
 
+    const index = orders.findIndex(
+      (order: any) => order.id === selectedOrder.id
+    );
+
+    const tmpOrders = orders;
+
+    tmpOrders[index] = { ...selectedOrder, status };
+    setOrders(tmpOrders);
     setUpdateLoading(false);
+
     if (error) {
       return alert(error);
     }
