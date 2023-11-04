@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
-import addNotification from 'react-push-notification';
+import addNotification from "react-push-notification";
 
 import { Modal, Label, Radio, Spinner } from "flowbite-react";
 import { useForm } from "react-hook-form";
@@ -70,7 +70,7 @@ export default function Account() {
       const { data, error } = await supabase.from("orders").select();
 
       if (error) {
-        toast.warn(error.message || "Could not fetch orders...")
+        toast.warn(error.message || "Could not fetch orders...");
       } else if (data) {
         setOrders(data);
       }
@@ -91,11 +91,11 @@ export default function Account() {
           setOrders((prev: any) => [...prev, data.new]);
           toast.info("New order received!");
           addNotification({
-            title: 'Notice',
-            subtitle: 'You\ve received an order...',
-            theme: 'darkblue',
-            native: true // when using native, your OS will handle theming.
-        });
+            title: "Notice",
+            subtitle: "You\ve received an order...",
+            theme: "darkblue",
+            native: true, // when using native, your OS will handle theming.
+          });
         }
       )
       .subscribe();
@@ -200,7 +200,11 @@ export default function Account() {
                 <Label htmlFor="collected">Collected</Label>
               </div>
               <div className="flex items-center gap-2">
-                <Radio id="cancelled" value="cancelled" />
+                <Radio
+                  {...register("status")}
+                  id="cancelled"
+                  value="cancelled"
+                />
                 <Label htmlFor="cancelled">Cancelled</Label>
               </div>
             </fieldset>
