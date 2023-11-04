@@ -57,7 +57,7 @@ export default function Account() {
       return alert(error);
     }
 
-    setOpenModal(false);
+    setOpenModal(undefined);
   };
 
   useEffect(() => {
@@ -85,7 +85,7 @@ export default function Account() {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "orders" },
         (data) => {
-          setOrders((prev) => [...prev, data.new]);
+          setOrders((prev: any) => [...prev, data.new]);
           toast.info("New order received!");
           addNotification({
             title: 'Notice',
