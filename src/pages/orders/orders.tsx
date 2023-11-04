@@ -23,6 +23,9 @@ export default function Account() {
     let to_update: any = { status };
 
     switch (status) {
+      case "preparing":
+        to_update.preparing_at = moment();
+        break;
       case "ready":
         to_update.completed_at = moment();
         break;
