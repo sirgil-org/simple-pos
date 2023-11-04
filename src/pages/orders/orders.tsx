@@ -3,24 +3,20 @@ import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
 import addNotification from "react-push-notification";
 
-import { Modal, Label, Radio, Spinner } from "flowbite-react";
-import { useForm } from "react-hook-form";
 import ListSkeletal from "../../components/list_skeletal_loader";
 import OrderTable from "./components/order_table";
 import moment from "moment";
 import OrderInfo from "./order_info";
+import OrderStatusModal from "./components/order_status_modal";
 
 export default function Account() {
   const [loading, setLoading] = useState(true);
-  const [updateLoading, setUpdateLoading] = useState(false);
   const [orders, setOrders]: any = useState([]);
   const [selectedOrder, setSelectedOrder]: any = useState("");
   const [openModal, setOpenModal] = useState(undefined);
 
-  const { register, handleSubmit } = useForm();
-
-  const onSubmit = async ({ status }: any) => {
-    let to_update: any = { status };
+  const handleChangeStatus = async (status: string, currentOrder: any) => {
+    const to_update: any = { status };
 
     switch (status) {
       case "preparing":
@@ -39,28 +35,29 @@ export default function Account() {
         break;
     }
 
-    setUpdateLoading(true);
     const { error } = await supabase
       .from("orders")
       .update(to_update)
-      .eq("id", selectedOrder.id)
-      .order("created", { ascending: false });
+      .eq("id", currentOrder.id);
 
-    const index = orders.findIndex(
-      (order: any) => order.id === selectedOrder.id
-    );
+   
+    setOrders((prev: any) => {
+      const index = prev.findIndex(
+        (p: any) => p.id === currentOrder.id
+      );
 
-    const tmpOrders = orders;
 
-    tmpOrders[index] = { ...selectedOrder, status };
-    setOrders(tmpOrders);
-    setUpdateLoading(false);
+      prev[index] = {...prev[index], status};
+
+      // Only way for the UI to update realtime, if just prev is returned
+      // it won't work as expected. My assumption is that it's memory issue, 
+      // probably assigning by memory location.
+      return [...prev]
+    });
 
     if (error) {
-      return alert(error);
+      toast.error(error.message || "Could not update");
     }
-
-    setOpenModal(undefined);
   };
 
   useEffect(() => {
@@ -113,6 +110,7 @@ export default function Account() {
               setSelectedOrder={setSelectedOrder}
               setOpenModal={setOpenModal}
               status="Waiting"
+              handleChangeStatus={handleChangeStatus}
             />
             <OrderTable
               orders={orders.filter(
@@ -121,6 +119,7 @@ export default function Account() {
               setSelectedOrder={setSelectedOrder}
               setOpenModal={setOpenModal}
               status="Preparing"
+              handleChangeStatus={handleChangeStatus}
             />
 
             <OrderTable
@@ -128,6 +127,7 @@ export default function Account() {
               setSelectedOrder={setSelectedOrder}
               setOpenModal={setOpenModal}
               status="Ready"
+              handleChangeStatus={handleChangeStatus}
             />
 
             <OrderTable
@@ -159,66 +159,12 @@ export default function Account() {
         />
       )}
 
-      <Modal
-        dismissible
-        show={openModal === "order-status-modal"}
-        onClose={() => setOpenModal(undefined)}
-        size="md"
-      >
-        <Modal.Header>#{selectedOrder.order_number}</Modal.Header>
-        <Modal.Body>
-          <form id="change-status-form" onSubmit={handleSubmit(onSubmit)}>
-            <fieldset className="flex max-w-md flex-col gap-4">
-              <legend className="mb-4">Choose the status of this order</legend>
-              <div className="flex items-center gap-2">
-                <Radio
-                  {...register("status")}
-                  id="waiting"
-                  value="waiting"
-                  defaultChecked
-                />
-                <Label htmlFor="waiting">Waiting</Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Radio
-                  {...register("status")}
-                  id="preparing"
-                  value="preparing"
-                />
-                <Label htmlFor="preparing">Preparing</Label>
-              </div>
-              <div {...register("status")} className="flex items-center gap-2">
-                <Radio {...register("status")} id="ready" value="ready" />
-                <Label htmlFor="ready">Ready</Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Radio
-                  {...register("status")}
-                  id="collected"
-                  value="collected"
-                />
-                <Label htmlFor="collected">Collected</Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Radio
-                  {...register("status")}
-                  id="cancelled"
-                  value="cancelled"
-                />
-                <Label htmlFor="cancelled">Cancelled</Label>
-              </div>
-            </fieldset>
-          </form>
-        </Modal.Body>
-        <Modal.Footer>
-          <button
-            form="change-status-form"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-          >
-            {updateLoading ? <Spinner /> : "Save"}
-          </button>
-        </Modal.Footer>
-      </Modal>
+      <OrderStatusModal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        selectedOrder={selectedOrder}
+        handleChangeStatus={handleChangeStatus}
+      />
     </div>
   );
 }

@@ -1,12 +1,19 @@
-import { Table } from "flowbite-react";
+import { Spinner, Table } from "flowbite-react";
 import moment from "moment";
+import { useState } from "react";
+
+import { LuArrowRightToLine } from "react-icons/lu";
 
 export default function OrderTable({
   orders,
   setSelectedOrder,
   setOpenModal,
   status,
+  handleChangeStatus,
 }: any) {
+  const possibleStatus = ["waiting", "preparing", "ready", "collected"];
+  const [loading, setLoading] = useState(false);
+
   return (
     <div className="max-h-[500px] overflow-y-auto">
       <Table striped hoverable className="table-auto">
@@ -33,21 +40,39 @@ export default function OrderTable({
             >
               <Table.Cell>{order.order_number}</Table.Cell>
               <Table.Cell>{order.order_number}</Table.Cell>
+              <Table.Cell>{moment(order.created_at).fromNow()}</Table.Cell>
               <Table.Cell>
-                {/* <Moment date={new Date()} fromNow /> */}
-                {moment(order.created_at).fromNow()}
-              </Table.Cell>
-              <Table.Cell>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedOrder(order);
-                    setOpenModal("order-status-modal");
-                  }}
+                <div className="flex items-center space-x-3">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedOrder(order);
+                      setOpenModal("order-status-modal");
+                    }}
+                  >
+                    Edit
+                  </button>
 
-                >
-                  Edit
-                </button>
+                  {!["cancelled", "collected"].includes(
+                    status.toLowerCase()
+                  ) && (
+                    <div
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        setLoading(true)
+                        await handleChangeStatus(
+                          possibleStatus[
+                            possibleStatus.indexOf(status.toLowerCase()) + 1
+                          ],
+                          order
+                        );
+                        setLoading(false)
+                      }}
+                    >
+                      {loading ? <Spinner /> : <LuArrowRightToLine /> }
+                    </div>
+                  )}
+                </div>
               </Table.Cell>
             </Table.Row>
           ))}
