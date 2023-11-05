@@ -9,12 +9,16 @@ import Seo from "./components/seo.tsx";
 import { animated } from "react-spring";
 import { useWiggle } from "./hooks/wiggle";
 
+import { Notifications } from 'react-push-notification';
+
 // Home function that is reflected across the site
 export default function Home() {
   const [style, trigger]: any = useWiggle({ x: 5, y: 5, scale: 1 });
 
   return (
     <Router>
+      <Notifications />
+
       <Seo />
       <nav className="flex items-center mb-[50px]">
         <animated.div onMouseEnter={trigger} style={style}>

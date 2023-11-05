@@ -12,7 +12,7 @@ export default function OrderTable({
   handleChangeStatus,
 }: any) {
   const possibleStatus = ["waiting", "preparing", "ready", "collected"];
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading]: any = useState([]);
 
   return (
     <div className="max-h-[500px] overflow-y-auto">
@@ -59,17 +59,24 @@ export default function OrderTable({
                     <div
                       onClick={async (e) => {
                         e.stopPropagation();
-                        setLoading(true)
+                        setLoading((prev: any) => [
+                          ...prev,
+                          order.order_number,
+                        ]);
                         await handleChangeStatus(
                           possibleStatus[
                             possibleStatus.indexOf(status.toLowerCase()) + 1
                           ],
                           order
                         );
-                        setLoading(false)
+                        setLoading([]);
                       }}
                     >
-                      {loading ? <Spinner /> : <LuArrowRightToLine /> }
+                      {loading.includes(order.order_number) ? (
+                        <Spinner />
+                      ) : (
+                        <LuArrowRightToLine />
+                      )}
                     </div>
                   )}
                 </div>
