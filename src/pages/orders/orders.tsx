@@ -40,19 +40,15 @@ export default function Account() {
       .update(to_update)
       .eq("id", currentOrder.id);
 
-   
     setOrders((prev: any) => {
-      const index = prev.findIndex(
-        (p: any) => p.id === currentOrder.id
-      );
+      const index = prev.findIndex((p: any) => p.id === currentOrder.id);
 
-
-      prev[index] = {...prev[index], status};
+      prev[index] = { ...prev[index], status };
 
       // Only way for the UI to update realtime, if just prev is returned
-      // it won't work as expected. My assumption is that it's memory issue, 
+      // it won't work as expected. My assumption is that it's memory issue,
       // probably assigning by memory location.
-      return [...prev]
+      return [...prev];
     });
 
     if (error) {
@@ -64,7 +60,23 @@ export default function Account() {
     async function getOrders() {
       setLoading(true);
 
-      const { data, error } = await supabase.from("orders").select();
+      const { data, error } = await supabase.from("orders").select(`
+        id, 
+        order_number, 
+        status,
+        created_at,
+        phone_number,
+        product_order ( 
+          sku, 
+          quantity, 
+          created_at, 
+          order_id, 
+          price,
+          products (
+            title
+          )
+        )
+      `);
 
       if (error) {
         toast.warn(error.message || "Could not fetch orders...");

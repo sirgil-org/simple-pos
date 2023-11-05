@@ -19,12 +19,12 @@ export default function OrderInfo({
           <div>Created</div>
           <div> {moment(selectedOrder.created_at).fromNow()}</div>
         </div>
-        {selectedOrder.items.order.map((order: any) => (
-          <div key={order.product_retailer_id} className="flex justify-between">
+        {selectedOrder.product_order.map((order: any) => (
+          <div key={order.sku} className="flex justify-between">
             <div>
-              {order.quantity} x {order.product_retailer_id}
+              {order.quantity} x {order.products.title}
             </div>
-            <div>N$ {order.quantity * order.item_price}</div>
+            <div>N$ {order.quantity * order.price}</div>
           </div>
         ))}
       </Modal.Body>
