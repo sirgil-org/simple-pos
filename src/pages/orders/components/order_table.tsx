@@ -39,7 +39,14 @@ export default function OrderTable({
               }}
             >
               <Table.Cell>{order.order_number}</Table.Cell>
-              <Table.Cell>{order.order_number}</Table.Cell>
+              <Table.Cell>
+                <div className="truncate overflow-ellipsis overflow-hidden max-w-[150px]">
+                  {order.product_order.map(
+                    (item: any) =>
+                      item.quantity + "x" + item.products.title + ", "
+                  )}
+                </div>
+              </Table.Cell>
               <Table.Cell>{moment(order.created_at).fromNow()}</Table.Cell>
               <Table.Cell>
                 <div className="flex items-center space-x-3">
