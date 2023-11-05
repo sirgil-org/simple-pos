@@ -28,9 +28,11 @@ export default function Home() {
           <Link href="/">Home</Link>
           <span className="divider">|</span>
           <Link href="/about">About</Link>
+          <span className="divider">|</span>
+          <Link href="/new">New Order</Link>
         </div>
       </nav>
-      <main role="main">
+      <main role="main" className="grow flex flex-col">
         {/* Router specifies which component to insert here as the main content */}
         <PageRouter />
       </main>
