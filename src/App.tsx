@@ -29,6 +29,7 @@ import { IonHeader, IonTitle, IonToolbar, setupIonicReact } from '@ionic/react';
 import './theme/variables.css';
 
 setupIonicReact();
+import { Notifications } from 'react-push-notification';
 
 // Home function that is reflected across the site
 export default function Home() {
@@ -36,6 +37,8 @@ export default function Home() {
 
   return (
     <Router>
+      <Notifications />
+
       <Seo />
         <IonHeader>
           <IonToolbar color="primary">
@@ -50,9 +53,11 @@ export default function Home() {
             <Link href="/">Home</Link>
             <span className="divider">|</span>
             <Link href="/about">About</Link>
+            <span className="divider">|</span>
+            <Link href="/new">New Order</Link>
           </div>
         </nav>
-        <main role="main">
+        <main role="main" className="grow flex flex-col">
           {/* Router specifies which component to insert here as the main content */}
           <PageRouter />
         </main>
