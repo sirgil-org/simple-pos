@@ -55,7 +55,11 @@ export default function Home() {
             <Link href="/about">About</Link>
             <span className="divider">|</span>
             <Link href="/new">New Order</Link>
-          </div>
+            <span className="divider">|</span>
+            <Link href="/expenses">Expenses</Link>
+            <span className="divider">|</span>
+            <Link href="/reports">Reports</Link>
+            </div>
         </nav>
         <main role="main" className="grow flex flex-col">
           {/* Router specifies which component to insert here as the main content */}
