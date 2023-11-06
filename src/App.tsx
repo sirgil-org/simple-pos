@@ -9,7 +9,7 @@ import Seo from "./components/seo.tsx";
 import { animated } from "react-spring";
 import { useWiggle } from "./hooks/wiggle";
 
-import { Notifications } from 'react-push-notification';
+import { Notifications } from "react-push-notification";
 
 // Home function that is reflected across the site
 export default function Home() {
@@ -30,6 +30,10 @@ export default function Home() {
           <Link href="/about">About</Link>
           <span className="divider">|</span>
           <Link href="/new">New Order</Link>
+          <span className="divider">|</span>
+          <Link href="/expenses">Expenses</Link>
+          <span className="divider">|</span>
+          <Link href="/reports">Reports</Link>
         </div>
       </nav>
       <main role="main" className="grow flex flex-col">
