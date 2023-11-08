@@ -1,29 +1,41 @@
 import { Spinner, Table } from "flowbite-react";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AddPurchaseModal, AddShopModal } from "./components";
-
-const data = [
-  {
-    invoice: 4,
-    shop: "Metro",
-    amount: 50,
-  },
-  {
-    invoice: 6,
-    shop: "Shoprite",
-    amount: 25,
-  },
-  {
-    invoice: 7,
-    shop: "Metro",
-    amount: 50,
-  },
-];
+import { toast } from "react-toastify";
+import { supabase } from "../../supabase_client";
 
 export default function Expenses() {
   const [openModal, setOpenModal]: any = useState(undefined);
+  const [expenses, setExpenses]: any = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function getOrders() {
+      setLoading(true);
+
+      const { data, error } = await supabase.from("expenses").select(`
+        id,
+        invoice_number,
+        amount,
+        created_at,
+        shops ( 
+          name
+        )
+      `);
+
+      if (error) {
+        toast.warn(error.message || "Could not fetch expenses...");
+      } else if (data) {
+        setExpenses(data);
+      }
+
+      setLoading(false);
+    }
+
+    getOrders();
+  }, []);
 
   return (
     <div>
@@ -55,30 +67,24 @@ export default function Expenses() {
           <Table.HeadCell>Invoice</Table.HeadCell>
 
           <Table.HeadCell>Shop</Table.HeadCell>
-          <Table.HeadCell>Amount</Table.HeadCell>
+          <Table.HeadCell>Amount (N$)</Table.HeadCell>
           <Table.HeadCell>Created</Table.HeadCell>
-          <Table.HeadCell>
-            <span className="sr-only">Edit</span>
-          </Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {data.map((order: any) => (
+          {expenses.map((expense: any) => (
             <Table.Row
-              key={order.id}
+              key={expense.id}
               className="bg-white dark:border-gray-700 dark:bg-gray-800 cursor-pointer"
             >
-              <Table.Cell>#{order.invoice}</Table.Cell>
+              <Table.Cell>#{expense.invoice_number}</Table.Cell>
               <Table.Cell>
                 <div className="truncate overflow-ellipsis overflow-hidden max-w-[150px]">
-                  {order.shop}
+                  {expense.shops.name}
                 </div>
               </Table.Cell>
 
-              <Table.Cell>{order.amount}</Table.Cell>
-              <Table.Cell>{moment(order.created_at).fromNow()}</Table.Cell>
-              <Table.Cell>
-                <div className="flex items-center space-x-3">Edit</div>
-              </Table.Cell>
+              <Table.Cell>{expense.amount}</Table.Cell>
+              <Table.Cell>{moment(expense.created_at).format('Do MMMM YYYY, h:mm a')}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
