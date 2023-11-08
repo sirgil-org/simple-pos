@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../../supabase_client";
-import { toast } from "react-toastify";
-import { NewOrderSkeletal } from "./components";
-
+import { Key, useEffect, useState } from "react";
 import { LuTrash } from "react-icons/lu";
-import { Spinner } from "flowbite-react";
+import { toast } from "react-toastify";
+import { supabase } from "../../supabase_client";
+import { NewOrderSkeletal } from "./components";
 
 export default function NewOrder() {
   const [loading, setLoading] = useState(true);
@@ -107,14 +105,14 @@ export default function NewOrder() {
   }
 
   return (
-    <div className="border border-green-900 ">
-
-      <div className="w-full border border-green-400">
-        <div className="grid grid-cols-4 gap-2">
-          {products.map((product: any) => {
+    <div className="">
+      <div className="w-full">
+        <div className="flex flex-wrap gap-2 overflow-scroll">
+          {products.map((product: any, key: Key) => {
             return (
-              <div>
+              <div key={key} className="w-1/3 sm:w-36">
                 <img
+                  className="cursor-pointer w-max"
                   key={product.sku}
                   src={product.image_url}
                   onClick={() => {
@@ -130,7 +128,6 @@ export default function NewOrder() {
                       return new_data;
                     });
                   }}
-                  className="cursor-pointer"
                 />
                 <div>
                   <div>{product.title}</div>

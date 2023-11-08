@@ -58,7 +58,7 @@ export default function Home() {
 
       <div className="bg-base-100">
 
-        <nav role="tablet & desktop nav" className="h-screen w-64 bg-base-200/90 hidden sm:flex flex-col gap-2 justify-content-center px-1.5 sm:py-4 backdrop-blur-md sticky top-0">
+        <nav role="tablet & desktop nav" className="fixed top-0 left-0 h-screen w-64 bg-base-200/90 hidden sm:flex flex-col gap-2 justify-content-center px-1.5 sm:py-4 backdrop-blur-md">
           <div className="px-1 flex items-center gap-2">
             <animated.div onMouseEnter={trigger} style={style}>
               <img src={logo} width="50" />
@@ -86,7 +86,7 @@ export default function Home() {
           }
         </nav>
 
-        <main role="main" className="sm:ml-64 w-auto min-h-screen border-2 border-red-400">
+        <main role="main" className="sm:ml-64 w-auto min-h-screen py-5 px-3">
           {/* Router specifies which component to insert here as the main content */}
           <div className="container mx-auto">
             <PageRouter />
