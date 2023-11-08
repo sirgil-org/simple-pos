@@ -107,8 +107,9 @@ export default function NewOrder() {
   }
 
   return (
-    <div className="flex space-x-4 grow">
-      <div>
+    <div className="border border-green-900 ">
+
+      <div className="w-full border border-green-400">
         <div className="grid grid-cols-4 gap-2">
           {products.map((product: any) => {
             return (
@@ -140,14 +141,15 @@ export default function NewOrder() {
           })}
         </div>
       </div>
-      <div className="min-w-[350px] flex flex-col">
-        <div className="grow">
+
+      <div className="min-w-[350px] flex flex-col my-3">
+        <div className="grow ">
           {Object.keys(order).map((key: any) => {
             const item = products.find((product: any) => product.sku === key);
             return (
               <div className="flex justify-between mb-2">
                 <div className="flex space-x-4 items-center">
-                  <div className="flex items-center justify-center rounded-full h-[30px] w-[30px] bg-gray-400">
+                  <div className="flex items-center justify-center rounded-full h-8 w-8 bg-secondary ">
                     {order[key]}
                   </div>
                   <div>{item?.title}</div>
@@ -173,7 +175,10 @@ export default function NewOrder() {
             );
           })}
         </div>
-        <div className="bg-yellow-300 rounded-md p-3 mb-5">
+
+
+        {/* payment modal */}
+        {/* <div className="bg-base-200 rounded-md p-6 mb-5">
           <div className="flex justify-between text-3xl font-bold">
             <div>Total</div>
             <div>N$ {totalCost}</div>
@@ -189,15 +194,15 @@ export default function NewOrder() {
             <input
               type="number"
               id="amount"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-3xl rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              // className="bg-gray-50 border border-gray-300 text-gray-900 text-3xl rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="input input-lg w-full"
               required
               onChange={(e: any) => setInputValue(e.target.value)}
               value={inputValue}
             />
             <div
-              className={`text-end text-lg font-bold ${
-                totalCost > inputValue ? "text-red-600" : "text-green-400"
-              } ${Object.keys(order).length === 0 ? "invisible" : ""}`}
+              className={`text-end text-lg font-bold ${totalCost > inputValue ? "text-red-600" : "text-green-400"
+                } ${Object.keys(order).length === 0 ? "invisible" : ""}`}
             >
               {inputValue - totalCost}
             </div>
@@ -214,7 +219,7 @@ export default function NewOrder() {
               {savingOrder ? <Spinner /> : "Submit"}
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
