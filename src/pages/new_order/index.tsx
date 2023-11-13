@@ -3,6 +3,7 @@ import { LuTrash } from "react-icons/lu";
 import { toast } from "react-toastify";
 import { supabase } from "../../supabase_client";
 import { NewOrderSkeletal } from "./components";
+import { Spinner } from "flowbite-react";
 
 export default function NewOrder() {
   const [loading, setLoading] = useState(true);
@@ -105,7 +106,7 @@ export default function NewOrder() {
   }
 
   return (
-    <div className="">
+    <div className="flex h-full">
       <div className="w-full">
         <div className="flex flex-wrap gap-2 overflow-scroll">
           {products.map((product: any, key: Key) => {
@@ -139,7 +140,7 @@ export default function NewOrder() {
         </div>
       </div>
 
-      <div className="min-w-[350px] flex flex-col my-3">
+      <div className="min-w-[350px] flex flex-col my-3 h-full">
         <div className="grow ">
           {Object.keys(order).map((key: any) => {
             const item = products.find((product: any) => product.sku === key);
@@ -173,9 +174,8 @@ export default function NewOrder() {
           })}
         </div>
 
-
         {/* payment modal */}
-        {/* <div className="bg-base-200 rounded-md p-6 mb-5">
+        <div className="bg-base-200 rounded-md p-6 mb-5">
           <div className="flex justify-between text-3xl font-bold">
             <div>Total</div>
             <div>N$ {totalCost}</div>
@@ -198,11 +198,26 @@ export default function NewOrder() {
               value={inputValue}
             />
             <div
-              className={`text-end text-lg font-bold ${totalCost > inputValue ? "text-red-600" : "text-green-400"
-                } ${Object.keys(order).length === 0 ? "invisible" : ""}`}
+              className={`text-end text-lg font-bold ${
+                totalCost > inputValue ? "text-red-600" : "text-green-400"
+              } ${Object.keys(order).length === 0 ? "invisible" : ""}`}
             >
               {inputValue - totalCost}
             </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2 mb-5">
+            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">7</button>
+            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">8</button>
+            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">9</button>
+            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">4</button>
+            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">5</button>
+            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">6</button>
+            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">1</button>
+            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">2</button>
+            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">3</button>
+            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">.</button>
+            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">0</button>
+            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">del</button>
           </div>
           <div>
             <button
@@ -216,7 +231,7 @@ export default function NewOrder() {
               {savingOrder ? <Spinner /> : "Submit"}
             </button>
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );
