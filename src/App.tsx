@@ -58,18 +58,18 @@ export default function Home() {
 
       <div className="bg-base-100">
 
-        <nav role="tablet & desktop nav" className="fixed top-0 left-0 h-screen w-64 bg-base-200/90 hidden sm:flex flex-col gap-2 justify-content-center px-1.5 sm:py-4 backdrop-blur-md">
-          <div className="px-1 flex items-center gap-2">
+        <nav role="tablet & desktop nav" className="fixed top-0 left-0 h-screen w-fit xl:w-64 bg-base-200/90 hidden sm:flex flex-col gap-2 justify-content-center px-1.5 sm:py-4 backdrop-blur-md">
+          <div className="px-1 flex items-center justify-center xl:justify-start gap-2">
             <animated.div onMouseEnter={trigger} style={style}>
               <img src={logo} width="50" />
             </animated.div>
-            <span className="text-xl font-extrabold text-base-content">HOTSPOT</span>
+            <span className="hidden xl:block text-xl font-extrabold text-base-content">HOTSPOT</span>
           </div>
           {
             routes.map((route, key: Key) => (
-              <Link to={route.path} className="flex !text-base-content items-center font-semibold gap-4 cursor-pointer py-2 px-4 rounded-lg hover:bg-base-100" key={key + route.name}>
+              <Link to={route.path} className="flex flex-col xl:flex-row !text-base-content items-center font-semibold gap-2 xl:gap-4 cursor-pointer py-2 px-2 xl:px-4 rounded-lg hover:bg-base-100" key={key + route.name}>
                 <span>{route.icon}</span>
-                <span>{route.name}</span>
+                <span className="text-[.6rem] xl:text-base">{route.name}</span>
               </Link>
             ))
           }
@@ -80,13 +80,13 @@ export default function Home() {
             routes.map((route, key: Key) => (
               <Link to={route.path} className="flex flex-col gap-0.5 justify-center items-center !text-base-content " key={key + route.name}>
                 <span>{route.icon}</span>
-                <span className="text-[.5rem]">{route.name}</span>
+                <span className="text-[.6rem]">{route.name}</span>
               </Link>
             ))
           }
         </nav>
 
-        <main role="main" className="sm:ml-64 w-auto min-h-screen py-5 px-3">
+        <main role="main" className="sm:ml-20 xl:ml-64 w-auto min-h-screen py-5 px-3">
           {/* Router specifies which component to insert here as the main content */}
             <PageRouter />
         </main>

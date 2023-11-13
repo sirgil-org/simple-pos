@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Key } from "react";
 import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
 import addNotification from "react-push-notification";
@@ -14,6 +14,7 @@ export default function Account() {
   const [orders, setOrders]: any = useState([]);
   const [selectedOrder, setSelectedOrder]: any = useState("");
   const [openModal, setOpenModal] = useState(undefined);
+  const [activeTab, setActiveTab] = useState('waiting');
 
   const handleChangeStatus = async (status: string, currentOrder: any) => {
     const to_update: any = { status };
@@ -55,6 +56,10 @@ export default function Account() {
       toast.error(error.message || "Could not update");
     }
   };
+
+  const onSwitchTab = (value: string) => {
+    setActiveTab(value)
+  }
 
   useEffect(() => {
     async function getOrders() {
@@ -116,15 +121,23 @@ export default function Account() {
         <ListSkeletal />
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-4 mb-[50px]">
+          <div className="lg:ml-10 tabs tabs-boxed my-3 lg:w-fit !justify-center">
+            {
+              ["waiting", "preparing", "ready", "collected", "cancelled", "all"].map((item: string, key: Key) => (
+                <a key={key} className={`capitalize tab ${activeTab === item ? 'tab-active' : ''} `} onClick={() => onSwitchTab(item)}>{item}</a>
+              ))
+            }
+          </div>
+
+          <div className="lg:pl-10">
             <OrderTable
-              orders={orders.filter((order: any) => order.status === "waiting")}
+              orders={activeTab === "all" ? orders : orders.filter((order: any) => order.status === activeTab)}
               setSelectedOrder={setSelectedOrder}
               setOpenModal={setOpenModal}
-              status="Waiting"
+              status={activeTab}
               handleChangeStatus={handleChangeStatus}
             />
-            <OrderTable
+            {/* <OrderTable
               orders={orders.filter(
                 (order: any) => order.status === "preparing"
               )}
@@ -158,7 +171,7 @@ export default function Account() {
               setSelectedOrder={setSelectedOrder}
               setOpenModal={setOpenModal}
               status="Cancelled"
-            />
+            /> */}
           </div>
         </>
       )}
