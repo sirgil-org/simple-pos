@@ -11,7 +11,7 @@ export default function NewOrder() {
   const [products, setProducts]: any = useState([]);
 
   const [order, setOrder]: any = useState({});
-  const [inputValue, setInputValue] = useState(0);
+  const [inputValue, setInputValue] = useState("0");
   const [totalCost, setTotalCost] = useState(0);
 
   const fetchData = async () => {
@@ -80,7 +80,7 @@ export default function NewOrder() {
 
     setOrder([]);
     setTotalCost(0);
-    setInputValue(0);
+    setInputValue("0");
 
     setSavingOrder(false);
 
@@ -145,7 +145,7 @@ export default function NewOrder() {
           {Object.keys(order).map((key: any) => {
             const item = products.find((product: any) => product.sku === key);
             return (
-              <div className="flex justify-between mb-2">
+              <div key={item.sku} className="flex justify-between mb-2">
                 <div className="flex space-x-4 items-center">
                   <div className="flex items-center justify-center rounded-full h-8 w-8 bg-secondary ">
                     {order[key]}
@@ -189,12 +189,13 @@ export default function NewOrder() {
               Amount paid
             </label>
             <input
-              type="number"
+              type="text"
               id="amount"
               // className="bg-gray-50 border border-gray-300 text-gray-900 text-3xl rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               className="input input-lg w-full"
               required
-              onChange={(e: any) => setInputValue(e.target.value)}
+              readOnly
+              // onChange={(e: any) => setInputValue(e.target.value)}
               value={inputValue}
             />
             <div
@@ -206,18 +207,33 @@ export default function NewOrder() {
             </div>
           </div>
           <div className="grid grid-cols-3 gap-2 mb-5">
-            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">7</button>
-            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">8</button>
-            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">9</button>
-            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">4</button>
-            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">5</button>
-            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">6</button>
-            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">1</button>
-            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">2</button>
-            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">3</button>
-            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">.</button>
-            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">0</button>
-            <button className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">del</button>
+            {["7", "8", "9", "4", "5", "6", "1", "2", "3", ".", "0", "del"].map(
+              (item: any) => (
+                <button
+                  key={item}
+                  onClick={() => {
+                    if (item === "del") {
+                      return setInputValue("0");
+                    }
+
+                    if (inputValue[0] === "0" && item !== ".") {
+                      return setInputValue(item);
+                    }
+
+                    if (
+                      item === "." &&
+                      Array.from(inputValue).indexOf(".") !== -1
+                    ) {
+                      return;
+                    }
+                    setInputValue(inputValue + item);
+                  }}
+                  className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  {item}
+                </button>
+              )
+            )}
           </div>
           <div>
             <button
