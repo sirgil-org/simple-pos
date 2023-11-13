@@ -86,7 +86,7 @@ export default function Home() {
           }
         </nav>
 
-        <main role="main" className="sm:ml-64 w-auto min-h-screen py-5 px-3">
+        <main role="main" className="sm:ml-64 w-auto h-screen py-5 px-3">
           {/* Router specifies which component to insert here as the main content */}
             <PageRouter />
         </main>
