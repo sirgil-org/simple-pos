@@ -75,7 +75,7 @@ export default function Home() {
           }
         </nav>
 
-        <nav role="mobile nav" className="sm:hidden bg-base-200/90 backdrop-blur-md px-2 py-1 fixed flex justify-around items-center z-50 bottom-0 w-full">
+        <nav role="mobile nav" className="sm:hidden bg-base-200/90 backdrop-blur-md px-2 py-2 fixed flex justify-around items-center z-50 bottom-0 w-full">
           {
             routes.map((route, key: Key) => (
               <Link to={route.path} className="flex flex-col gap-0.5 justify-center items-center !text-base-content " key={key + route.name}>

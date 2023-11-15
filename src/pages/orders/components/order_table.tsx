@@ -3,7 +3,7 @@ import moment from "moment";
 import { useState } from "react";
 
 import { LuArrowRightToLine } from "react-icons/lu";
-import { SlNote } from "react-icons/sl";
+import { SlArrowRight, SlNote } from "react-icons/sl";
 
 export default function OrderTable({
   orders,
@@ -26,79 +26,117 @@ export default function OrderTable({
           <span>No orders</span>
         </div>
         :
-        <table className="table table-auto">
-          <thead className="">
-            <tr>
-              <th>Order number</th>
-              <th>Items</th>
-              <th>Created</th>
-              <th><span className="sr-only"></span></th>
-            </tr>
-          </thead>
-          <tbody className="">
-            {orders?.map((order: any) => (
-              <tr
-                key={order.id}
-                className="cursor-pointer"
-                onClick={() => {
-                  setSelectedOrder(order);
-                  setOpenModal("order-info-modal");
-                }}
-              >
-                <td>{order.order_number}</td>
-                <td>
-                  <div className="truncate overflow-ellipsis overflow-hidden max-w-[150px]">
-                    {order.product_order.map(
-                      (item: any) =>
-                        item.quantity + "x" + item.products.title + ", "
-                    )}
-                  </div>
-                </td>
-                <td>{moment(order.created_at).fromNow()}</td>
-                <td>
-                  <div className="flex items-center space-x-3">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedOrder(order);
-                        setOpenModal("order-status-modal");
-                      }}
-                    >
-                      <SlNote />
-                    </button>
-
-                    {!["cancelled", "collected"].includes(
-                      status.toLowerCase()
-                    ) && (
-                        <div
-                          onClick={async (e) => {
+        <div className="my-2">
+          <div className="hidden sm:block px-3">
+            <table className="table table-auto w-full">
+              <thead className="">
+                <tr>
+                  <th>Order number</th>
+                  <th>Items</th>
+                  <th>Created</th>
+                  <th><span className="sr-only"></span></th>
+                </tr>
+              </thead>
+              <tbody className="">
+                {orders?.map((order: any) => (
+                  <tr
+                    key={order.id}
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setSelectedOrder(order);
+                      setOpenModal("order-info-modal");
+                    }}
+                  >
+                    <td>{order.order_number}</td>
+                    <td>
+                      <div className="truncate overflow-ellipsis overflow-hidden max-w-[150px]">
+                        {order.product_order.map(
+                          (item: any) =>
+                            item.quantity + "x" + item.products.title + ", "
+                        )}
+                      </div>
+                    </td>
+                    <td>{moment(order.created_at).fromNow()}</td>
+                    <td>
+                      <div className="flex items-center space-x-3">
+                        <button
+                          className=""
+                          onClick={(e) => {
                             e.stopPropagation();
-                            setLoading((prev: any) => [
-                              ...prev,
-                              order.order_number,
-                            ]);
-                            await handleChangeStatus(
-                              possibleStatus[
-                              possibleStatus.indexOf(status.toLowerCase()) + 1
-                              ],
-                              order
-                            );
-                            setLoading([]);
+                            setSelectedOrder(order);
+                            setOpenModal("order-status-modal");
                           }}
                         >
-                          {loading.includes(order.order_number) ? (
-                            <Spinner />
-                          ) : (
-                            <LuArrowRightToLine />
+                          <SlNote />
+                        </button>
+
+                        {!["cancelled", "collected"].includes(
+                          status.toLowerCase()
+                        ) && (
+                            <div
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                setLoading((prev: any) => [
+                                  ...prev,
+                                  order.order_number,
+                                ]);
+                                await handleChangeStatus(
+                                  possibleStatus[
+                                  possibleStatus.indexOf(status.toLowerCase()) + 1
+                                  ],
+                                  order
+                                );
+                                setLoading([]);
+                              }}
+                            >
+                              {loading.includes(order.order_number) ? (
+                                <Spinner />
+                              ) : (
+                                <button className="">
+                                  <LuArrowRightToLine />
+                                </button>
+                              )}
+                            </div>
                           )}
-                        </div>
-                      )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {
+            orders?.map((order: any) => (
+              <div key={order.id} className="flex items-center justify-between gap-2 sm:hidden px-2 py-1.5 border-b-2">
+                <div className="w-16">
+                  <div className="mask mask-squircle w-12 h-12 bg-base-100 grid place-items-center">
+                    <span className="text-xl font-extrabold">
+                      {order.order_number}
+                    </span>
                   </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </div>
+
+                <div className="text-base flex-auto">
+                  {order.product_order.map(
+                    (item: any) =>
+                      item.quantity + "x" + item.products.title + ", "
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button className="p-3 bg-base-100 rounded-md ">
+                    <SlNote />
+                  </button>
+
+                  <button className="p-3 bg-base-100 rounded-md">
+                    <SlArrowRight />
+                  </button>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
       }
     </div>
   );
