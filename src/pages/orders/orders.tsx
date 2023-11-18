@@ -1,20 +1,37 @@
-import { useState, useEffect, useMemo, Key } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
 import addNotification from "react-push-notification";
 
-import ListSkeletal from "../../components/list_skeletal_loader";
-import OrderTable from "./components/order_table";
+import OrdersSkeletal from "./components/orders_skeletal";
 import moment from "moment";
-import OrderInfo from "./order_info";
 import OrderStatusModal from "./components/order_status_modal";
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonItemGroup,
+  IonLabel,
+  IonList,
+  IonNote,
+  IonSelect,
+  IonSelectOption,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
+import { ellipsisVerticalSharp } from "ionicons/icons";
+import OrderDetailsModal from "./components/order_details_modal";
 
-export default function Account() {
+export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
   const [orders, setOrders]: any = useState([]);
-  const [selectedOrder, setSelectedOrder]: any = useState("");
+  const [filteredOrders, setFilteredOrders]: any = useState([]);
+  const [selectedOrder, setSelectedOrder]: any = useState({});
   const [openModal, setOpenModal] = useState(undefined);
-  const [activeTab, setActiveTab] = useState('waiting');
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleChangeStatus = async (status: string, currentOrder: any) => {
     const to_update: any = { status };
@@ -57,41 +74,42 @@ export default function Account() {
     }
   };
 
-  const onSwitchTab = (value: string) => {
-    setActiveTab(value)
+  function dismiss() {
+    setIsOpen(false);
+  }
+
+  async function getOrders() {
+    setLoading(true);
+
+    const { data, error } = await supabase.from("orders").select(`
+      id, 
+      order_number, 
+      status,
+      created_at,
+      phone_number,
+      product_order ( 
+        sku, 
+        quantity, 
+        created_at, 
+        order_id, 
+        price,
+        products (
+          title
+        )
+      )
+    `);
+
+    if (error) {
+      toast.warn(error.message || "Could not fetch orders...");
+    } else if (data) {
+      setOrders(data);
+      setFilteredOrders(data);
+    }
+
+    setLoading(false);
   }
 
   useEffect(() => {
-    async function getOrders() {
-      setLoading(true);
-
-      const { data, error } = await supabase.from("orders").select(`
-        id, 
-        order_number, 
-        status,
-        created_at,
-        phone_number,
-        product_order ( 
-          sku, 
-          quantity, 
-          created_at, 
-          order_id, 
-          price,
-          products (
-            title
-          )
-        )
-      `);
-
-      if (error) {
-        toast.warn(error.message || "Could not fetch orders...");
-      } else if (data) {
-        setOrders(data);
-      }
-
-      setLoading(false);
-    }
-
     getOrders();
   }, []);
 
@@ -116,73 +134,96 @@ export default function Account() {
   }, []);
 
   return (
-    <div className="w-full">
-      {loading ? (
-        <ListSkeletal />
-      ) : (
-        <>
-          <div className="lg:ml-10 tabs tabs-boxed my-3 lg:w-fit !justify-center">
-            {
-              ["waiting", "preparing", "ready", "collected", "cancelled", "all"].map((item: string, key: Key) => (
-                <a key={key} className={`capitalize tab ${activeTab === item ? 'tab-active' : ''} `} onClick={() => onSwitchTab(item)}>{item}</a>
-              ))
-            }
-          </div>
+    <>
+      <IonHeader translucent>
+        <IonToolbar>
+          <IonTitle>Orders</IonTitle>
+          <IonButtons collapse={true} slot="end">
+            <IonButton>
+              <div>All</div>
+              <IonIcon icon={ellipsisVerticalSharp} />
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent fullscreen>
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonTitle size="large">Orders</IonTitle>
 
-          <div className="lg:pl-10">
-            <OrderTable
-              orders={activeTab === "all" ? orders : orders.filter((order: any) => order.status === activeTab)}
-              setSelectedOrder={setSelectedOrder}
-              setOpenModal={setOpenModal}
-              status={activeTab}
-              handleChangeStatus={handleChangeStatus}
-            />
-            {/* <OrderTable
-              orders={orders.filter(
-                (order: any) => order.status === "preparing"
-              )}
-              setSelectedOrder={setSelectedOrder}
-              setOpenModal={setOpenModal}
-              status="Preparing"
-              handleChangeStatus={handleChangeStatus}
-            />
-
-            <OrderTable
-              orders={orders.filter((order: any) => order.status === "ready")}
-              setSelectedOrder={setSelectedOrder}
-              setOpenModal={setOpenModal}
-              status="Ready"
-              handleChangeStatus={handleChangeStatus}
-            />
-
-            <OrderTable
-              orders={orders.filter(
-                (order: any) => order.status === "collected"
-              )}
-              setSelectedOrder={setSelectedOrder}
-              setOpenModal={setOpenModal}
-              status="Collected"
-            />
-
-            <OrderTable
-              orders={orders.filter(
-                (order: any) => order.status === "cancelled"
-              )}
-              setSelectedOrder={setSelectedOrder}
-              setOpenModal={setOpenModal}
-              status="Cancelled"
-            /> */}
-          </div>
-        </>
-      )}
-
-      {selectedOrder && (
-        <OrderInfo
-          selectedOrder={selectedOrder}
-          openModal={openModal}
-          setOpenModal={setOpenModal}
-        />
-      )}
+            <IonButtons collapse={true} slot="end">
+              <IonButton>
+                <IonList>
+                  <IonItem>
+                    <IonSelect
+                      justify="end"
+                      aria-label="Order status"
+                      toggleIcon={ellipsisVerticalSharp}
+                      interface="popover"
+                      placeholder="all"
+                      onIonChange={(e: any) => {
+                        if (e.detail.value === "all") {
+                          return setFilteredOrders(orders);
+                        }
+                        setFilteredOrders(
+                          orders.filter((o: any) => o.status === e.detail.value)
+                        );
+                      }}
+                    >
+                      <IonSelectOption value="all">All</IonSelectOption>
+                      <IonSelectOption value="waiting">Waiting</IonSelectOption>
+                      <IonSelectOption value="preparing">
+                        Preparing
+                      </IonSelectOption>
+                      <IonSelectOption value="collected">
+                        Collected
+                      </IonSelectOption>
+                      <IonSelectOption value="ready">Ready</IonSelectOption>
+                      <IonSelectOption value="cancelled">
+                        Cancelled
+                      </IonSelectOption>
+                    </IonSelect>
+                  </IonItem>
+                </IonList>
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        {loading ? (
+          <OrdersSkeletal />
+        ) : (
+          <>
+            <div className="lg:pl-10">
+              <IonItemGroup>
+                {filteredOrders.map((order: any, index: any) => (
+                  <IonItem
+                    button
+                    key={index}
+                    onClick={() => {
+                      setSelectedOrder(order);
+                      setIsOpen(true);
+                    }}
+                  >
+                    <IonLabel>
+                      {order.product_order.map(
+                        (order: any) =>
+                          ` ${order.quantity}  x ${order.products.title}, `
+                      )}
+                      <div>N$ </div>
+                    </IonLabel>
+                    <IonNote slot="end">#{order.order_number}</IonNote>
+                  </IonItem>
+                ))}
+              </IonItemGroup>
+              <OrderDetailsModal
+                dismiss={dismiss}
+                selectedOrder={selectedOrder}
+                isOpen={isOpen}
+              />
+            </div>
+          </>
+        )}
+      </IonContent>
 
       <OrderStatusModal
         openModal={openModal}
@@ -190,6 +231,6 @@ export default function Account() {
         selectedOrder={selectedOrder}
         handleChangeStatus={handleChangeStatus}
       />
-    </div>
+    </>
   );
 }

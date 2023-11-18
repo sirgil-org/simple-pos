@@ -1,9 +1,24 @@
-import { Key, useEffect, useState } from "react";
-import { LuTrash } from "react-icons/lu";
+import React, { Key, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { supabase } from "../../supabase_client";
 import { NewOrderSkeletal } from "./components";
-import { Spinner } from "flowbite-react";
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonItemGroup,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
+import { OrderModal } from "./modals";
+import OrderList from "./components/order_list";
+import OrderSummary from "./components/order_summary";
+import { trash } from "ionicons/icons";
 
 export default function NewOrder() {
   const [loading, setLoading] = useState(true);
@@ -13,6 +28,11 @@ export default function NewOrder() {
   const [order, setOrder]: any = useState({});
   const [inputValue, setInputValue] = useState("0");
   const [totalCost, setTotalCost] = useState(0);
+
+  const modal = useRef<HTMLIonModalElement>(null);
+  const slidingItemRef = useRef<HTMLIonItemSlidingElement>(null);
+
+  
 
   const fetchData = async () => {
     setLoading(true);
@@ -78,10 +98,8 @@ export default function NewOrder() {
       change: inputValue - total_cost,
     });
 
-    setOrder([]);
-    setTotalCost(0);
-    setInputValue("0");
-
+    reset_order();
+    dismiss();
     setSavingOrder(false);
 
     if (error) {
@@ -101,154 +119,149 @@ export default function NewOrder() {
     setTotalCost(total_cost);
   };
 
-  if (loading) {
-    return <NewOrderSkeletal />;
+  function dismiss() {
+    modal.current?.dismiss();
   }
 
+  const reset_order = () => {
+    setTotalCost(0);
+    setInputValue("0");
+    setOrder({});
+  };
+
   return (
-    <div className="flex h-full space-x-4">
-      <div className="w-full overflow-y-auto">
-        <div className="grid grid-cols-3 gap-2">
-          {products.map((product: any, key: Key) => {
-            return (
-              <div key={key}>
-                <img
-                  className="cursor-pointer w-max"
-                  key={product.sku}
-                  src={product.image_url}
-                  onClick={() => {
-                    setOrder((prev: any) => {
-                      const old_count = order[product.sku];
+    <>
+      <IonHeader translucent>
+        <IonToolbar>
+          <IonTitle>Create Order</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent fullscreen>
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonTitle size="large">Create Order</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <div className="flex h-full relative space-x-4 ion-padding">
+          {/* <div className="w-full overflow-y-auto"> */}
 
-                      const new_data = {
-                        ...prev,
-                        [product.sku]: old_count > 0 ? old_count + 1 : 1,
-                      };
+          {loading ? (
+            <NewOrderSkeletal />
+          ) : (
+            <div>
+              <div className="grid grid-cols-3 md:grid-cols-5 gap-2">
+                {products.map((product: any, key: Key) => {
+                  return (
+                    <div key={key}>
+                      <img
+                        className="cursor-pointer w-max"
+                        key={product.sku}
+                        src={product.image_url}
+                        onClick={() => {
+                          setOrder((prev: any) => {
+                            const old_count = order[product.sku];
 
-                      calculate_total(new_data);
-                      return new_data;
-                    });
-                  }}
-                />
-                <div>
-                  <div>{product.title}</div>
-                  <div>N$ {product.price}</div>
-                </div>
+                            const new_data = {
+                              ...prev,
+                              [product.sku]: old_count > 0 ? old_count + 1 : 1,
+                            };
+
+                            calculate_total(new_data);
+                            return new_data;
+                          });
+                        }}
+                      />
+                      <div>
+                        <div className="truncate text-ellipsis">
+                          {product.title}
+                        </div>
+                        <div>N$ {product.price}</div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
-      </div>
+            </div>
+          )}
 
-      <div className="min-w-[350px] flex flex-col my-3 h-full">
-        <div className="grow overflow-y-auto px-4">
-          {Object.keys(order).map((key: any) => {
-            const item = products.find((product: any) => product.sku === key);
-            return (
-              <div key={item.sku} className="flex justify-between mb-2">
-                <div className="flex space-x-4 items-center">
-                  <div className="flex items-center justify-center rounded-full h-8 w-8 bg-secondary ">
-                    {order[key]}
-                  </div>
-                  <div>{item?.title}</div>
-                </div>
+          <div className="min-w-[350px] hidden md:flex flex-col h-full">
+            <div className="grow overflow-y-auto px-4">
+              <OrderList
+                products={products}
+                order={order}
+                calculate_total={calculate_total}
+                setOrder={setOrder}
+              />
+            </div>
 
-                <div className="flex items-center space-x-2">
-                  <div
-                    className="cursor-pointer"
-                    onClick={() => {
-                      setOrder((prev: any) => {
-                        delete prev[key];
-
-                        calculate_total({ ...prev });
-                        return { ...prev };
-                      });
-                    }}
-                  >
-                    <LuTrash />
-                  </div>
-                  <div>N$ {item.price * order[key]}</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* payment modal */}
-        <div className="bg-base-200 rounded-md p-6 mb-5">
-          <div className="flex justify-between text-3xl font-bold">
-            <div>Total</div>
-            <div>N$ {totalCost}</div>
-          </div>
-
-          <div className="mb-6">
-            <label
-              htmlFor="amount"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Amount paid
-            </label>
-            <input
-              type="text"
-              id="amount"
-              // className="bg-gray-50 border border-gray-300 text-gray-900 text-3xl rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              className="input input-lg w-full"
-              required
-              readOnly
-              // onChange={(e: any) => setInputValue(e.target.value)}
-              value={inputValue}
-            />
-            <div
-              className={`text-end text-lg font-bold ${
-                totalCost > inputValue ? "text-red-600" : "text-green-400"
-              } ${Object.keys(order).length === 0 ? "invisible" : ""}`}
-            >
-              {inputValue - totalCost}
+            {/* payment modal */}
+            <div className="bg-base-200 rounded-md p-6 mb-5">
+              <OrderSummary
+                order={order}
+                totalCost={totalCost}
+                inputValue={inputValue}
+                setInputValue={setInputValue}
+                onSubmit={onSubmit}
+                savingOrder={savingOrder}
+              />
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-2 mb-5">
-            {["7", "8", "9", "4", "5", "6", "1", "2", "3", ".", "0", "del"].map(
-              (item: any) => (
-                <button
-                  key={item}
-                  onClick={() => {
-                    if (item === "del") {
-                      return setInputValue("0");
-                    }
 
-                    if (inputValue[0] === "0" && item !== ".") {
-                      return setInputValue(item);
-                    }
-
-                    if (
-                      item === "." &&
-                      Array.from(inputValue).indexOf(".") !== -1
-                    ) {
-                      return;
-                    }
-                    setInputValue(inputValue + item);
-                  }}
-                  className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  {item}
-                </button>
-              )
-            )}
-          </div>
-          <div>
-            <button
-              type="submit"
-              disabled={
-                Object.keys(order).length === 0 || totalCost > inputValue
-              }
-              onClick={onSubmit}
-              className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              {savingOrder ? <Spinner /> : "Submit"}
-            </button>
-          </div>
+          {/* <div className="absolute bottom-0 left-0 h-[100px] bg-red-400 w-full"></div> */}
         </div>
-      </div>
-    </div>
+        <OrderModal
+          modal={modal}
+          dismiss={dismiss}
+          products={products}
+          order={order}
+          calculate_total={calculate_total}
+          setOrder={setOrder}
+          totalCost={totalCost}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
+          onSubmit={onSubmit}
+          savingOrder={savingOrder}
+          reset_order={reset_order}
+        />
+        <IonItemGroup
+          className={`${
+            Object.keys(order).length === 0 ? "hidden" : ""
+          } fixed bottom-0 w-full`}
+        >
+          <IonItemSliding ref={slidingItemRef}>
+            <IonItem>
+              <div className="w-full grid grid-cols-2 gap-2 pb-2">
+                <div>
+                  <div>You've added</div>
+                  <div className="text-2xl font-semibold">
+                    {Object.keys(order).length} Items
+                  </div>
+                </div>
+                <IonButton id="open-modal" expand="block">
+                  Continue
+                </IonButton>
+              </div>
+            </IonItem>
+            <IonItemOptions
+              onIonSwipe={() => {
+                reset_order();
+                slidingItemRef.current?.close();
+              }}
+            >
+              <IonItemOption
+                color="danger"
+                expandable={true}
+                onClick={() => {
+                  reset_order();
+                  slidingItemRef.current?.close();
+                }}
+              >
+                <IonIcon slot="icon-only" icon={trash}></IonIcon>
+              </IonItemOption>
+            </IonItemOptions>
+          </IonItemSliding>
+        </IonItemGroup>
+      </IonContent>
+    </>
   );
 }

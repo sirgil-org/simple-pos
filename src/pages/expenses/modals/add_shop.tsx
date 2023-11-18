@@ -1,39 +1,53 @@
-import { Modal, Label, Radio, Spinner } from "flowbite-react";
+import {
+  IonButtons,
+  IonButton,
+  IonModal,
+  IonHeader,
+  IonContent,
+  IonToolbar,
+} from "@ionic/react";
+import { Spinner } from "flowbite-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { supabase } from "../../../supabase_client";
 import { toast } from "react-toastify";
+import { supabase } from "../../../supabase_client";
 
-export default function AddShopModal({ openModal, setOpenModal }: any) {
+export default function AddShopModal({ dismiss, isOpen }: any) {
   const { register, handleSubmit, reset } = useForm();
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async ({ name }: any) => {
     setLoading(true);
     const { error } = await supabase.from("shops").insert({ name });
-    setLoading(false)
+    setLoading(false);
 
-    if(error){
-      return toast.error(error.message || "Could not add shop")
+    if (error) {
+      return toast.error(error.message || "Could not add shop");
     }
 
-    reset()
-    setOpenModal(undefined);
+    reset();
+    dismiss();
   };
   return (
-    <Modal
-      dismissible
-      show={openModal === "add-shop-modal"}
-      onClose={() => setOpenModal(undefined)}
-      size="md"
+    <IonModal
+      isOpen={isOpen}
+      presentingElement={document.getElementById("main-content")!}
+      onWillDismiss={dismiss}
     >
-      <Modal.Header>Add Shop</Modal.Header>
-      <Modal.Body>
+      <IonHeader>
+        <IonToolbar>
+          {/* <IonTitle>Modal</IonTitle> */}
+          <IonButtons slot="end">
+            <IonButton onClick={() => dismiss()}>Close</IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent className="ion-padding">
         <form id="change-status-form" onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-6">
             <label
               htmlFor="name"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-sm font-medium"
             >
               Shop name
             </label>
@@ -41,7 +55,7 @@ export default function AddShopModal({ openModal, setOpenModal }: any) {
               {...register("name", { required: true })}
               type="text"
               id="name"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-3xl rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="border border-gray-300 text-3xl rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             />
           </div>
 
@@ -54,7 +68,7 @@ export default function AddShopModal({ openModal, setOpenModal }: any) {
             </button>
           </div>
         </form>
-      </Modal.Body>
-    </Modal>
+      </IonContent>
+    </IonModal>
   );
 }

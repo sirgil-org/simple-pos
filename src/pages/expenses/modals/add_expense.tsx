@@ -1,10 +1,18 @@
-import { Modal, Spinner } from "flowbite-react";
-import { useEffect, useState } from "react";
+import {
+  IonButtons,
+  IonButton,
+  IonModal,
+  IonHeader,
+  IonContent,
+  IonToolbar,
+} from "@ionic/react";
+import { Spinner } from "flowbite-react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { supabase } from "../../../supabase_client";
 import { toast } from "react-toastify";
+import { supabase } from "../../../supabase_client";
 
-export default function AddPurchaseModal({ openModal, setOpenModal }: any) {
+export default function AddExpenseModal({ dismiss, isOpen }: any) {
   const { register, handleSubmit, reset } = useForm();
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +31,7 @@ export default function AddPurchaseModal({ openModal, setOpenModal }: any) {
     }
 
     reset();
-    setOpenModal(undefined);
+    dismiss();
   };
 
   const fetchData = async () => {
@@ -43,19 +51,20 @@ export default function AddPurchaseModal({ openModal, setOpenModal }: any) {
   useEffect(() => {
     fetchData();
   }, []);
-
-  if (loadingShops) {
-    return <></>;
-  }
   return (
-    <Modal
-      dismissible
-      show={openModal === "add-purchase-modal"}
-      onClose={() => setOpenModal(undefined)}
-      size="md"
+    <IonModal
+      isOpen={isOpen}
+      presentingElement={document.getElementById("main-content")!}
+      onWillDismiss={dismiss}
     >
-      <Modal.Header>Add Purchase</Modal.Header>
-      <Modal.Body>
+      <IonHeader>
+        <IonToolbar>
+          <IonButtons slot="end">
+            <IonButton onClick={() => dismiss()}>Close</IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent className="ion-padding">
         <form id="change-status-form" onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-6">
             <label
@@ -115,7 +124,7 @@ export default function AddPurchaseModal({ openModal, setOpenModal }: any) {
             </button>
           </div>
         </form>
-      </Modal.Body>
-    </Modal>
+      </IonContent>
+    </IonModal>
   );
 }

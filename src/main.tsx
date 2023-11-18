@@ -10,10 +10,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <HelmetProvider>
+    {/* <HelmetProvider> */}
       <App />
-      <ToastContainer />
+      <ToastContainer style={{ paddingTop: "env(safe-area-inset-top)" }} />
     
-    </HelmetProvider>
+    {/* </HelmetProvider> */}
   </React.StrictMode>
 );
