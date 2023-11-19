@@ -1,7 +1,5 @@
-import { Spinner, Table } from "flowbite-react";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { AddExpenseModal } from "../modals";
 import { toast } from "react-toastify";
 import { supabase } from "../../../supabase_client";
@@ -22,7 +20,7 @@ import {
 } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 
-export default function ShopsPage() {
+export default function ShopsPage(props) {
   const [expenses, setExpenses]: any = useState([]);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -35,15 +33,17 @@ export default function ShopsPage() {
     async function getOrders() {
       setLoading(true);
 
-      const { data, error } = await supabase.from("expenses").select(`
-        id,
-        invoice_number,
-        amount,
-        created_at,
-        shops ( 
-          name
+      const { data, error } = await supabase
+        .from("expenses")
+        .select(
+          `
+            id,
+            invoice_number,
+            amount,
+            created_at
+      `
         )
-      `);
+        .eq("shop_id", props.match.params.id);
 
       if (error) {
         toast.warn(error.message || "Could not fetch expenses...");
@@ -66,12 +66,7 @@ export default function ShopsPage() {
             <IonBackButton defaultHref="/expenses" />
           </IonButtons>
           <IonButtons collapse={true} slot="end">
-            <IonButton
-              onClick={() => {
-                console.log(".....");
-                setIsOpen(true);
-              }}
-            >
+            <IonButton onClick={() => setIsOpen(true)}>
               <IonIcon icon={addOutline} />
             </IonButton>
           </IonButtons>
@@ -82,12 +77,7 @@ export default function ShopsPage() {
           <IonToolbar>
             <IonTitle size="large">Shops</IonTitle>
             <IonButtons collapse={true} slot="end">
-              <IonButton
-                onClick={() => {
-                  console.log("......in shops opening");
-                  setIsOpen(true);
-                }}
-              >
+              <IonButton onClick={() => setIsOpen(true)}>
                 <IonIcon icon={addOutline} />
               </IonButton>
             </IonButtons>
@@ -97,13 +87,11 @@ export default function ShopsPage() {
           {expenses.map((expense: any, index: any) => (
             <IonItem button key={index} detail={false}>
               <IonLabel>
-                {/* <div>{expense.shops.name}</div> */}
                 <div>Invoice #{expense.invoice_number}</div>
                 <div className="text-sm">
                   {moment(expense.created_at).format("Do MMMM YYYY, h:mm a")}
                 </div>
               </IonLabel>
-              {/* <IonNote slot="start">{expense.invoice_number}</IonNote> */}
               <IonNote slot="end">
                 <div>N$ {expense.amount}</div>
               </IonNote>

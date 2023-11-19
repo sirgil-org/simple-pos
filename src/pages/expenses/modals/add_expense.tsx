@@ -95,7 +95,7 @@ export default function AddExpenseModal({ dismiss, isOpen }: any) {
             >
               <option selected>Choose a shop</option>
               {shops.map((shop: any) => (
-                <option value={shop.id}>{shop.name}</option>
+                <option key={shop.id} value={shop.id}>{shop.name}</option>
               ))}
             </select>
           </div>
