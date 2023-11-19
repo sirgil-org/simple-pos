@@ -189,48 +189,36 @@ export default function OrdersPage() {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        {loading ? (
-          <OrdersSkeletal />
-        ) : (
-          <>
-            <div className="lg:pl-10">
-              <IonItemGroup>
-                {filteredOrders.map((order: any, index: any) => (
-                  <IonItem
-                    button
-                    key={index}
-                    onClick={() => {
-                      setSelectedOrder(order);
-                      setIsOpen(true);
-                    }}
-                  >
-                    <IonLabel>
-                      {order.product_order.map(
-                        (order: any) =>
-                          ` ${order.quantity}  x ${order.products.title}, `
-                      )}
-                      <div>N$ </div>
-                    </IonLabel>
-                    <IonNote slot="end">#{order.order_number}</IonNote>
-                  </IonItem>
-                ))}
-              </IonItemGroup>
-              <OrderDetailsModal
-                dismiss={dismiss}
-                selectedOrder={selectedOrder}
-                isOpen={isOpen}
-              />
-            </div>
-          </>
-        )}
-      </IonContent>
 
-      <OrderStatusModal
-        openModal={openModal}
-        setOpenModal={setOpenModal}
-        selectedOrder={selectedOrder}
-        handleChangeStatus={handleChangeStatus}
-      />
+        <div>
+          <IonList>
+            {filteredOrders.map((order: any, index: any) => (
+              <IonItem
+                button
+                key={index}
+                onClick={() => {
+                  setSelectedOrder(order);
+                  setIsOpen(true);
+                }}
+              >
+                <IonLabel>
+                  {order.product_order.map(
+                    (order: any) =>
+                      ` ${order.quantity}  x ${order.products.title}, `
+                  )}
+                  <div>N$ </div>
+                </IonLabel>
+                <IonNote slot="end">#{order.order_number}</IonNote>
+              </IonItem>
+            ))}
+          </IonList>
+          <OrderDetailsModal
+            dismiss={dismiss}
+            selectedOrder={selectedOrder}
+            isOpen={isOpen}
+          />
+        </div>
+      </IonContent>
     </>
   );
 }

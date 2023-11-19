@@ -55,7 +55,7 @@ export default function AddShopModal({ dismiss, isOpen }: any) {
               {...register("name", { required: true })}
               type="text"
               id="name"
-              className="border border-gray-300 text-3xl rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="input input-lg w-full border border-gray-300"
             />
           </div>
 

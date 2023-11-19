@@ -1,24 +1,12 @@
 import { useEffect, useState } from "react";
-import { ReportSkeletal } from "./components";
-import {
-  AreaChart,
-  Area,
-  PieChart,
-  Pie,
-  Tooltip,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-} from "recharts";
+import { CustomAreaChart, ReportSkeletal } from "./components";
+
 import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
 import {
   IonCard,
   IonCardContent,
   IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
 } from "@ionic/react";
 
 export default function Reports() {
@@ -73,6 +61,8 @@ export default function Reports() {
     getOrders();
   }, []);
 
+
+
   if (loading) {
     return <ReportSkeletal />;
   }
@@ -81,39 +71,12 @@ export default function Reports() {
     <>
       <IonContent fullscreen>
         <div
-          // style={{ paddingTop: "env(safe-area-inset-top)" }}
+          style={{ paddingTop: "env(safe-area-inset-top)" }}
           className="grid md:grid-cols-12 gap-4"
         >
           <div className="md:col-span-9">
-            <ResponsiveContainer width="100%" height={400}>
-              <AreaChart
-                data={orders}
-                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-              >
-                <defs>
-                  <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-
-                <Area
-                  type="monotone"
-                  dataKey="total_sales"
-                  stroke="#82ca9d"
-                  fillOpacity={1}
-                  fill="url(#colorPv)"
-                />
-                {/* <Line type="monotone" dataKey="pv" stroke="#387908" /> */}
-                {/* <YAxis /> */}
-                <Tooltip />
-                <XAxis dataKey="period" />
-              </AreaChart>
-            </ResponsiveContainer>
+          <CustomAreaChart data={orders} />
+          {/* <ContainerComponent historicalData={orders} /> */}
           </div>
           <div>
             <IonCard>
@@ -164,57 +127,3 @@ export default function Reports() {
     </>
   );
 }
-
-const data02 = [
-  {
-    name: "Group A",
-    value: 2400,
-  },
-  {
-    name: "Group B",
-    value: 4567,
-  },
-  {
-    name: "Group C",
-    value: 1398,
-  },
-  {
-    name: "Group D",
-    value: 9800,
-  },
-  {
-    name: "Group E",
-    value: 3908,
-  },
-  {
-    name: "Group F",
-    value: 4800,
-  },
-];
-
-const data01 = [
-  {
-    name: "Group A",
-    value: 400,
-  },
-  {
-    name: "Group B",
-    value: 300,
-  },
-  {
-    name: "Group C",
-    value: 300,
-  },
-  {
-    name: "Group D",
-    value: 200,
-  },
-  {
-    name: "Group E",
-    value: 278,
-  },
-  {
-    name: "Group F",
-    value: 189,
-  },
-];

@@ -19,6 +19,10 @@ import "@ionic/react/css/display.css";
 import { IonApp, setupIonicReact } from "@ionic/react";
 import "./theme/variables.css";
 
+import { Notifications } from "react-push-notification";
+import { Key } from "react";
+import { IonReactRouter } from "@ionic/react-router";
+
 setupIonicReact();
 
 // Home function that is reflected across the site

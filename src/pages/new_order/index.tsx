@@ -32,8 +32,6 @@ export default function NewOrder() {
   const modal = useRef<HTMLIonModalElement>(null);
   const slidingItemRef = useRef<HTMLIonItemSlidingElement>(null);
 
-  
-
   const fetchData = async () => {
     setLoading(true);
 
@@ -143,8 +141,6 @@ export default function NewOrder() {
           </IonToolbar>
         </IonHeader>
         <div className="flex h-full relative space-x-4 ion-padding">
-          {/* <div className="w-full overflow-y-auto"> */}
-
           {loading ? (
             <NewOrderSkeletal />
           ) : (
@@ -206,8 +202,6 @@ export default function NewOrder() {
               />
             </div>
           </div>
-
-          {/* <div className="absolute bottom-0 left-0 h-[100px] bg-red-400 w-full"></div> */}
         </div>
         <OrderModal
           modal={modal}

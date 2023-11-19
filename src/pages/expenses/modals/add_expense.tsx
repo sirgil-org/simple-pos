@@ -69,7 +69,7 @@ export default function AddExpenseModal({ dismiss, isOpen }: any) {
           <div className="mb-6">
             <label
               htmlFor="invoice_number"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-sm font-medium"
             >
               Invoice number
             </label>
@@ -77,21 +77,21 @@ export default function AddExpenseModal({ dismiss, isOpen }: any) {
               {...register("invoice_number", { required: true })}
               type="text"
               id="invoice_number"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="input input-lg w-full border border-gray-300"
             />
           </div>
 
           <div className="mb-6">
             <label
               htmlFor="shops"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-sm font-medium"
             >
               Shops
             </label>
             <select
               id="shops"
               {...register("shop", { required: true })}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="input input-lg w-full border border-gray-300"
             >
               <option selected>Choose a shop</option>
               {shops.map((shop: any) => (
@@ -102,15 +102,16 @@ export default function AddExpenseModal({ dismiss, isOpen }: any) {
           <div className="mb-6">
             <label
               htmlFor="amount"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-sm font-medium"
             >
               Amount
             </label>
             <input
               {...register("amount", { required: true })}
               type="number"
+              inputMode="numeric"
               id="amount"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="input input-lg w-full border border-gray-300"
               required
             />
           </div>
