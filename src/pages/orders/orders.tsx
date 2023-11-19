@@ -1,11 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
-import addNotification from "react-push-notification";
 
 import OrdersSkeletal from "./components/orders_skeletal";
 import moment from "moment";
-import OrderStatusModal from "./components/order_status_modal";
 import {
   IonButton,
   IonButtons,
@@ -13,7 +11,6 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
-  IonItemGroup,
   IonLabel,
   IonList,
   IonNote,
@@ -30,7 +27,6 @@ export default function OrdersPage() {
   const [orders, setOrders]: any = useState([]);
   const [filteredOrders, setFilteredOrders]: any = useState([]);
   const [selectedOrder, setSelectedOrder]: any = useState({});
-  const [openModal, setOpenModal] = useState(undefined);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleChangeStatus = async (status: string, currentOrder: any) => {
@@ -122,12 +118,6 @@ export default function OrdersPage() {
         (data) => {
           setOrders((prev: any) => [...prev, data.new]);
           toast.info("New order received!");
-          addNotification({
-            title: "Notice",
-            subtitle: "You\ve received an order...",
-            theme: "darkblue",
-            native: true, // when using native, your OS will handle theming.
-          });
         }
       )
       .subscribe();
@@ -190,34 +180,38 @@ export default function OrdersPage() {
           </IonToolbar>
         </IonHeader>
 
-        <div>
-          <IonList>
-            {filteredOrders.map((order: any, index: any) => (
-              <IonItem
-                button
-                key={index}
-                onClick={() => {
-                  setSelectedOrder(order);
-                  setIsOpen(true);
-                }}
-              >
-                <IonLabel>
-                  {order.product_order.map(
-                    (order: any) =>
-                      ` ${order.quantity}  x ${order.products.title}, `
-                  )}
-                  <div>N$ </div>
-                </IonLabel>
-                <IonNote slot="end">#{order.order_number}</IonNote>
-              </IonItem>
-            ))}
-          </IonList>
-          <OrderDetailsModal
-            dismiss={dismiss}
-            selectedOrder={selectedOrder}
-            isOpen={isOpen}
-          />
-        </div>
+        {loading ? (
+          <OrdersSkeletal />
+        ) : (
+          <div>
+            <IonList>
+              {filteredOrders.map((order: any, index: any) => (
+                <IonItem
+                  button
+                  key={index}
+                  onClick={() => {
+                    setSelectedOrder(order);
+                    setIsOpen(true);
+                  }}
+                >
+                  <IonLabel>
+                    {order.product_order.map(
+                      (order: any) =>
+                        ` ${order.quantity}  x ${order.products.title}, `
+                    )}
+                    <div>N$ </div>
+                  </IonLabel>
+                  <IonNote slot="end">#{order.order_number}</IonNote>
+                </IonItem>
+              ))}
+            </IonList>
+            <OrderDetailsModal
+              dismiss={dismiss}
+              selectedOrder={selectedOrder}
+              isOpen={isOpen}
+            />
+          </div>
+        )}
       </IonContent>
     </>
   );
