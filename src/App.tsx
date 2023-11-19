@@ -1,6 +1,4 @@
 import PageRouter from "./components/router.tsx";
-import Seo from "./components/seo.tsx";
-
 import "@ionic/react/css/core.css";
 
 /* Basic CSS for apps built with Ionic */
@@ -19,21 +17,13 @@ import "@ionic/react/css/display.css";
 import { IonApp, setupIonicReact } from "@ionic/react";
 import "./theme/variables.css";
 
-import { Notifications } from "react-push-notification";
-import { Key } from "react";
-import { IonReactRouter } from "@ionic/react-router";
-
 setupIonicReact();
 
 // Home function that is reflected across the site
 export default function App() {
   return (
     <IonApp>
-        {/* <Notifications />
-        <Seo /> */}
         <PageRouter />
-        {/* </main>
-        </div> */}
     </IonApp>
   );
 }
