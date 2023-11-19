@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { LuArrowRightToLine } from "react-icons/lu";
 import { SlArrowRight, SlNote } from "react-icons/sl";
+import possibleStatus from "../../../constants/status";
 
 export default function OrderTable({
   orders,
@@ -13,7 +14,6 @@ export default function OrderTable({
   status,
   handleChangeStatus,
 }: any) {
-  const possibleStatus = ["waiting", "preparing", "ready", "collected"];
   const [loading, setLoading]: any = useState([]);
 
   return (

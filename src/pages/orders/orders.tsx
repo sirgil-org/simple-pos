@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
 
@@ -10,6 +10,9 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
   IonLabel,
   IonList,
   IonNote,
@@ -18,8 +21,18 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { ellipsisVerticalSharp } from "ionicons/icons";
+import {
+  arrowForward,
+  banOutline,
+  checkmark,
+  checkmarkCircle,
+  checkmarkDoneOutline,
+  ellipsisVerticalSharp,
+} from "ionicons/icons";
 import OrderDetailsModal from "./components/order_details_modal";
+import possibleStatus, {
+  possibleStatusWithIcons,
+} from "../../constants/status";
 
 export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
@@ -27,6 +40,8 @@ export default function OrdersPage() {
   const [filteredOrders, setFilteredOrders]: any = useState([]);
   const [selectedOrder, setSelectedOrder]: any = useState({});
   const [isOpen, setIsOpen] = useState(false);
+
+  const slidingItemRef = useRef<HTMLIonItemSlidingElement>(null);
 
   const handleChangeStatus = async (status: string, currentOrder: any) => {
     const to_update: any = { status };
@@ -190,29 +205,97 @@ export default function OrdersPage() {
           <div>
             <IonList>
               {filteredOrders.map((order: any, index: any) => (
-                <IonItem
-                  button
-                  key={index}
-                  onClick={() => {
-                    setSelectedOrder(order);
-                    setIsOpen(true);
-                  }}
-                >
-                  <IonLabel>
-                    {order.product_order.map(
-                      (order: any) =>
-                        ` ${order.quantity}  x ${order.products.title}, `
-                    )}
-                    <div>
-                      N${" "}
-                      {order.product_order.reduce(
-                        (a, b) => a + b.price * b.quantity,
-                        0
+                <IonItemSliding key={order.id} ref={slidingItemRef}>
+                  <IonItem
+                    button
+                    key={index}
+                    onClick={() => {
+                      setSelectedOrder(order);
+                      setIsOpen(true);
+                    }}
+                  >
+                    <IonIcon
+                      slot="start"
+                      icon={possibleStatusWithIcons[order.status]}
+                    ></IonIcon>
+
+                    <IonLabel>
+                      {order.product_order.map(
+                        (order: any) =>
+                          ` ${order.quantity}  x ${order.products.title}, `
                       )}
-                    </div>
-                  </IonLabel>
-                  <IonNote slot="end">#{order.order_number}</IonNote>
-                </IonItem>
+                      <div>
+                        N${" "}
+                        {order.product_order.reduce(
+                          (a, b) => a + b.price * b.quantity,
+                          0
+                        )}
+                      </div>
+                    </IonLabel>
+                    <IonNote slot="end">#{order.order_number}</IonNote>
+                  </IonItem>
+                  {!["collected", "cancelled"].includes(order.status) && (
+                    <IonItemOptions
+                      side="start"
+                      onIonSwipe={async () => {
+                        console.log('updading....',   possibleStatus[
+                          possibleStatus.indexOf(order.status.toLowerCase()) +
+                            1
+                        ],)
+                        await handleChangeStatus(
+                          possibleStatus[
+                            possibleStatus.indexOf(order.status.toLowerCase()) +
+                              1
+                          ],
+                          order
+                        );
+                        // slidingItemRef.current?.close();
+                      }}
+                    >
+                      <IonItemOption color="success" expandable={true}>
+                        <IonIcon slot="icon-only" icon={arrowForward}></IonIcon>
+                      </IonItemOption>
+                    </IonItemOptions>
+                  )}
+                  <IonItemOptions
+                    side="end"
+                    onIonSwipe={async () => {
+                      await handleChangeStatus("cancelled", order);
+                      slidingItemRef.current?.close();
+                    }}
+                  >
+                    <IonItemOption
+                      color="primary"
+                      expandable={true}
+                      onClick={async () => {
+                        await handleChangeStatus("ready", order);
+                      }}
+                    >
+                      <IonIcon slot="icon-only" icon={checkmark}></IonIcon>
+                    </IonItemOption>
+                    <IonItemOption
+                      color="success"
+                      expandable={true}
+                      onClick={async () => {
+                        await handleChangeStatus("collected", order);
+                      }}
+                    >
+                      <IonIcon
+                        slot="icon-only"
+                        icon={checkmarkDoneOutline}
+                      ></IonIcon>
+                    </IonItemOption>
+                    <IonItemOption color="danger" expandable={true}>
+                      <IonIcon
+                        slot="icon-only"
+                        icon={banOutline}
+                        onClick={async () => {
+                          await handleChangeStatus("cancelled", order);
+                        }}
+                      ></IonIcon>
+                    </IonItemOption>
+                  </IonItemOptions>
+                </IonItemSliding>
               ))}
             </IonList>
             <OrderDetailsModal
