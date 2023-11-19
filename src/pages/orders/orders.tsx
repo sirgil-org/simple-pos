@@ -95,6 +95,8 @@ export default function OrdersPage() {
       )
     `);
 
+    console.log(data,'====')
+
     if (error) {
       toast.warn(error.message || "Could not fetch orders...");
     } else if (data) {
@@ -199,7 +201,7 @@ export default function OrdersPage() {
                       (order: any) =>
                         ` ${order.quantity}  x ${order.products.title}, `
                     )}
-                    <div>N$ </div>
+                    <div>N$ {order.product_order.reduce((a, b)=> a + (b.price * b.quantity),0)}</div>
                   </IonLabel>
                   <IonNote slot="end">#{order.order_number}</IonNote>
                 </IonItem>
