@@ -1,4 +1,4 @@
-import moment from "moment";
+import { format } from 'date-fns'
 import { useEffect, useState } from "react";
 import { AddExpenseModal } from "../modals";
 import { toast } from "react-toastify";
@@ -89,7 +89,7 @@ export default function ShopsPage(props) {
               <IonLabel>
                 <div>Invoice #{expense.invoice_number}</div>
                 <div className="text-sm">
-                  {moment(expense.created_at).format("Do MMMM YYYY, h:mm a")}
+                  {format(new Date(expense.created_at), 'dd MMMM yyyy, h:mm a')}
                 </div>
               </IonLabel>
               <IonNote slot="end">

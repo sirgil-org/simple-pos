@@ -3,7 +3,6 @@ import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
 
 import OrdersSkeletal from "./components/orders_skeletal";
-import moment from "moment";
 import {
   IonButton,
   IonButtons,
@@ -34,18 +33,18 @@ export default function OrdersPage() {
 
     switch (status) {
       case "preparing":
-        to_update.preparing_at = moment();
+        to_update.preparing_at = new Date();
         break;
       case "ready":
-        to_update.completed_at = moment();
+        to_update.completed_at = new Date();
         break;
 
       case "collected":
-        to_update.collected_at = moment();
+        to_update.collected_at = new Date();
         break;
 
       case "cancelled":
-        to_update.cancelled_at = moment();
+        to_update.cancelled_at = new Date();
         break;
     }
 

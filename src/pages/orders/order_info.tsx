@@ -1,5 +1,5 @@
 import { Modal } from "flowbite-react";
-import moment from "moment";
+import { formatDistance } from "date-fns";
 
 export default function OrderInfo({
   selectedOrder,
@@ -17,7 +17,12 @@ export default function OrderInfo({
       <Modal.Body>
         <div className="flex justify-between">
           <div>Created</div>
-          <div> {moment(selectedOrder.created_at).fromNow()}</div>
+          <div>
+            {selectedOrder.created_at &&
+              formatDistance(new Date(selectedOrder.created_at), new Date(), {
+                addSuffix: true,
+              })}
+          </div>
         </div>
         {selectedOrder.product_order.map((order: any) => (
           <div key={order.sku} className="flex justify-between">

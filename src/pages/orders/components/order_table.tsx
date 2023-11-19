@@ -1,5 +1,6 @@
-import { Spinner, Table } from "flowbite-react";
-import moment from "moment";
+import { Spinner } from "flowbite-react";
+import { formatDistance } from "date-fns";
+
 import { useState } from "react";
 
 import { LuArrowRightToLine } from "react-icons/lu";
@@ -21,11 +22,11 @@ export default function OrderTable({
         {status} Orders ({orders.length})
       </div>
 
-      {!orders.length ?
+      {!orders.length ? (
         <div className="h-36 grid place-items-center">
           <span>No orders</span>
         </div>
-        :
+      ) : (
         <div className="my-2">
           <div className="hidden sm:block px-3">
             <table className="table table-auto w-full">
@@ -34,7 +35,9 @@ export default function OrderTable({
                   <th>Order number</th>
                   <th>Items</th>
                   <th>Created</th>
-                  <th><span className="sr-only"></span></th>
+                  <th>
+                    <span className="sr-only"></span>
+                  </th>
                 </tr>
               </thead>
               <tbody className="">
@@ -56,7 +59,11 @@ export default function OrderTable({
                         )}
                       </div>
                     </td>
-                    <td>{moment(order.created_at).fromNow()}</td>
+                    <td>
+                      {formatDistance(new Date(order.created_at), new Date(), {
+                        addSuffix: true,
+                      })}
+                    </td>
                     <td>
                       <div className="flex items-center space-x-3">
                         <button
@@ -73,31 +80,32 @@ export default function OrderTable({
                         {!["cancelled", "collected"].includes(
                           status.toLowerCase()
                         ) && (
-                            <div
-                              onClick={async (e) => {
-                                e.stopPropagation();
-                                setLoading((prev: any) => [
-                                  ...prev,
-                                  order.order_number,
-                                ]);
-                                await handleChangeStatus(
-                                  possibleStatus[
-                                  possibleStatus.indexOf(status.toLowerCase()) + 1
-                                  ],
-                                  order
-                                );
-                                setLoading([]);
-                              }}
-                            >
-                              {loading.includes(order.order_number) ? (
-                                <Spinner />
-                              ) : (
-                                <button className="">
-                                  <LuArrowRightToLine />
-                                </button>
-                              )}
-                            </div>
-                          )}
+                          <div
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              setLoading((prev: any) => [
+                                ...prev,
+                                order.order_number,
+                              ]);
+                              await handleChangeStatus(
+                                possibleStatus[
+                                  possibleStatus.indexOf(status.toLowerCase()) +
+                                    1
+                                ],
+                                order
+                              );
+                              setLoading([]);
+                            }}
+                          >
+                            {loading.includes(order.order_number) ? (
+                              <Spinner />
+                            ) : (
+                              <button className="">
+                                <LuArrowRightToLine />
+                              </button>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -105,39 +113,39 @@ export default function OrderTable({
               </tbody>
             </table>
           </div>
-          {
-            orders?.map((order: any) => (
-              <div key={order.id} className="flex items-center justify-between gap-2 sm:hidden px-2 py-1.5 border-b-2">
-                <div className="w-16">
-                  <div className="mask mask-squircle w-12 h-12 bg-base-100 grid place-items-center">
-                    <span className="text-xl font-extrabold">
-                      {order.order_number}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="text-base flex-auto">
-                  {order.product_order.map(
-                    (item: any) =>
-                      item.quantity + "x" + item.products.title + ", "
-                  )}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button className="p-3 bg-base-100 rounded-md ">
-                    <SlNote />
-                  </button>
-
-                  <button className="p-3 bg-base-100 rounded-md">
-                    <SlArrowRight />
-                  </button>
+          {orders?.map((order: any) => (
+            <div
+              key={order.id}
+              className="flex items-center justify-between gap-2 sm:hidden px-2 py-1.5 border-b-2"
+            >
+              <div className="w-16">
+                <div className="mask mask-squircle w-12 h-12 bg-base-100 grid place-items-center">
+                  <span className="text-xl font-extrabold">
+                    {order.order_number}
+                  </span>
                 </div>
               </div>
-            ))
-          }
-        </div>
 
-      }
+              <div className="text-base flex-auto">
+                {order.product_order.map(
+                  (item: any) =>
+                    item.quantity + "x" + item.products.title + ", "
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button className="p-3 bg-base-100 rounded-md ">
+                  <SlNote />
+                </button>
+
+                <button className="p-3 bg-base-100 rounded-md">
+                  <SlArrowRight />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
