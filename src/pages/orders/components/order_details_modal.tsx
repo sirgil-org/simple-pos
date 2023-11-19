@@ -6,8 +6,14 @@ import {
   IonButtons,
   IonButton,
   IonContent,
+  IonItemGroup,
+  IonItem,
+  IonLabel,
+  IonNote,
+  IonList,
+  IonListHeader,
 } from "@ionic/react";
-import moment from "moment";
+import { format } from "date-fns";
 
 export default function OrderDetailsModal({
   dismiss,
@@ -29,21 +35,45 @@ export default function OrderDetailsModal({
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
-        <div className="flex flex-col space-y-5">
-          <div className="flex justify-between">
-            <div>Created</div>
-            <div> {moment(selectedOrder?.created_at).fromNow()}</div>
-          </div>
+      <IonContent>
+        <IonList inset={true}>
+          <IonItem>
+            <IonLabel>Status</IonLabel>
+            <IonNote slot="end" className="capitalize">
+              {selectedOrder.status}
+            </IonNote>
+          </IonItem>
+          <IonItem>
+            <IonLabel>Created</IonLabel>
+            {selectedOrder?.created_at && (
+              <IonNote slot="end">
+                {format(new Date(selectedOrder?.created_at), "dd MMM yyyy")}{" at "}
+                {format(new Date(selectedOrder?.created_at), "HH:mm")}
+              </IonNote>
+            )}
+          </IonItem>
+          <IonItem>
+            <IonLabel>Total</IonLabel>
+            <IonNote slot="end">
+              N${" "}
+              {selectedOrder.product_order?.reduce(
+                (a, b) => a + b.price * b.quantity,
+                0
+              )}
+            </IonNote>
+          </IonItem>
+        </IonList>
+        <IonList inset={true}>
+          <IonListHeader>Summary</IonListHeader>
           {selectedOrder?.product_order?.map((order: any) => (
-            <div key={order.sku} className="flex justify-between">
-              <div>
+            <IonItem key={order.sku}>
+              <IonLabel>
                 {order.quantity} x {order.products.title}
-              </div>
-              <div>N$ {order.quantity * order.price}</div>
-            </div>
+              </IonLabel>
+              <IonNote slot="end">N$ {order.quantity * order.price}</IonNote>
+            </IonItem>
           ))}
-        </div>
+        </IonList>
       </IonContent>
     </IonModal>
   );

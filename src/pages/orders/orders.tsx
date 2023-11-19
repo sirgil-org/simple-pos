@@ -77,7 +77,10 @@ export default function OrdersPage() {
   async function getOrders() {
     setLoading(true);
 
-    const { data, error } = await supabase.from("orders").select(`
+    const { data, error } = await supabase
+      .from("orders")
+      .select(
+        `
       id, 
       order_number, 
       status,
@@ -93,9 +96,9 @@ export default function OrdersPage() {
           title
         )
       )
-    `);
-
-    console.log(data,'====')
+    `
+      )
+      .order("created_at", { ascending: false });
 
     if (error) {
       toast.warn(error.message || "Could not fetch orders...");
@@ -201,7 +204,13 @@ export default function OrdersPage() {
                       (order: any) =>
                         ` ${order.quantity}  x ${order.products.title}, `
                     )}
-                    <div>N$ {order.product_order.reduce((a, b)=> a + (b.price * b.quantity),0)}</div>
+                    <div>
+                      N${" "}
+                      {order.product_order.reduce(
+                        (a, b) => a + b.price * b.quantity,
+                        0
+                      )}
+                    </div>
                   </IonLabel>
                   <IonNote slot="end">#{order.order_number}</IonNote>
                 </IonItem>
