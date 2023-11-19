@@ -20,26 +20,7 @@ export default function Reports() {
   useEffect(() => {
     async function getOrders() {
       setLoading(true);
-
-      //   const { data, error } = await supabase.from("orders").select(`
-      //         id,
-      //         order_number,
-      //         status,
-      //         created_at,
-      //         phone_number,
-      //         product_order (
-      //           sku,
-      //           quantity,
-      //           created_at,
-      //           order_id,
-      //           price,
-      //           products (
-      //             title
-      //           )
-      //         )
-      //       `);
-
-      // Call the function using a SQL query
+      
       const { data, error } = await supabase.rpc(
         "calculate_sales_by_time_unit",
         {
