@@ -265,6 +265,11 @@
   resolved "https://registry.yarnpkg.com/@capacitor/ios/-/ios-5.5.1.tgz#e07d0752b8934215a9defc2d22a537060f2dd7f7"
   integrity sha512-h00qt8u32t8eEbIkuG4IjR0r34YZC0sIXglDH8fRDdA84xDkTybmz3WtdpRWDzh6ukE2RIY7rmD7p410WSJ2yA==
 
+"@capacitor/splash-screen@^5.0.6":
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/@capacitor/splash-screen/-/splash-screen-5.0.6.tgz#d29320de49cc68add59e17fecb64aa2f1a08447f"
+  integrity sha512-9B8wSm89D+LlshFw8B+mjPU8pJNf1WOx2mkMjMvcH0/EqxNaE+ZaO8lPCX+9WvWSEZs3O3l11qiSnOFHeK0t9A==
+
 "@esbuild/android-arm64@0.18.20":
   version "0.18.20"
   resolved "https://registry.yarnpkg.com/@esbuild/android-arm64/-/android-arm64-0.18.20.tgz#984b4f9c8d0377443cc2dfcef266d02244593622"

@@ -125,7 +125,6 @@ export const options = {
 
 export default function CustomAreaChart({ data }) {
   const getStackedData = (data) => {
-    console.log(data, " --------------");
     return {
       labels: data.map((item) => item.period),
       datasets: [
@@ -133,8 +132,8 @@ export default function CustomAreaChart({ data }) {
           fill: true,
           label: "Dataset 2",
           data: data.map((item) => item.total_sales),
-          borderColor: "rgb(53, 162, 235)",
-          backgroundColor: "rgba(53, 162, 235, 0.5)",
+          borderColor: "#EF6335",
+          backgroundColor: "#7B1013",
         },
       ],
     };
