@@ -226,9 +226,12 @@ export default function NewOrder() {
             <IonItem>
               <div className="w-full grid grid-cols-2 gap-2 pb-2">
                 <div>
-                  <div>You've added</div>
+                  <div className="text-sm">
+                    You've added {Object.keys(order).length} Item
+                    {Object.keys(order).length > 1 ? "s" : ""}
+                  </div>
                   <div className="text-2xl font-semibold">
-                    {Object.keys(order).length} Items
+                    N$ {totalCost}
                   </div>
                 </div>
                 <IonButton id="open-modal" expand="block">
