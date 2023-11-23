@@ -1,4 +1,5 @@
 import { CapacitorConfig } from '@capacitor/cli';
+import { KeyboardResize, KeyboardStyle } from '@capacitor/keyboard';
 
 const config: CapacitorConfig = {
   appId: 'com.example.app',
@@ -8,6 +9,13 @@ const config: CapacitorConfig = {
     androidScheme: 'https',
     url: 'http://192.168.178.27:3000',
     cleartext: true,
+  },
+  plugins: {
+    Keyboard: {
+      resize: KeyboardResize.Body,
+      style: KeyboardStyle.Dark,
+      resizeOnFullScreen: true,
+    },
   },
 };
 
