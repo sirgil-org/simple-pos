@@ -202,8 +202,8 @@ export default function OrdersPage() {
         {loading ? (
           <OrdersSkeletal />
         ) : (
-          <div>
-            <IonList>
+          <>
+            <IonList className="pb-[100px]">
               {filteredOrders.map((order: any, index: any) => (
                 <IonItemSliding key={order.id} ref={slidingItemRef}>
                   <IonItem
@@ -303,7 +303,7 @@ export default function OrdersPage() {
               selectedOrder={selectedOrder}
               isOpen={isOpen}
             />
-          </div>
+          </>
         )}
       </IonContent>
     </>
