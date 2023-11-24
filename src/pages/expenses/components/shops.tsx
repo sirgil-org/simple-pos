@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { format } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { AddExpenseModal } from "../modals";
 import { toast } from "react-toastify";
@@ -64,7 +64,9 @@ export default function ShopsPage(props) {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "expenses" },
         async (data) => {
-          setExpenses((prev) => [...prev, data.new]);
+          if (data.new.shop_id === props.match.params.id) {
+            setExpenses((prev) => [...prev, data.new]);
+          }
         }
       )
       .subscribe();
@@ -102,7 +104,7 @@ export default function ShopsPage(props) {
               <IonLabel>
                 <div>Invoice #{expense.invoice_number}</div>
                 <div className="text-sm">
-                  {format(new Date(expense.created_at), 'dd MMMM yyyy, h:mm a')}
+                  {format(new Date(expense.created_at), "dd MMMM yyyy, h:mm a")}
                 </div>
               </IonLabel>
               <IonNote slot="end">
