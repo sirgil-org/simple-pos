@@ -25,7 +25,6 @@ import {
   arrowForward,
   banOutline,
   checkmark,
-  checkmarkCircle,
   checkmarkDoneOutline,
   ellipsisVerticalSharp,
 } from "ionicons/icons";
@@ -40,8 +39,17 @@ export default function OrdersPage() {
   const [filteredOrders, setFilteredOrders]: any = useState([]);
   const [selectedOrder, setSelectedOrder]: any = useState({});
   const [isOpen, setIsOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("all");
 
   const slidingItemRef = useRef<HTMLIonItemSlidingElement>(null);
+
+  function getMap() {
+    if (!slidingItemRef.current) {
+      // Initialize the Map on first usage.
+      slidingItemRef.current = new Map();
+    }
+    return slidingItemRef.current;
+  }
 
   const handleChangeStatus = async (status: string, currentOrder: any) => {
     const to_update: any = { status };
@@ -68,10 +76,26 @@ export default function OrdersPage() {
       .update(to_update)
       .eq("id", currentOrder.id);
 
+    if (error) {
+      return toast.error(error.message || "Could not update");
+    }
+
     setOrders((prev: any) => {
       const index = prev.findIndex((p: any) => p.id === currentOrder.id);
-
       prev[index] = { ...prev[index], status };
+
+      // Should only be added to filtered orders if all is selected
+      // since if the status is changed the current filter won't apply
+      if (activeFilter === "all") {
+        setFilteredOrders(prev);
+      } else {
+        setFilteredOrders((prev_filtered: any) => {
+          const new_data = prev_filtered.filter(
+            (item: any) => item.id !== currentOrder.id
+          );
+          return new_data;
+        });
+      }
 
       // Only way for the UI to update realtime, if just prev is returned
       // it won't work as expected. My assumption is that it's memory issue,
@@ -79,9 +103,7 @@ export default function OrdersPage() {
       return [...prev];
     });
 
-    if (error) {
-      toast.error(error.message || "Could not update");
-    }
+    slidingItemRef.current.get(currentOrder.id).close();
   };
 
   function dismiss() {
@@ -128,15 +150,58 @@ export default function OrdersPage() {
     getOrders();
   }, []);
 
+  async function getNewOrder(data) {
+    const { data: newOrder, error } = await supabase
+      .from("orders")
+      .select(
+        `
+      id, 
+      order_number, 
+      status,
+      created_at,
+      phone_number,
+      product_order ( 
+        sku, 
+        quantity, 
+        created_at, 
+        order_id, 
+        price,
+        products (
+          title
+        )
+      )
+    `
+      )
+      .eq("id", data.new.id)
+      .limit(1)
+      .single();
+
+    if (error) {
+      toast.warn(error.message || "Could not fetch new orders...");
+    } else if (newOrder) {
+      setOrders((prev: any) => {
+        return [newOrder, ...prev];
+      });
+
+      // TODO: Fix latest activeFilter value, since it's in useMemo
+      if (activeFilter === "all" || newOrder.status === activeFilter) {
+        setFilteredOrders((prev: any) => {
+          return [newOrder, ...prev];
+        });
+      }
+
+      toast.info("New order received!");
+    }
+  }
+
   useMemo(() => {
     supabase
       .channel("todos")
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "orders" },
-        (data) => {
-          setOrders((prev: any) => [...prev, data.new]);
-          toast.info("New order received!");
+        async (data) => {
+          await getNewOrder(data);
         }
       )
       .subscribe();
@@ -171,9 +236,12 @@ export default function OrdersPage() {
                       interface="popover"
                       placeholder="all"
                       onIonChange={(e: any) => {
+                        setActiveFilter(e.detail.value);
+
                         if (e.detail.value === "all") {
                           return setFilteredOrders(orders);
                         }
+
                         setFilteredOrders(
                           orders.filter((o: any) => o.status === e.detail.value)
                         );
@@ -205,7 +273,17 @@ export default function OrdersPage() {
           <>
             <IonList className="pb-[100px]">
               {filteredOrders.map((order: any, index: any) => (
-                <IonItemSliding key={order.id} ref={slidingItemRef}>
+                <IonItemSliding
+                  key={order.id}
+                  ref={(node) => {
+                    const map = getMap();
+                    if (node) {
+                      map.set(order.id, node);
+                    } else {
+                      map.delete(order.id);
+                    }
+                  }}
+                >
                   <IonItem
                     button
                     key={index}
@@ -238,10 +316,6 @@ export default function OrdersPage() {
                     <IonItemOptions
                       side="start"
                       onIonSwipe={async () => {
-                        console.log('updading....',   possibleStatus[
-                          possibleStatus.indexOf(order.status.toLowerCase()) +
-                            1
-                        ],)
                         await handleChangeStatus(
                           possibleStatus[
                             possibleStatus.indexOf(order.status.toLowerCase()) +
@@ -249,7 +323,6 @@ export default function OrdersPage() {
                           ],
                           order
                         );
-                        // slidingItemRef.current?.close();
                       }}
                     >
                       <IonItemOption color="success" expandable={true}>
@@ -257,44 +330,48 @@ export default function OrdersPage() {
                       </IonItemOption>
                     </IonItemOptions>
                   )}
-                  <IonItemOptions
-                    side="end"
-                    onIonSwipe={async () => {
-                      await handleChangeStatus("cancelled", order);
-                      slidingItemRef.current?.close();
-                    }}
-                  >
-                    <IonItemOption
-                      color="primary"
-                      expandable={true}
-                      onClick={async () => {
-                        await handleChangeStatus("ready", order);
+
+                  {!["collected", "cancelled"].includes(order.status) && (
+                    <IonItemOptions
+                      side="end"
+                      onIonSwipe={async () => {
+                        await handleChangeStatus("cancelled", order);
                       }}
                     >
-                      <IonIcon slot="icon-only" icon={checkmark}></IonIcon>
-                    </IonItemOption>
-                    <IonItemOption
-                      color="success"
-                      expandable={true}
-                      onClick={async () => {
-                        await handleChangeStatus("collected", order);
-                      }}
-                    >
-                      <IonIcon
-                        slot="icon-only"
-                        icon={checkmarkDoneOutline}
-                      ></IonIcon>
-                    </IonItemOption>
-                    <IonItemOption color="danger" expandable={true}>
-                      <IonIcon
-                        slot="icon-only"
-                        icon={banOutline}
+                      {!["ready", "cancelled"].includes(order.status) && (
+                        <IonItemOption
+                          color="primary"
+                          expandable={true}
+                          onClick={async () => {
+                            await handleChangeStatus("ready", order);
+                          }}
+                        >
+                          <IonIcon slot="icon-only" icon={checkmark}></IonIcon>
+                        </IonItemOption>
+                      )}
+                      <IonItemOption
+                        color="success"
+                        expandable={true}
                         onClick={async () => {
-                          await handleChangeStatus("cancelled", order);
+                          await handleChangeStatus("collected", order);
                         }}
-                      ></IonIcon>
-                    </IonItemOption>
-                  </IonItemOptions>
+                      >
+                        <IonIcon
+                          slot="icon-only"
+                          icon={checkmarkDoneOutline}
+                        ></IonIcon>
+                      </IonItemOption>
+                      <IonItemOption color="danger" expandable={true}>
+                        <IonIcon
+                          slot="icon-only"
+                          icon={banOutline}
+                          onClick={async () => {
+                            await handleChangeStatus("cancelled", order);
+                          }}
+                        ></IonIcon>
+                      </IonItemOption>
+                    </IonItemOptions>
+                  )}
                 </IonItemSliding>
               ))}
             </IonList>
