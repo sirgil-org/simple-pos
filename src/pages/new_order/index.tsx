@@ -26,7 +26,7 @@ export default function NewOrder() {
   const [products, setProducts]: any = useState([]);
 
   const [order, setOrder]: any = useState({});
-  const [inputValue, setInputValue] = useState("0");
+  const [inputValue, setInputValue] = useState("");
   const [totalCost, setTotalCost] = useState(0);
 
   const modal = useRef<HTMLIonModalElement>(null);
