@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AddShopModal } from "./modals";
 import { toast } from "react-toastify";
 import { supabase } from "../../supabase_client";
@@ -17,7 +17,7 @@ import {
 import { addOutline } from "ionicons/icons";
 
 export default function Expenses() {
-  const [shops, setExpenses]: any = useState([]);
+  const [shops, setShops]: any = useState([]);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -37,13 +37,26 @@ export default function Expenses() {
       if (error) {
         toast.warn(error.message || "Could not fetch shops...");
       } else if (data) {
-        setExpenses(data);
+        setShops(data);
       }
 
       setLoading(false);
     }
 
     getOrders();
+  }, []);
+
+  useMemo(() => {
+    supabase
+      .channel("todos")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "shops" },
+        async (data) => {
+          setShops((prev) => [...prev, data.new]);
+        }
+      )
+      .subscribe();
   }, []);
 
   return (
@@ -77,18 +90,18 @@ export default function Expenses() {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-          <IonItemGroup>
-            {shops.map((shop: any, index: any) => (
-              <IonItem
-                button
-                key={index}
-                routerLink={`/expenses/shops/${shop.id}`}
-              >
-                <IonLabel>{shop.name}</IonLabel>
-              </IonItem>
-            ))}
-          </IonItemGroup>
-          <AddShopModal dismiss={dismiss} isOpen={isOpen} />
+        <IonItemGroup>
+          {shops.map((shop: any, index: any) => (
+            <IonItem
+              button
+              key={index}
+              routerLink={`/expenses/shops/${shop.id}`}
+            >
+              <IonLabel>{shop.name}</IonLabel>
+            </IonItem>
+          ))}
+        </IonItemGroup>
+        <AddShopModal dismiss={dismiss} isOpen={isOpen} />
       </IonContent>
     </>
   );

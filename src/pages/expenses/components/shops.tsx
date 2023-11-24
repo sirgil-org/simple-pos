@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AddExpenseModal } from "../modals";
 import { toast } from "react-toastify";
 import { supabase } from "../../../supabase_client";
@@ -55,6 +55,19 @@ export default function ShopsPage(props) {
     }
 
     getOrders();
+  }, []);
+
+  useMemo(() => {
+    supabase
+      .channel("todos")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "expenses" },
+        async (data) => {
+          setExpenses((prev) => [...prev, data.new]);
+        }
+      )
+      .subscribe();
   }, []);
 
   return (
