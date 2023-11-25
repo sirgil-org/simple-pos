@@ -14,7 +14,7 @@ export default function About() {
             <IonTitle size="large">About</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <div className="ion-padding">
+        <div className="ion-padding pb-[100px]">
           <p>
             🍽️ Welcome to [Your Website Name], where we serve restaurants like
             yours with a powerful order management tool. You can efficiently
