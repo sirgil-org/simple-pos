@@ -45,7 +45,7 @@ export default function OrderSummary({
           {inputValue - totalCost}
         </div>
       </div>
-      {/* <div className="grid grid-cols-3 gap-2 mb-5">
+      <div className="hidden md:grid grid-cols-3 gap-2 mb-5">
         {["7", "8", "9", "4", "5", "6", "1", "2", "3", ".", "0", "del"].map(
           (item: any) => (
             <button
@@ -73,7 +73,7 @@ export default function OrderSummary({
             </button>
           )
         )}
-      </div> */}
+      </div>
       <div>
         <button
           type="submit"

@@ -3,11 +3,7 @@ import { CustomAreaChart, ReportSkeletal } from "./components";
 
 import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
-import {
-  IonCard,
-  IonCardContent,
-  IonContent,
-} from "@ionic/react";
+import { IonCard, IonCardContent, IonContent } from "@ionic/react";
 
 export default function Reports() {
   const [loading, setLoading] = useState(true);
@@ -20,7 +16,7 @@ export default function Reports() {
   useEffect(() => {
     async function getOrders() {
       setLoading(true);
-      
+
       const { data, error } = await supabase.rpc(
         "calculate_sales_by_time_unit",
         {
@@ -42,8 +38,6 @@ export default function Reports() {
     getOrders();
   }, []);
 
-
-
   if (loading) {
     return <ReportSkeletal />;
   }
@@ -55,11 +49,10 @@ export default function Reports() {
           style={{ paddingTop: "env(safe-area-inset-top)" }}
           className="grid md:grid-cols-12 gap-4"
         >
-          <div className="md:col-span-9">
-          <CustomAreaChart data={orders} />
-          {/* <ContainerComponent historicalData={orders} /> */}
+          <div className="md:col-span-8">
+            <CustomAreaChart data={orders} />
           </div>
-          <div>
+          <div  className="md:col-span-4">
             <IonCard>
               <IonCardContent>
                 <div className="space-y-2">

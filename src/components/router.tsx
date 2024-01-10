@@ -26,7 +26,7 @@ import ReportsTab from "../pages/reports";
 import ExpensesTab from "../pages/expenses";
 import { ShopsPage } from "../pages/expenses/components";
 
-const tabs: any = [
+export const tabs: any = [
   {
     label: "New Order",
     url: "/new-order",
@@ -90,7 +90,7 @@ const routes = () => (
                 <Redirect exact to="/orders" />
               </Route>
             </IonRouterOutlet>
-            <IonTabBar slot="bottom" translucent>
+            <IonTabBar slot="bottom" translucent className="md:hidden">
               {tabs
                 .filter((item) => !item.isChild)
                 .map((tab, index) => (

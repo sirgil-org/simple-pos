@@ -1,22 +1,3 @@
-// import React, { useRef, useState } from "react";
-// import { Line } from 'react-chartjs-2';
-// import 'chartjs-plugin-zoom';
-
-// export default function CustomAreaChart({ data }) {
-//   // console.log('----------- ', newDateRange, '-------', startIndex, '+++++++++', endIndex)
-
-//   const formatDate = (dateString) => {
-//     // You can use a library like `date-fns` for more advanced date formatting
-//     const options = { year: "numeric", month: "short", day: "numeric" };
-//     return new Date(dateString).toLocaleDateString("en-US", options);
-//   };
-
-//   return (
-
-//   );
-// }
-
-import React from "react";
 import {
   Chart as ChartJS,
   CategoryScale,

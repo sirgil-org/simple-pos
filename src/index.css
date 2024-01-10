@@ -178,3 +178,8 @@ h1 {
 h2 {
   color: #2800FF;
 }
+
+ion-split-pane {
+  --side-max-width: 100px;
+  --side-min-width: 100px;
+}

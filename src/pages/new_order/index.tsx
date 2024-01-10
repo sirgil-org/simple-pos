@@ -38,6 +38,7 @@ export default function NewOrder() {
     const { data, error } = await supabase.from("products").select();
 
     if (error) {
+      console.log(error)
       toast.warn(error.message || "Could not fetch orders...");
     } else if (data) {
       setProducts(data);
@@ -145,7 +146,7 @@ export default function NewOrder() {
             <NewOrderSkeletal />
           ) : (
             <div>
-              <div className="grid grid-cols-3 md:grid-cols-5 gap-2">
+              <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
                 {products.map((product: any, key: Key) => {
                   return (
                     <div key={key}>
@@ -220,7 +221,7 @@ export default function NewOrder() {
         <IonItemGroup
           className={`${
             Object.keys(order).length === 0 ? "hidden" : ""
-          } fixed bottom-0 w-full`}
+          } fixed bottom-0 w-full md:hidden`}
         >
           <IonItemSliding ref={slidingItemRef}>
             <IonItem>
