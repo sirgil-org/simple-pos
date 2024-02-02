@@ -147,6 +147,7 @@ export default function OrdersPage() {
   }
 
   useEffect(() => {
+    console.log('in order...')
     getOrders();
   }, []);
 
