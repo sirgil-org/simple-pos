@@ -1,5 +1,5 @@
 import { tabs } from "./components/router/tab_routes.ts";
-import PageRouter from "./components/router/router.tsx"
+import PageRouter from "./components/router/router.tsx";
 import "@ionic/react/css/core.css";
 
 /* Basic CSS for apps built with Ionic */
@@ -37,6 +37,7 @@ import "./swiper_styles.css";
 import { useEffect } from "react";
 import { supabase } from "./supabase_client.ts";
 import AppUrlListener from "./app_url_listener";
+import { SplitPaneWrapper } from "./components/router/split_pane_wrapper.tsx";
 
 setupIonicReact();
 
@@ -52,7 +53,6 @@ export default function App() {
       } else if (_event === "SIGNED_IN") {
         // handle sign in event
         console.log("SIGNED_IN");
-
       } else if (_event === "SIGNED_OUT") {
         // handle sign out event
         console.log("SIGNED_OUT");
@@ -76,39 +76,10 @@ export default function App() {
 
   return (
     <IonApp>
-      <IonSplitPane when="md" contentId="main">
-        <IonMenu contentId="main">
-          <IonHeader>
-            <IonToolbar>{/* <IonTitle>Menu</IonTitle> */}</IonToolbar>
-          </IonHeader>
-          <IonContent className="ion-padding">
-            <IonList>
-              {tabs
-                .filter((item) => !item.isChild)
-                .map((tab, index) => {
-                  return (
-                    <IonItem
-                      className="mb-5"
-                      key={index}
-                      href={'/tabs'+tab.url}
-                      detail={false}
-                      button={true}
-                      lines="none"
-                      color="transparent"
-                    >
-                      <IonIcon icon={tab.icon} size="large" />
-                    </IonItem>
-                  );
-                })}
-            </IonList>
-          </IonContent>
-        </IonMenu>
-
-        <div className="ion-page" id="main">
-          <AppUrlListener />
-          <PageRouter />
-        </div>
-      </IonSplitPane>
+      {/* <SplitPaneWrapper> */}
+        <AppUrlListener />
+        <PageRouter />
+      {/* </SplitPaneWrapper> */}
     </IonApp>
   );
 }
