@@ -31,7 +31,7 @@ const Routes = () => {
         <Route exact path="/login" component={LoginPage} />
         <Route exact path="/reset-password" component={ResetPasswordPage} />
         <Route exact path="/">
-          <Redirect to="/tabs/orders" />
+          <Redirect to="/tabs" />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>

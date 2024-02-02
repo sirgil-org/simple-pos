@@ -12,7 +12,6 @@ import {
 } from "@ionic/react";
 import { useForm } from "react-hook-form";
 import { supabase } from "../../supabase_client";
-import { useState } from "react";
 
 export default function LoginPage() {
   const [showLoading, hideLoading] = useIonLoading();
@@ -36,12 +35,12 @@ export default function LoginPage() {
         duration: 1500,
       });
     } else {
-      router.push("/register", "root", "replace");
+      router.push("/tabs", "root", "replace");
     }
 
     await hideLoading();
   };
-  
+
   return (
     <IonPage>
       <IonContent className="ion-padding">
@@ -88,16 +87,9 @@ export default function LoginPage() {
           </IonRouterLink>
         </div>
         <div>
-          {/* <IonRouterLink href={"/reset-password"}>
+          <IonRouterLink href={"/reset-password"}>
             Forgot password
-          </IonRouterLink> */}
-          <div
-            onClick={() => {
-              router.push("/register", "root", "replace");
-            }}
-          >
-            Forgot Password
-          </div>
+          </IonRouterLink>
         </div>
       </IonContent>
     </IonPage>
