@@ -3,10 +3,10 @@ import {
   walletOutline,
   statsChartOutline,
   listOutline,
-  informationCircleOutline,
+  settingsOutline,
 } from "ionicons/icons";
 
-import AboutTab from "../../pages/about";
+import SettingsTab from "../../pages/settings";
 import OrdersTab from "../../pages/orders/orders";
 import NewOrderTab from "../../pages/new_order";
 import ReportsTab from "../../pages/reports";
@@ -48,9 +48,9 @@ export const tabs: any = [
     isChild: true,
   },
   {
-    label: "About",
-    url: "/about",
-    icon: informationCircleOutline,
-    component: AboutTab,
+    label: "Settings",
+    url: "/settings",
+    icon: settingsOutline,
+    component: SettingsTab,
   },
 ];
