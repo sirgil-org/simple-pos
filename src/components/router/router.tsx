@@ -11,21 +11,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../supabase_client";
 
 const Routes = () => {
-  const [session, setSession] = useState<any>(null);
-
-  useEffect(() => {
-    (async () => {
-      const { data, error } = await supabase.auth.getSession();
-      setSession(data);
-    })();
-  }, []);
   return (
     <IonReactRouter>
       <IonRouterOutlet>
-        <Route
-          path="/tabs"
-          render={() => (session ? <Tabs /> : <Redirect to="/login" />)}
-        />
+        <Route path="/tabs" render={() => <Tabs />} />
         <Route exact path="/welcome" component={OnboardingPage} />
         <Route exact path="/register" component={RegisterPage} />
         <Route exact path="/login" component={LoginPage} />

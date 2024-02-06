@@ -12,16 +12,19 @@ import {
 } from "@ionic/react";
 import { useForm } from "react-hook-form";
 import { supabase } from "../../supabase_client";
+import { useEffect } from "react";
 
 export default function LoginPage() {
   const [showLoading, hideLoading] = useIonLoading();
   const [showToast] = useIonToast();
   const router = useIonRouter();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: "onTouched", reValidateMode: "onChange" });
+
   const onSubmit = async ({ email, password }: any) => {
     await showLoading();
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -40,6 +43,15 @@ export default function LoginPage() {
 
     await hideLoading();
   };
+
+  useEffect(() => {
+    (async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (data) {
+        router.push("/tabs", "root", "replace");
+      }
+    })();
+  }, []);
 
   return (
     <IonPage>

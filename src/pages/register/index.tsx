@@ -8,20 +8,25 @@ import {
   IonRouterLink,
   IonText,
   useIonLoading,
+  useIonRouter,
   useIonToast,
 } from "@ionic/react";
 import { supabase } from "../../supabase_client";
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 
 export default function RegisterPage() {
   const [showLoading, hideLoading] = useIonLoading();
   const [showToast] = useIonToast();
+  const router = useIonRouter();
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
+
   const onSubmit = async ({ email, password }: any) => {
     await showLoading();
 
@@ -44,6 +49,16 @@ export default function RegisterPage() {
 
     await hideLoading();
   };
+
+  useEffect(() => {
+    (async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (data) {
+        router.push("/tabs", "root", "replace");
+      }
+    })();
+  }, []);
+
   return (
     <IonPage>
       <IonContent className="ion-padding">

@@ -17,15 +17,8 @@ import "@ionic/react/css/display.css";
 
 import {
   IonApp,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonItem,
-  IonList,
-  IonMenu,
-  IonSplitPane,
-  IonToolbar,
   setupIonicReact,
+  useIonRouter,
 } from "@ionic/react";
 import "./theme/variables.css";
 
@@ -37,17 +30,19 @@ import "./swiper_styles.css";
 import { useEffect } from "react";
 import { supabase } from "./supabase_client.ts";
 import AppUrlListener from "./app_url_listener";
-import { SplitPaneWrapper } from "./components/router/split_pane_wrapper.tsx";
 
 setupIonicReact();
 
 // Home function that is reflected across the site
 export default function App() {
-  const setup = async () => {
-    // const { data, error } = await supabase.auth.getSession();
+  const router = useIonRouter();
 
+  const setup = async () => {
     supabase.auth.onAuthStateChange((_event, session) => {
       if (_event === "INITIAL_SESSION") {
+        if(session === null){
+          router.push("/login", "root", "replace");
+        }
         // handle initial session
         console.log("INITIAL_SESSION");
       } else if (_event === "SIGNED_IN") {
@@ -56,6 +51,7 @@ export default function App() {
       } else if (_event === "SIGNED_OUT") {
         // handle sign out event
         console.log("SIGNED_OUT");
+        router.push("/login", "root", "replace");
       } else if (_event === "PASSWORD_RECOVERY") {
         // handle password recovery event
         console.log("PASSWORD_RECOVERY");
@@ -70,16 +66,15 @@ export default function App() {
       console.log(session, "---- session...");
     });
   };
+
   useEffect(() => {
     setup();
   }, []);
 
   return (
     <IonApp>
-      {/* <SplitPaneWrapper> */}
         <AppUrlListener />
         <PageRouter />
-      {/* </SplitPaneWrapper> */}
     </IonApp>
   );
 }
