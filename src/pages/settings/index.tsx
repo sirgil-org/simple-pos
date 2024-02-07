@@ -54,7 +54,6 @@ export default function SettingsPage() {
             },
             async handler() {
               await supabase.auth.signOut();
-              router.push("/login", "root", "replace");
             },
           },
           {
