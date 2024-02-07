@@ -53,7 +53,8 @@ export default function RegisterPage() {
   useEffect(() => {
     (async () => {
       const { data, error } = await supabase.auth.getSession();
-      if (data) {
+      if (data.session) {
+        console.log(data, ' has data')
         router.push("/tabs", "root", "replace");
       }
     })();

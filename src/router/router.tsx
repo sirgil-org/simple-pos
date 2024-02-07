@@ -1,5 +1,5 @@
 import { Redirect, Route } from "react-router-dom";
-import { IonRouterOutlet } from "@ionic/react";
+import { IonRouterOutlet, useIonRouter } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 
 import OnboardingPage from "../pages/onboarding";
@@ -7,8 +7,6 @@ import RegisterPage from "../pages/register";
 import LoginPage from "../pages/login";
 import ResetPasswordPage from "../pages/reset-password";
 import { Tabs } from "./tabs";
-import { useEffect, useState } from "react";
-import { supabase } from "../supabase_client";
 
 const Routes = () => {
   return (

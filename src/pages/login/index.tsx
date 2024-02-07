@@ -47,7 +47,7 @@ export default function LoginPage() {
   useEffect(() => {
     (async () => {
       const { data, error } = await supabase.auth.getSession();
-      if (data) {
+      if (data.session) {
         router.push("/tabs", "root", "replace");
       }
     })();
@@ -93,10 +93,12 @@ export default function LoginPage() {
           </div>
         </form>
         <div>
-          <IonRouterLink href={"/register"}>
+          {/* <IonRouterLink href={"/register"}>
             <span>Already have an account?</span>&nbsp;
             <span>Register</span>
-          </IonRouterLink>
+          </IonRouterLink> */}
+
+          <div onClick={()=>{router.push("/register", "root", "replace");}}>Goto register</div>
         </div>
         <div>
           <IonRouterLink href={"/reset-password"}>
