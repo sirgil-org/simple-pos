@@ -6,12 +6,12 @@ import {
   settingsOutline,
 } from "ionicons/icons";
 
-import SettingsTab from "../../pages/settings";
-import OrdersTab from "../../pages/orders/orders";
-import NewOrderTab from "../../pages/new_order";
-import ReportsTab from "../../pages/reports";
-import ExpensesTab from "../../pages/expenses";
-import { ShopsPage } from "../../pages/expenses/components";
+import SettingsTab from "../pages/settings";
+import OrdersTab from "../pages/orders/orders";
+import NewOrderTab from "../pages/new_order";
+import ReportsTab from "../pages/reports";
+import ExpensesTab from "../pages/expenses";
+import { ShopsPage } from "../pages/expenses/components";
 
 export const tabs: any = [
   {

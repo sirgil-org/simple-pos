@@ -1,5 +1,5 @@
-import { tabs } from "./components/router/tab_routes.ts";
-import PageRouter from "./components/router/router.tsx";
+import { tabs } from "./router/tab_routes.ts";
+import PageRouter from "./router/router.tsx";
 import "@ionic/react/css/core.css";
 
 /* Basic CSS for apps built with Ionic */
@@ -40,6 +40,7 @@ export default function App() {
   const setup = async () => {
     supabase.auth.onAuthStateChange((_event, session) => {
       if (_event === "INITIAL_SESSION") {
+        console.log(session, ' ----- initial session')
         if(session === null){
           router.push("/login", "root", "replace");
         }

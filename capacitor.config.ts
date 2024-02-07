@@ -3,7 +3,7 @@ import { KeyboardResize, KeyboardStyle } from '@capacitor/keyboard';
 
 const config: CapacitorConfig = {
   appId: 'com.example.app',
-  appName: 'hotspot-admin',
+  appName: 'simple-pos',
   webDir: 'build',
   server: {
     androidScheme: 'https',

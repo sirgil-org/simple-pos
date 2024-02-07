@@ -8,11 +8,14 @@ import {
   IonList,
   IonTitle,
   IonToolbar,
+  useIonRouter,
 } from "@ionic/react";
 import { logOutOutline } from "ionicons/icons";
 import { supabase } from "../../supabase_client";
 
 export default function SettingsPage() {
+  const router = useIonRouter();
+
   return (
     <>
       <IonHeader>
@@ -51,6 +54,7 @@ export default function SettingsPage() {
             },
             async handler() {
               await supabase.auth.signOut();
+              router.push("/login", "root", "replace");
             },
           },
           {

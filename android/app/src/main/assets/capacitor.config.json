@@ -1,6 +1,6 @@
 {
 	"appId": "com.example.app",
-	"appName": "hotspot-admin",
+	"appName": "simple-pos",
 	"webDir": "build",
 	"server": {
 		"androidScheme": "https",
