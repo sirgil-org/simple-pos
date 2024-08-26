@@ -1,4 +1,3 @@
-import AddPurchaseModal from "./add_purchase";
-import AddShopModal from "./add_shop_modal";
+import ShopsPage from "./shops";
 
-export { AddShopModal, AddPurchaseModal };
+export { ShopsPage };
