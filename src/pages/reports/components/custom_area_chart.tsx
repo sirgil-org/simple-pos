@@ -104,7 +104,7 @@ export const options = {
   },
 };
 
-export default function CustomAreaChart({ data }) {
+/*export default function CustomAreaChart({ data }) {
   const getStackedData = (data) => {
     return {
       labels: data.map((item) => item.period),
@@ -122,4 +122,4 @@ export default function CustomAreaChart({ data }) {
   return (
     <Line height={"300px"} options={options} data={getStackedData(data)} />
   );
-}
+}*/

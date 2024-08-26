@@ -94,7 +94,7 @@ export default function NewOrder() {
     await supabase.from("payments").insert({
       order_id: new_order[0].id,
       amount_paid: inputValue,
-      change: inputValue - total_cost,
+      change: parseFloat(inputValue) - total_cost,
     });
 
     reset_order();

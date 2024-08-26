@@ -16,7 +16,7 @@ export default function AddExpenseModal({ dismiss, isOpen }: any) {
   const { register, handleSubmit, reset } = useForm();
   const [loading, setLoading] = useState(false);
 
-  const [loadingShops, setLoadingShops] = useState(true);
+  const [, setLoadingShops] = useState(true);
   const [shops, setShops] = useState([]);
 
   const onSubmit = async ({ invoice_number, shop, amount }: any) => {
@@ -41,7 +41,7 @@ export default function AddExpenseModal({ dismiss, isOpen }: any) {
 
     if (error) {
       toast.warn(error.message || "Could not fetch shops...");
-    } else if (data) {
+    } else if (data.length) {
       setShops(data);
     }
 

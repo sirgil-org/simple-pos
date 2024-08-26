@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CustomAreaChart, ReportSkeletal } from "./components";
+import { ReportSkeletal } from "./components";
 
 import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
@@ -50,7 +50,7 @@ export default function Reports() {
           className="grid md:grid-cols-12 gap-4"
         >
           <div className="md:col-span-8">
-            <CustomAreaChart data={orders} />
+            {/*<CustomAreaChart data={orders} />*/}
           </div>
           <div  className="md:col-span-4">
             <IonCard>

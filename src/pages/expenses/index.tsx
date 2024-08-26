@@ -18,7 +18,7 @@ import { addOutline } from "ionicons/icons";
 
 export default function Expenses() {
   const [shops, setShops]: any = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
 
   function dismiss() {
@@ -53,7 +53,7 @@ export default function Expenses() {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "shops" },
         async (data) => {
-          setShops((prev) => [...prev, data.new]);
+          setShops((prev: any) => [...prev, data.new]);
         }
       )
       .subscribe();

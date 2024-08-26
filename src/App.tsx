@@ -1,4 +1,3 @@
-import { tabs } from "./router/tab_routes.ts";
 import PageRouter from "./router/router.tsx";
 import "@ionic/react/css/core.css";
 

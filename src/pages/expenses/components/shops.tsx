@@ -20,9 +20,9 @@ import {
 } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 
-export default function ShopsPage(props) {
+export default function ShopsPage(props: any) {
   const [expenses, setExpenses]: any = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
 
   function dismiss() {
@@ -65,7 +65,7 @@ export default function ShopsPage(props) {
         { event: "INSERT", schema: "public", table: "expenses" },
         async (data) => {
           if (data.new.shop_id === props.match.params.id) {
-            setExpenses((prev) => [...prev, data.new]);
+            setExpenses((prev: any) => [...prev, data.new]);
           }
         }
       )

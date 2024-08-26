@@ -34,7 +34,7 @@ export default function LoginPage() {
 
     if (error) {
       await showToast({
-        message: error.error_description || error.message,
+        message: error.message,
         duration: 1500,
       });
     } else {
@@ -67,7 +67,7 @@ export default function LoginPage() {
             />
             {errors.email && (
               <IonBadge color="danger" className="mt-2">
-                {errors.email.message}
+                {/*{errors.email.message || ""}*/}
               </IonBadge>
             )}
           </div>
@@ -82,7 +82,7 @@ export default function LoginPage() {
             />
             {errors.password && (
               <IonBadge color="danger" className="mt-2">
-                {errors.password.message}
+                {/*{errors.password.message || ""}*/}
               </IonBadge>
             )}
           </div>

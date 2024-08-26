@@ -38,7 +38,7 @@ export default function RegisterPage() {
 
     if (error) {
       await showToast({
-        message: error.error_description || error.message,
+        message: error.message,
         duration: 1500,
       });
     } else {
@@ -75,7 +75,7 @@ export default function RegisterPage() {
             <IonInput type="text" placeholder="Enter text" />
             {errors.name && (
               <IonBadge color="danger" className="mt-2">
-                {errors.name.message}
+                {/*{errors.name.message}*/}
               </IonBadge>
             )}
           </div>
@@ -88,7 +88,7 @@ export default function RegisterPage() {
             />
             {errors.email && (
               <IonBadge color="danger" className="mt-2">
-                {errors.email.message}
+                {/*{errors.email.message}*/}
               </IonBadge>
             )}
           </div>
@@ -100,7 +100,7 @@ export default function RegisterPage() {
             />
             {errors.password && (
               <IonBadge color="danger" className="mt-2">
-                {errors.password.message}
+                {/*{errors.password.message}*/}
               </IonBadge>
             )}
           </div>
@@ -119,7 +119,7 @@ export default function RegisterPage() {
             />
             {errors.confirm_password && (
               <IonBadge color="danger" className="mt-2">
-                {errors.confirm_password.message}
+                {/*{errors.confirm_password.message}*/}
               </IonBadge>
             )}
           </div>

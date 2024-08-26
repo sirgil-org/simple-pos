@@ -43,13 +43,13 @@ export default function OrdersPage() {
 
   const slidingItemRef = useRef<HTMLIonItemSlidingElement>(null);
 
-  function getMap() {
+  /*function getMap() {
     if (!slidingItemRef.current) {
       // Initialize the Map on first usage.
       slidingItemRef.current = new Map();
     }
     return slidingItemRef.current;
-  }
+  }*/
 
   const handleChangeStatus = async (status: string, currentOrder: any) => {
     const to_update: any = { status };
@@ -103,7 +103,7 @@ export default function OrdersPage() {
       return [...prev];
     });
 
-    slidingItemRef.current.get(currentOrder.id).close();
+    //slidingItemRef.current.get(currentOrder.id).close();
   };
 
   function dismiss() {
@@ -276,14 +276,14 @@ export default function OrdersPage() {
               {filteredOrders.map((order: any, index: any) => (
                 <IonItemSliding
                   key={order.id}
-                  ref={(node) => {
+                  /*ref={(node) => {
                     const map = getMap();
                     if (node) {
                       map.set(order.id, node);
                     } else {
                       map.delete(order.id);
                     }
-                  }}
+                  }}*/
                 >
                   <IonItem
                     button
