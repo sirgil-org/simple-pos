@@ -183,3 +183,9 @@ ion-split-pane {
   --side-max-width: 100px;
   --side-min-width: 100px;
 }
+
+/* Login Page */
+#ion-input-0, #ion-input-1{
+  color: black;
+  padding: 5px 10px;
+}
