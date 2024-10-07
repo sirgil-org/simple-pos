@@ -1,9 +1,7 @@
 import {
-  IonBadge,
   IonButton,
   IonContent,
   IonInput,
-  IonLabel,
   IonPage,
   IonRouterLink,
   IonText,
@@ -31,7 +29,7 @@ export default function RegisterPage() {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, touchedFields },
   } = useForm<IRegiterForm>();
 
   const onSubmit = async ({ email, password }) => {
@@ -85,6 +83,10 @@ export default function RegisterPage() {
                 fill="outline"
                 placeholder="Enter text"
                 errorText={errors.name?.message}
+                className={`${errors.name && "ion-invalid"} ${
+                  touchedFields.name && "ion-touched"
+                }`}
+                {...register("name", { required: true })}
               />
               <IonInput
                 type="email"
@@ -93,6 +95,9 @@ export default function RegisterPage() {
                 fill="outline"
                 placeholder="email@domain.com"
                 errorText={errors.email?.message}
+                className={`${errors.email && "ion-invalid"} ${
+                  touchedFields.email && "ion-touched"
+                }`}
                 {...register("email", { required: true })}
               />
 
@@ -103,6 +108,9 @@ export default function RegisterPage() {
                 fill="outline"
                 placeholder="xxxxxxx"
                 errorText={errors.password?.message}
+                className={`${errors.password && "ion-invalid"} ${
+                  touchedFields.password && "ion-touched"
+                }`}
                 {...register("password", { required: true })}
               />
               <IonInput
@@ -112,6 +120,9 @@ export default function RegisterPage() {
                 fill="outline"
                 placeholder="xxxxxxx"
                 errorText={errors.confirm_password?.message}
+                className={`${errors.confirm_password && "ion-invalid"} ${
+                  touchedFields.confirm_password && "ion-touched"
+                }`}
                 {...register("confirm_password", {
                   required: true,
                   validate: (val: string) => {

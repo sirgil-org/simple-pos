@@ -1,4 +1,4 @@
-import React, { Key, useEffect, useRef, useState } from "react";
+import { Key, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { supabase } from "../../supabase_client";
 import { NewOrderSkeletal } from "./components";
@@ -25,8 +25,10 @@ export default function NewOrder() {
   const [savingOrder, setSavingOrder] = useState(false);
   const [products, setProducts]: any = useState([]);
 
+  const inputRef = useRef(null);
+
   const [order, setOrder]: any = useState({});
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
 
   const modal = useRef<HTMLIonModalElement>(null);
@@ -124,7 +126,8 @@ export default function NewOrder() {
 
   const reset_order = () => {
     setTotalCost(0);
-    setInputValue("0");
+    setInputValue(0);
+    inputRef.current.value = undefined
     setOrder({});
   };
 
@@ -200,6 +203,7 @@ export default function NewOrder() {
                 setInputValue={setInputValue}
                 onSubmit={onSubmit}
                 savingOrder={savingOrder}
+                inputRef={inputRef}
               />
             </div>
           </div>

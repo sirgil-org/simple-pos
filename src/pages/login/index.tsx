@@ -25,7 +25,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, touchedFields },
   } = useForm<ILoginForm>({ mode: "onTouched", reValidateMode: "onChange" });
 
   const onSubmit = async ({ email, password }) => {
@@ -66,7 +66,7 @@ export default function LoginPage() {
             noValidate
             className="space-y-6"
           >
-            <div className="space-y-2">
+            <div className="space-y-3">
               <IonInput
                 type="email"
                 label="Email"
@@ -74,7 +74,10 @@ export default function LoginPage() {
                 fill="outline"
                 placeholder="email@domain.com"
                 errorText={errors.email?.message}
-                className={`${errors.email && "ion-invalid"}`}
+                helperText="Enter valid email"
+                className={`${errors.email && "ion-invalid"} ${
+                  touchedFields.email && "ion-touched"
+                }`}
                 {...register("email", { required: "Email is required" })}
               ></IonInput>
               <IonInput
@@ -84,6 +87,9 @@ export default function LoginPage() {
                 fill="outline"
                 errorText={errors.password?.message}
                 placeholder="xxxxxx"
+                className={`${errors.password && "ion-invalid"} ${
+                  touchedFields.password && "ion-touched"
+                }`}
                 {...register("password", {
                   required: "Password is required",
                   maxLength: { value: 40, message: "Password too long" },

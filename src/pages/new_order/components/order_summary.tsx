@@ -24,19 +24,17 @@ export default function OrderSummary({
         >
           Amount paid
         </label>
-        <input
-          type="text"
-          inputMode="numeric"
-          id="amount"
-          ref={inputRef}
-          autoFocus
-          className="input input-lg w-full border border-gray-300"
-          required
-          // readOnly
-          onChange={(e: any) => setInputValue(e.target.value)}
-          defaultValue={inputValue}
-        />
 
+        <IonInput
+          id="amount"
+          type="text"
+          fill="outline"
+          inputMode="numeric"
+          autoFocus
+          placeholder="0.00"
+          ref={inputRef}
+          onIonInput={(e) => setInputValue(e.target.value)}
+        />
         <div
           className={`text-end text-lg font-bold ${
             totalCost > inputValue ? "text-red-600" : "text-green-400"
@@ -47,7 +45,7 @@ export default function OrderSummary({
       </div>
       <div className="hidden md:grid grid-cols-3 gap-2 mb-5">
         {["7", "8", "9", "4", "5", "6", "1", "2", "3", ".", "0", "del"].map(
-          (item: any) => (
+          (item: string) => (
             <button
               key={item}
               onClick={() => {
@@ -79,7 +77,7 @@ export default function OrderSummary({
           type="submit"
           disabled={Object.keys(order).length === 0 || totalCost > inputValue}
           onClick={onSubmit}
-          className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
           {savingOrder ? <Spinner /> : "Place Order"}
         </button>
