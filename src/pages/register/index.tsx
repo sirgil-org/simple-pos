@@ -15,6 +15,13 @@ import { supabase } from "../../supabase_client";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 
+type IRegiterForm = {
+  name: string;
+  email: string;
+  password: string;
+  confirm_password: string;
+};
+
 export default function RegisterPage() {
   const [showLoading, hideLoading] = useIonLoading();
   const [showToast] = useIonToast();
@@ -25,13 +32,12 @@ export default function RegisterPage() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm<IRegiterForm>();
 
-  const onSubmit = async ({ email, password }: any) => {
+  const onSubmit = async ({ email, password }) => {
     await showLoading();
 
-    console.log(email, "-------", password);
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
     });
@@ -52,88 +58,82 @@ export default function RegisterPage() {
 
   useEffect(() => {
     (async () => {
-      const { data, error } = await supabase.auth.getSession();
+      const { data } = await supabase.auth.getSession();
       if (data.session) {
-        console.log(data, ' has data')
+        console.log(data, " has data");
         router.push("/tabs", "root", "replace");
       }
     })();
-  }, []);
+  }, [router]);
 
   return (
     <IonPage>
       <IonContent className="ion-padding">
         <div style={{ paddingTop: "env(safe-area-inset-top)" }}></div>
-        <IonText>
-          <p className="text-2xl">
-            Welcome to the Solace, setup your account proceed
-          </p>
-        </IonText>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mt-5">
-            <IonLabel>Business Name</IonLabel>
-            <IonInput type="text" placeholder="Enter text" />
-            {errors.name && (
-              <IonBadge color="danger" className="mt-2">
-                {/*{errors.name.message}*/}
-              </IonBadge>
-            )}
-          </div>
+        <div className="mx-auto max-w-lg h-full flex flex-col justify-center space-y-2">
+          <IonText>
+            <p className="text-3xl font-bold">
+              Welcome to Simple PoS <br /> Setup your account to proceed
+            </p>
+          </IonText>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-3">
+              <IonInput
+                type="text"
+                label="Business Name"
+                labelPlacement="floating"
+                fill="outline"
+                placeholder="Enter text"
+                errorText={errors.name?.message}
+              />
+              <IonInput
+                type="email"
+                label="Email"
+                labelPlacement="floating"
+                fill="outline"
+                placeholder="email@domain.com"
+                errorText={errors.email?.message}
+                {...register("email", { required: true })}
+              />
+
+              <IonInput
+                type="password"
+                label="Password"
+                labelPlacement="floating"
+                fill="outline"
+                placeholder="xxxxxxx"
+                errorText={errors.password?.message}
+                {...register("password", { required: true })}
+              />
+              <IonInput
+                type="password"
+                label="Re-Enter Password"
+                labelPlacement="floating"
+                fill="outline"
+                placeholder="xxxxxxx"
+                errorText={errors.confirm_password?.message}
+                {...register("confirm_password", {
+                  required: true,
+                  validate: (val: string) => {
+                    if (watch("password") != val) {
+                      return "Your passwords do not match";
+                    }
+                  },
+                })}
+              />
+            </div>
+            <div className="mt-6">
+              <IonButton expand="full" type="submit">
+                Continue
+              </IonButton>
+            </div>
+          </form>
           <div>
-            <IonLabel>Email</IonLabel>
-            <IonInput
-              type="email"
-              placeholder="email@domain.com"
-              {...register("email", { required: true })}
-            />
-            {errors.email && (
-              <IonBadge color="danger" className="mt-2">
-                {/*{errors.email.message}*/}
-              </IonBadge>
-            )}
+            <IonRouterLink href={"/login"}>
+              Already have an account? &nbsp;
+              <span>Login</span>
+            </IonRouterLink>
           </div>
-          <div>
-            <IonLabel>Password</IonLabel>
-            <IonInput
-              type="password"
-              {...register("password", { required: true })}
-            />
-            {errors.password && (
-              <IonBadge color="danger" className="mt-2">
-                {/*{errors.password.message}*/}
-              </IonBadge>
-            )}
-          </div>
-          <div>
-            <IonLabel>Re-Enter Password</IonLabel>
-            <IonInput
-              type="password"
-              {...register("confirm_password", {
-                required: true,
-                validate: (val: string) => {
-                  if (watch("password") != val) {
-                    return "Your passwords do not match";
-                  }
-                },
-              })}
-            />
-            {errors.confirm_password && (
-              <IonBadge color="danger" className="mt-2">
-                {/*{errors.confirm_password.message}*/}
-              </IonBadge>
-            )}
-          </div>
-          <div className="mt-6">
-            <IonButton expand="full" type="submit">
-              Continue
-            </IonButton>
-          </div>
-        </form>
-        <div>
-          <IonRouterLink href={"/login"}>
-            Already have an account? &nbsp;
-            <span>Login</span>
-          </IonRouterLink>
         </div>
       </IonContent>
     </IonPage>

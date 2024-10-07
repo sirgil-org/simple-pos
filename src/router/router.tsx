@@ -1,5 +1,5 @@
 import { Redirect, Route } from "react-router-dom";
-import { IonRouterOutlet, useIonRouter } from "@ionic/react";
+import { IonRouterOutlet } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 
 import OnboardingPage from "../pages/onboarding";

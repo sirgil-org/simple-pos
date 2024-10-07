@@ -1,8 +1,8 @@
-@tailwind base;
+/* /* @tailwind base; */
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
 
-@layer base {
+/* @layer base {
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -10,7 +10,7 @@
     outline: none;
     border: none;
   }
-}
+} */
 
 ion-split-pane {
   --side-max-width: 100px;

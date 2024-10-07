@@ -1,9 +1,7 @@
 import {
-  IonBadge,
   IonButton,
   IonContent,
   IonInput,
-  IonLabel,
   IonPage,
   IonRouterLink,
   useIonLoading,
@@ -14,6 +12,11 @@ import { useForm } from "react-hook-form";
 import { supabase } from "../../supabase_client";
 import { useEffect } from "react";
 
+type ILoginForm = {
+  email: string;
+  password: string;
+};
+
 export default function LoginPage() {
   const [showLoading, hideLoading] = useIonLoading();
   const [showToast] = useIonToast();
@@ -23,11 +26,11 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ mode: "onTouched", reValidateMode: "onChange" });
+  } = useForm<ILoginForm>({ mode: "onTouched", reValidateMode: "onChange" });
 
-  const onSubmit = async ({ email, password }: any) => {
+  const onSubmit = async ({ email, password }) => {
     await showLoading();
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -46,7 +49,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     (async () => {
-      const { data, error } = await supabase.auth.getSession();
+      const { data } = await supabase.auth.getSession();
       if (data.session) {
         router.push("/tabs", "root", "replace");
       }
@@ -58,36 +61,34 @@ export default function LoginPage() {
       <IonContent className="ion-padding">
         <div style={{ paddingTop: "env(safe-area-inset-top)" }}></div>
         <div className="mx-auto max-w-lg h-full flex flex-col justify-center space-y-2">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+            className="space-y-6"
+          >
             <div className="space-y-2">
-              <div>
-                <IonLabel>Email</IonLabel>
-                <IonInput
-                  type="email"
-                  placeholder="email@domain.com"
-                  {...register("email", { required: "Email is required" })}
-                />
-                {errors.email && (
-                  <IonBadge color="danger" className="mt-2">
-                    {/*{errors.email.message || ""}*/}
-                  </IonBadge>
-                )}
-              </div>
-              <div>
-                <IonLabel>Password</IonLabel>
-                <IonInput
-                  type="password"
-                  {...register("password", {
-                    required: "Password is required",
-                    maxLength: { value: 40, message: "Password too long" },
-                  })}
-                />
-                {errors.password && (
-                  <IonBadge color="danger" className="mt-2">
-                    {/*{errors.password.message || ""}*/}
-                  </IonBadge>
-                )}
-              </div>
+              <IonInput
+                type="email"
+                label="Email"
+                labelPlacement="floating"
+                fill="outline"
+                placeholder="email@domain.com"
+                errorText={errors.email?.message}
+                className={`${errors.email && "ion-invalid"}`}
+                {...register("email", { required: "Email is required" })}
+              ></IonInput>
+              <IonInput
+                type="password"
+                label="Password"
+                labelPlacement="floating"
+                fill="outline"
+                errorText={errors.password?.message}
+                placeholder="xxxxxx"
+                {...register("password", {
+                  required: "Password is required",
+                  maxLength: { value: 40, message: "Password too long" },
+                })}
+              />
             </div>
             <IonButton expand="full" type="submit">
               Continue
