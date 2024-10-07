@@ -51,7 +51,7 @@ export default function LoginPage() {
         router.push("/tabs", "root", "replace");
       }
     })();
-  }, []);
+  }, [router]);
 
   return (
     <IonPage>
@@ -98,7 +98,13 @@ export default function LoginPage() {
             <span>Register</span>
           </IonRouterLink> */}
 
-          <div onClick={()=>{router.push("/register", "root", "replace");}}>Goto register</div>
+          <div
+            onClick={() => {
+              router.push("/register", "root", "replace");
+            }}
+          >
+            Goto register
+          </div>
         </div>
         <div>
           <IonRouterLink href={"/reset-password"}>
