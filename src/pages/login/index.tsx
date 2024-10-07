@@ -57,59 +57,55 @@ export default function LoginPage() {
     <IonPage>
       <IonContent className="ion-padding">
         <div style={{ paddingTop: "env(safe-area-inset-top)" }}></div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <IonLabel>Email</IonLabel>
-            <IonInput
-              type="email"
-              placeholder="email@domain.com"
-              {...register("email", { required: "Email is required" })}
-            />
-            {errors.email && (
-              <IonBadge color="danger" className="mt-2">
-                {/*{errors.email.message || ""}*/}
-              </IonBadge>
-            )}
-          </div>
-          <div>
-            <IonLabel>Password</IonLabel>
-            <IonInput
-              type="password"
-              {...register("password", {
-                required: "Password is required",
-                maxLength: { value: 40, message: "Password too long" },
-              })}
-            />
-            {errors.password && (
-              <IonBadge color="danger" className="mt-2">
-                {/*{errors.password.message || ""}*/}
-              </IonBadge>
-            )}
-          </div>
-          <div className="mt-6">
+        <div className="mx-auto max-w-lg h-full flex flex-col justify-center space-y-2">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-2">
+              <div>
+                <IonLabel>Email</IonLabel>
+                <IonInput
+                  type="email"
+                  placeholder="email@domain.com"
+                  {...register("email", { required: "Email is required" })}
+                />
+                {errors.email && (
+                  <IonBadge color="danger" className="mt-2">
+                    {/*{errors.email.message || ""}*/}
+                  </IonBadge>
+                )}
+              </div>
+              <div>
+                <IonLabel>Password</IonLabel>
+                <IonInput
+                  type="password"
+                  {...register("password", {
+                    required: "Password is required",
+                    maxLength: { value: 40, message: "Password too long" },
+                  })}
+                />
+                {errors.password && (
+                  <IonBadge color="danger" className="mt-2">
+                    {/*{errors.password.message || ""}*/}
+                  </IonBadge>
+                )}
+              </div>
+            </div>
             <IonButton expand="full" type="submit">
               Continue
             </IonButton>
+          </form>
+          <div className="flex justify-between">
+            <div>
+              <IonRouterLink href={"/register"}>
+                <span>New user?</span>&nbsp;
+                <span>Register</span>
+              </IonRouterLink>
+            </div>
+            <div>
+              <IonRouterLink href={"/reset-password"}>
+                Forgot password
+              </IonRouterLink>
+            </div>
           </div>
-        </form>
-        <div>
-          {/* <IonRouterLink href={"/register"}>
-            <span>Already have an account?</span>&nbsp;
-            <span>Register</span>
-          </IonRouterLink> */}
-
-          <div
-            onClick={() => {
-              router.push("/register", "root", "replace");
-            }}
-          >
-            Goto register
-          </div>
-        </div>
-        <div>
-          <IonRouterLink href={"/reset-password"}>
-            Forgot password
-          </IonRouterLink>
         </div>
       </IonContent>
     </IonPage>

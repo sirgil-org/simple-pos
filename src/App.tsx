@@ -18,7 +18,7 @@ import {
   IonApp,
   setupIonicReact,
 } from "@ionic/react";
-import "./theme/variables.css";
+// import "./theme/variables.css";
 
 // Import Swiper styles
 import "swiper/css";
