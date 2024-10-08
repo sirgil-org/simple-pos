@@ -47,3 +47,9 @@ Simple POS is a lightweight and user-friendly Point of Sale (POS) system built u
 4. **Run the project**:
     ```powershell
     yarn dev
+
+5. **Run on simulator**:
+    ```npx cap run ios|android
+
+6. **Open workspace**:
+    ```npx cap open ios|android 
