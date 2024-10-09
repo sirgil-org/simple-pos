@@ -12,6 +12,7 @@ import {
   IonItemOption,
   IonItemOptions,
   IonItemSliding,
+  IonPage,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -19,15 +20,16 @@ import { OrderModal } from "./modals";
 import OrderList from "./components/order_list";
 import OrderSummary from "./components/order_summary";
 import { trash } from "ionicons/icons";
+import { IProduct } from "../../types";
 
 export default function NewOrder() {
   const [loading, setLoading] = useState(true);
   const [savingOrder, setSavingOrder] = useState(false);
-  const [products, setProducts]: any = useState([]);
+  const [products, setProducts] = useState<IProduct[]>([]);
 
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLIonInputElement>(null);
 
-  const [order, setOrder]: any = useState({});
+  const [order, setOrder] = useState({});
   const [inputValue, setInputValue] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
 
@@ -40,7 +42,7 @@ export default function NewOrder() {
     const { data, error } = await supabase.from("products").select();
 
     if (error) {
-      console.log(error)
+      console.log(error);
       toast.warn(error.message || "Could not fetch orders...");
     } else if (data) {
       setProducts(data);
@@ -96,7 +98,7 @@ export default function NewOrder() {
     await supabase.from("payments").insert({
       order_id: new_order[0].id,
       amount_paid: inputValue,
-      change: parseFloat(inputValue) - total_cost,
+      change: inputValue - total_cost,
     });
 
     reset_order();
@@ -104,7 +106,8 @@ export default function NewOrder() {
     setSavingOrder(false);
 
     if (error) {
-      return toast.error(error.msg || "Could not create order...");
+      toast.error(error.msg || "Could not create order...");
+      return;
     }
 
     toast.success("Order created...");
@@ -127,12 +130,12 @@ export default function NewOrder() {
   const reset_order = () => {
     setTotalCost(0);
     setInputValue(0);
-    inputRef.current.value = undefined
+    inputRef.current.value = null;
     setOrder({});
   };
 
   return (
-    <>
+    <IonPage>
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle>Create Order</IonTitle>
@@ -235,9 +238,7 @@ export default function NewOrder() {
                     You've added {Object.keys(order).length} Item
                     {Object.keys(order).length > 1 ? "s" : ""}
                   </div>
-                  <div className="text-2xl font-semibold">
-                    N$ {totalCost}
-                  </div>
+                  <div className="text-2xl font-semibold">N$ {totalCost}</div>
                 </div>
                 <IonButton id="open-modal" expand="block">
                   Continue
@@ -264,6 +265,6 @@ export default function NewOrder() {
           </IonItemSliding>
         </IonItemGroup>
       </IonContent>
-    </>
+    </IonPage>
   );
 }

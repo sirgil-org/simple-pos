@@ -12,7 +12,7 @@ const Routes = () => {
   return (
     <IonReactRouter>
       <IonRouterOutlet>
-        <Route path="/tabs" render={() => <Tabs />} />
+        <Route path="/tabs" component={Tabs} />
         <Route exact path="/welcome" component={OnboardingPage} />
         <Route exact path="/register" component={RegisterPage} />
         <Route exact path="/login" component={LoginPage} />
@@ -20,6 +20,7 @@ const Routes = () => {
         <Route exact path="/">
           <Redirect to="/tabs" />
         </Route>
+        <Route render={() => <Redirect to={"/welcome"} />} />
       </IonRouterOutlet>
     </IonReactRouter>
   );

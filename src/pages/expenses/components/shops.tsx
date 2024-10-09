@@ -76,9 +76,9 @@ export default function ShopsPage(props: any) {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Expenses</IonTitle>
+          <IonTitle>History</IonTitle>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/expenses" />
+            <IonBackButton defaultHref="/tabs/expenses" />
           </IonButtons>
           <IonButtons collapse={true} slot="end">
             <IonButton onClick={() => setIsOpen(true)}>
@@ -90,7 +90,7 @@ export default function ShopsPage(props: any) {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Expenses</IonTitle>
+            <IonTitle size="large">History</IonTitle>
             <IonButtons collapse={true} slot="end">
               <IonButton onClick={() => setIsOpen(true)}>
                 <IonIcon icon={addOutline} />

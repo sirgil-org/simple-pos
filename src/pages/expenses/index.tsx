@@ -11,6 +11,7 @@ import {
   IonItem,
   IonItemGroup,
   IonLabel,
+  IonPage,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -60,10 +61,10 @@ export default function Expenses() {
   }, []);
 
   return (
-    <>
+    <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Shops</IonTitle>
+          <IonTitle>Expensess</IonTitle>
           <IonButtons collapse={true} slot="end">
             <IonButton
               onClick={() => {
@@ -95,7 +96,8 @@ export default function Expenses() {
             <IonItem
               button
               key={index}
-              routerLink={`/expenses/shops/${shop.id}`}
+              routerLink={`expenses/${shop.id}`}
+              routerDirection="forward"
             >
               <IonLabel>{shop.name}</IonLabel>
             </IonItem>
@@ -103,6 +105,6 @@ export default function Expenses() {
         </IonItemGroup>
         <AddShopModal dismiss={dismiss} isOpen={isOpen} />
       </IonContent>
-    </>
+    </IonPage>
   );
 }

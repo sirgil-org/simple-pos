@@ -4,8 +4,10 @@ import { toast } from "react-toastify";
 
 import OrdersSkeletal from "./components/orders_skeletal";
 import {
+  IonBadge,
   IonButton,
   IonButtons,
+  IonChip,
   IonContent,
   IonHeader,
   IonIcon,
@@ -16,6 +18,7 @@ import {
   IonLabel,
   IonList,
   IonNote,
+  IonPage,
   IonSelect,
   IonSelectOption,
   IonTitle,
@@ -32,6 +35,15 @@ import OrderDetailsModal from "./components/order_details_modal";
 import possibleStatus, {
   possibleStatusWithIcons,
 } from "../../constants/status";
+
+enum Filters {
+  ALL = "all",
+  WAITING = "waiting",
+  PREPARING = "preparing",
+  COLLECTED = "collected",
+  CANCELLED = "cancelled",
+  READY = "ready",
+}
 
 export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
@@ -147,7 +159,7 @@ export default function OrdersPage() {
   }
 
   useEffect(() => {
-    console.log('in order...')
+    console.log("in order...");
     getOrders();
   }, []);
 
@@ -195,6 +207,16 @@ export default function OrdersPage() {
     }
   }
 
+  async function onFilterChange(value: string) {
+    setActiveFilter(value);
+
+    if (value === Filters.ALL) {
+      return setFilteredOrders(orders);
+    }
+
+    setFilteredOrders(orders.filter((o: any) => o.status === value));
+  }
+
   useMemo(() => {
     supabase
       .channel("todos")
@@ -209,62 +231,29 @@ export default function OrdersPage() {
   }, []);
 
   return (
-    <>
+    <IonPage>
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle>Orders</IonTitle>
-          <IonButtons collapse={true} slot="end">
-            <IonButton>
-              <div>All</div>
-              <IonIcon icon={ellipsisVerticalSharp} />
-            </IonButton>
-          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle size="large">Orders</IonTitle>
-
-            <IonButtons collapse={true} slot="end">
-              <IonButton>
-                <IonList>
-                  <IonItem>
-                    <IonSelect
-                      justify="end"
-                      aria-label="Order status"
-                      toggleIcon={ellipsisVerticalSharp}
-                      interface="popover"
-                      placeholder="all"
-                      onIonChange={(e: any) => {
-                        setActiveFilter(e.detail.value);
-
-                        if (e.detail.value === "all") {
-                          return setFilteredOrders(orders);
-                        }
-
-                        setFilteredOrders(
-                          orders.filter((o: any) => o.status === e.detail.value)
-                        );
-                      }}
-                    >
-                      <IonSelectOption value="all">All</IonSelectOption>
-                      <IonSelectOption value="waiting">Waiting</IonSelectOption>
-                      <IonSelectOption value="preparing">
-                        Preparing
-                      </IonSelectOption>
-                      <IonSelectOption value="collected">
-                        Collected
-                      </IonSelectOption>
-                      <IonSelectOption value="ready">Ready</IonSelectOption>
-                      <IonSelectOption value="cancelled">
-                        Cancelled
-                      </IonSelectOption>
-                    </IonSelect>
-                  </IonItem>
-                </IonList>
-              </IonButton>
-            </IonButtons>
+          </IonToolbar>
+          <IonToolbar>
+            <IonList>
+              {Object.values(Filters).map((filter) => (
+                <IonChip
+                  onClick={() => onFilterChange(filter)}
+                  className="capitalize"
+                  color={filter === activeFilter ? "primary": "medium"}
+                >
+                  {filter}
+                </IonChip>
+              ))}
+            </IonList>
           </IonToolbar>
         </IonHeader>
 
@@ -384,6 +373,6 @@ export default function OrdersPage() {
           </>
         )}
       </IonContent>
-    </>
+    </IonPage>
   );
 }

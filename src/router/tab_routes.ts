@@ -15,11 +15,15 @@ import { ShopsPage } from "../pages/expenses/components";
 
 export const tabs: any = [
   {
+    label: "Reportss",
+    url: "/reports",
+    icon: statsChartOutline,
+    component: ReportsTab,
+  },
+  {
     label: "New Order",
     url: "/new-order",
     icon: addOutline,
-    // color: "#76b140",
-    // backgroundColor: "#ddf7c5",
     component: NewOrderTab,
   },
   {
@@ -28,12 +32,7 @@ export const tabs: any = [
     icon: listOutline,
     component: OrdersTab,
   },
-  {
-    label: "Reports",
-    url: "/reports",
-    icon: statsChartOutline,
-    component: ReportsTab,
-  },
+
   {
     label: "Expenses",
     url: "/expenses",
@@ -42,8 +41,7 @@ export const tabs: any = [
   },
   {
     label: "Shops",
-    url: "/expenses/shops/:id",
-    icon: walletOutline,
+    url: "/expenses/:id",
     component: ShopsPage,
     isChild: true,
   },

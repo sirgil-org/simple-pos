@@ -3,7 +3,7 @@ import { ReportSkeletal } from "./components";
 
 import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
-import { IonCard, IonCardContent, IonContent } from "@ionic/react";
+import { IonCard, IonCardContent, IonContent, IonPage } from "@ionic/react";
 
 export default function Reports() {
   const [loading, setLoading] = useState(true);
@@ -43,7 +43,7 @@ export default function Reports() {
   }
 
   return (
-    <>
+    <IonPage>
       <IonContent fullscreen>
         <div
           style={{ paddingTop: "env(safe-area-inset-top)" }}
@@ -98,6 +98,6 @@ export default function Reports() {
           </div>
         </div>
       </IonContent>
-    </>
+    </IonPage>
   );
 }

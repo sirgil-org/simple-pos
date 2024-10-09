@@ -3,9 +3,7 @@
 	"appName": "simple-pos",
 	"webDir": "build",
 	"server": {
-		"androidScheme": "https",
-		"url": "http://192.168.178.27:3000",
-		"cleartext": true
+		"url": "http://192.168.178.152:3000"
 	},
 	"plugins": {
 		"Keyboard": {

@@ -6,6 +6,7 @@ import {
   IonItem,
   IonLabel,
   IonList,
+  IonPage,
   IonTitle,
   IonToolbar,
   useIonRouter,
@@ -17,7 +18,7 @@ export default function SettingsPage() {
   const router = useIonRouter();
 
   return (
-    <>
+    <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonTitle>About</IonTitle>
@@ -65,6 +66,6 @@ export default function SettingsPage() {
           },
         ]}
       ></IonActionSheet>
-    </>
+    </IonPage>
   );
 }

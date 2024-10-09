@@ -1,6 +1,16 @@
 import { IonInput } from "@ionic/react";
 import { Spinner } from "flowbite-react";
 
+type IOrderSummaryProps = {
+  order: object;
+  totalCost: number;
+  inputValue: number;
+  setInputValue: React.Dispatch<React.SetStateAction<number>>;
+  onSubmit: () => Promise<void>;
+  savingOrder: boolean;
+  inputRef: React.MutableRefObject<HTMLIonInputElement>;
+};
+
 export default function OrderSummary({
   order,
   totalCost,
@@ -9,7 +19,7 @@ export default function OrderSummary({
   onSubmit,
   savingOrder,
   inputRef,
-}: any) {
+}: IOrderSummaryProps) {
   return (
     <div>
       <div className="flex justify-between text-3xl font-bold">
@@ -33,7 +43,9 @@ export default function OrderSummary({
           autoFocus
           placeholder="0.00"
           ref={inputRef}
-          onIonInput={(e) => setInputValue(e.target.value)}
+          onIonInput={(e) =>
+            setInputValue(parseFloat(e.target.value.toString()))
+          }
         />
         <div
           className={`text-end text-lg font-bold ${
@@ -50,22 +62,22 @@ export default function OrderSummary({
               key={item}
               onClick={() => {
                 if (item === "del") {
-                  return setInputValue("0");
+                  return setInputValue(0);
                 }
 
                 if (inputValue[0] === "0" && item !== ".") {
-                  return setInputValue(item);
+                  return setInputValue(parseInt(item));
                 }
 
-                if (
-                  item === "." &&
-                  Array.from(inputValue).indexOf(".") !== -1
-                ) {
-                  return;
-                }
-                setInputValue(inputValue + item);
+                // if (
+                //   item === "." &&
+                //   Array.from(inputValue).indexOf(".") !== -1
+                // ) {
+                //   return;
+                // }
+                setInputValue(inputValue + parseInt(item));
               }}
-              className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               {item}
             </button>
