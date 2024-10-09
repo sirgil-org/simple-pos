@@ -96,8 +96,8 @@ export default function Expenses() {
             <IonItem
               button
               key={index}
-              routerLink={`expenses/${shop.id}`}
-              routerDirection="forward"
+              routerLink={`/tabs/expenses/${shop.id}`}
+              // routerDirection="forward"
             >
               <IonLabel>{shop.name}</IonLabel>
             </IonItem>

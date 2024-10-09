@@ -43,7 +43,7 @@ export const tabs: any = [
     label: "Shops",
     url: "/expenses/:id",
     component: ShopsPage,
-    isChild: true,
+    is_child: true,
   },
   {
     label: "Settings",

@@ -58,7 +58,7 @@ export const Tabs: React.FC = ({ match }) => {
           {tabs.map((tab, index) => (
             <Route
               key={index}
-              exact
+              exact={tab.is_child ? false: true}
               path={`${match.url}${tab.url}`}
               render={(props) => {
                 return <tab.component {...props} />;
@@ -71,7 +71,7 @@ export const Tabs: React.FC = ({ match }) => {
         </IonRouterOutlet>
         <IonTabBar slot="bottom" translucent className="md:hidden">
           {tabs
-            .filter((item) => !item.isChild)
+            .filter((item) => !item.is_child)
             .map((tab, index) => (
               <IonTabButton
                 key={index}
