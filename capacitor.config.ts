@@ -3,11 +3,11 @@ import { KeyboardResize, KeyboardStyle } from '@capacitor/keyboard';
 
 const config: CapacitorConfig = {
   appId: 'com.example.app',
-  appName: 'simple-pos',
+  appName: 'SimplePos',
   webDir: 'build',
   server: {
     androidScheme: 'https',
-    url: 'http://192.168.178.152:3000',
+    url: 'http://192.168.178.27:3000',
     cleartext: true,
   },
   plugins: {
