@@ -35,6 +35,7 @@ import possibleStatus, {
   possibleStatusWithIcons,
 } from "../../constants/status";
 import { AuthContext } from "../../contexts";
+import useQuery from "../../hooks/query";
 
 enum Filters {
   ALL = "all",
@@ -46,14 +47,36 @@ enum Filters {
 }
 
 export default function OrdersPage() {
-  const [loading, setLoading] = useState(true);
-  const [orders, setOrders]: any = useState([]);
   const [filteredOrders, setFilteredOrders]: any = useState([]);
+  const { data: orders, loading } = useQuery<any[]>({
+    table: "orders",
+
+    from: 0,
+    to: 100,
+    filter: `
+      id, 
+      order_number, 
+      status,
+      created_at,
+      phone_number,
+      product_order ( 
+        product_id, 
+        quantity, 
+        created_at, 
+        order_id, 
+        price,
+        products (
+          title
+        )
+      )
+  `,
+    order: { column: "created_at", ascending: false },
+    cb: setFilteredOrders,
+  });
+
   const [selectedOrder, setSelectedOrder]: any = useState({});
   const [isOpen, setIsOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState("all");
-
-  const currentUser = useContext(AuthContext);
 
   const handleChangeStatus = async (status: string, currentOrder: any) => {
     const to_update: any = { status };
@@ -114,48 +137,6 @@ export default function OrdersPage() {
     setIsOpen(false);
   }
 
-  async function getOrders() {
-    setLoading(true);
-
-    const { data, error } = await supabase
-      .from("orders")
-      .select(
-        `
-      id, 
-      order_number, 
-      status,
-      created_at,
-      phone_number,
-      product_order ( 
-        sku, 
-        quantity, 
-        created_at, 
-        order_id, 
-        price,
-        products (
-          title
-        )
-      )
-    `
-      )
-      .eq("vendor_id", currentUser.id)
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      toast.warn(error.message || "Could not fetch orders...");
-    } else if (data) {
-      setOrders(data);
-      setFilteredOrders(data);
-    }
-
-    setLoading(false);
-  }
-
-  useEffect(() => {
-    console.log("in order...");
-    getOrders();
-  }, []);
-
   async function getNewOrder(data) {
     const { data: newOrder, error } = await supabase
       .from("orders")
@@ -167,7 +148,7 @@ export default function OrdersPage() {
       created_at,
       phone_number,
       product_order ( 
-        sku, 
+        product_id, 
         quantity, 
         created_at, 
         order_id, 
@@ -237,8 +218,9 @@ export default function OrdersPage() {
           </IonToolbar>
           <IonToolbar>
             <IonList>
-              {Object.values(Filters).map((filter) => (
+              {Object.values(Filters).map((filter, index: number) => (
                 <IonChip
+                  key={index}
                   onClick={() => onFilterChange(filter)}
                   className="capitalize"
                   color={filter === activeFilter ? "primary" : "medium"}
@@ -255,7 +237,7 @@ export default function OrdersPage() {
         ) : (
           <>
             <IonList className="pb-[100px]">
-              {filteredOrders.map((order: any, index: any) => (
+              {filteredOrders.map((order: any, index: number) => (
                 <IonItemSliding
                   key={order.id}
                   /*ref={(node) => {

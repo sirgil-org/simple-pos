@@ -25,7 +25,7 @@ export default function OrderInfo({
           </div>
         </div>
         {selectedOrder.product_order.map((order: any) => (
-          <div key={order.sku} className="flex justify-between">
+          <div key={order.product_id} className="flex justify-between">
             <div>
               {order.quantity} x {order.products.title}
             </div>

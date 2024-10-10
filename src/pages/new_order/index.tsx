@@ -1,4 +1,4 @@
-import { Key, useContext, useEffect, useRef, useState } from "react";
+import { Key, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { supabase } from "../../supabase_client";
 import { NewOrderSkeletal } from "./components";
@@ -21,15 +21,18 @@ import OrderList from "./components/order_list";
 import OrderSummary from "./components/order_summary";
 import { trash } from "ionicons/icons";
 import { IProduct } from "../../types";
-import { AuthContext } from "../../contexts";
+import useQuery from "../../hooks/query";
 
 export default function NewOrder() {
-  const [loading, setLoading] = useState(true);
-  const [savingOrder, setSavingOrder] = useState(false);
-  const [products, setProducts] = useState<IProduct[]>([]);
 
+  const { data: products, loading } = useQuery<IProduct[]>({
+    table: "products",
+    from: 0,
+    to: 100,
+  });
+
+  const [savingOrder, setSavingOrder] = useState(false);
   const inputRef = useRef<HTMLIonInputElement>(null);
-  const currentUser = useContext(AuthContext);
 
   const [order, setOrder] = useState({});
   const [inputValue, setInputValue] = useState(0);
@@ -38,27 +41,6 @@ export default function NewOrder() {
   const modal = useRef<HTMLIonModalElement>(null);
   const slidingItemRef = useRef<HTMLIonItemSlidingElement>(null);
 
-  const fetchData = async () => {
-    setLoading(true);
-
-    const { data, error } = await supabase
-      .from("products")
-      .select()
-      .eq("vendor_id", currentUser.id);
-
-    if (error) {
-      console.log(error);
-      toast.warn(error.message || "Could not fetch orders...");
-    } else if (data) {
-      setProducts(data);
-    }
-
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const onSubmit = async () => {
     setSavingOrder(true);
@@ -88,12 +70,12 @@ export default function NewOrder() {
 
     const { error }: any = await supabase.from("product_order").insert(
       Object.keys(order).map((key: any) => {
-        const item = products.find((product: any) => product.sku === key);
+        const item = products.find((product: any) => product.id === key);
         total_cost += item.price * order[key];
 
         return {
           order_id: new_order[0].id,
-          sku: key,
+          product_id: key,
           quantity: order[key],
           price: item?.price,
         };
@@ -121,7 +103,7 @@ export default function NewOrder() {
   const calculate_total = (orders: any) => {
     let total_cost = 0;
     Object.keys(orders).forEach((key: any) => {
-      const item = products.find((product: any) => product.sku === key);
+      const item = products.find((product: any) => product.id === key);
       total_cost += item.price * orders[key];
     });
 
@@ -163,15 +145,15 @@ export default function NewOrder() {
                     <div key={key}>
                       <img
                         className="cursor-pointer w-max"
-                        key={product.sku}
+                        key={product.id}
                         src={product.image_url}
                         onClick={() => {
                           setOrder((prev: any) => {
-                            const old_count = order[product.sku];
+                            const old_count = order[product.id];
 
                             const new_data = {
                               ...prev,
-                              [product.sku]: old_count > 0 ? old_count + 1 : 1,
+                              [product.id]: old_count > 0 ? old_count + 1 : 1,
                             };
 
                             calculate_total(new_data);

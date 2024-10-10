@@ -1,7 +1,6 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { AddShopModal } from "./modals";
-import { toast } from "react-toastify";
-import { supabase } from "../../supabase_client";
+
 import {
   IonButton,
   IonButtons,
@@ -16,58 +15,40 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
-import { IShop } from "../../types";
-import { AuthContext } from "../../contexts";
+import useQuery from "../../hooks/query";
+import OrdersSkeletal from "../orders/components/orders_skeletal";
 
 export default function Expenses() {
-  const [shops, setShops] = useState<IShop[]>([]);
-  const [, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const currentUser = useContext(AuthContext);
+
+  const { data: shops, loading } = useQuery<any[]>({
+    table: "vendor_shop",
+    from: 0,
+    to: 100,
+    filter: `
+      shops(
+        id,
+        name
+      )
+  `,
+  });
 
   function dismiss() {
     setIsOpen(false);
   }
 
-  useEffect(() => {
-    async function getOrders() {
-      setLoading(true);
-
-      const { data, error } = await supabase
-        .from("vendor_shop")
-        .select(
-          `shops(
-            id,
-            name
-          )
-      `
-        )
-        .eq("vendor_id", currentUser.id);
-
-      if (error) {
-        toast.warn(error.message || "Could not fetch shops...");
-      } else if (data) {
-        setShops(data);
-      }
-
-      setLoading(false);
-    }
-
-    getOrders();
-  }, []);
-
-  useMemo(() => {
-    supabase
-      .channel("todos")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "shops" },
-        async (data) => {
-          setShops((prev) => [...prev, data.new]);
-        }
-      )
-      .subscribe();
-  }, []);
+  // useMemo(() => {
+  //   supabase
+  //     .channel("todos")
+  //     .on(
+  //       "postgres_changes",
+  //       { event: "INSERT", schema: "public", table: "shops" },
+  //       async (data) => {
+  //         setShops((prev) => [...prev, data.new]);
+  //       }
+  //     )
+  //     .subscribe();
+  // }, []);
 
   return (
     <IonPage>
@@ -101,15 +82,19 @@ export default function Expenses() {
           </IonToolbar>
         </IonHeader>
         <IonItemGroup>
-          {shops.map((shop, index: number) => (
-            <IonItem
-              button
-              key={index}
-              routerLink={`/tabs/expenses/${shop.id}`}
-            >
-              <IonLabel>{shop.name}</IonLabel>
-            </IonItem>
-          ))}
+          {loading ? (
+            <OrdersSkeletal />
+          ) : (
+            shops.map(({ shops: shop }, index: number) => (
+              <IonItem
+                button
+                key={index}
+                routerLink={`/tabs/expenses/${shop.id}`}
+              >
+                <IonLabel>{shop.name}</IonLabel>
+              </IonItem>
+            ))
+          )}
         </IonItemGroup>
         <AddShopModal dismiss={dismiss} isOpen={isOpen} />
       </IonContent>

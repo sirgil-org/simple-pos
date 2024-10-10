@@ -1,7 +1,7 @@
 import {
   addOutline,
   walletOutline,
-  statsChartOutline,
+  // statsChartOutline,
   listOutline,
   settingsOutline,
 } from "ionicons/icons";
@@ -9,7 +9,7 @@ import {
 import SettingsTab from "../pages/settings";
 import OrdersTab from "../pages/orders/orders";
 import NewOrderTab from "../pages/new_order";
-import ReportsTab from "../pages/reports";
+// import ReportsTab from "../pages/reports";
 import ExpensesTab from "../pages/expenses";
 import { ShopsPage } from "../pages/expenses/components";
 
@@ -22,12 +22,12 @@ type IRoute = {
 };
 
 export const tabs: IRoute[] = [
-  {
-    label: "Reports",
-    url: "/reports",
-    icon: statsChartOutline,
-    component: ReportsTab,
-  },
+  // {
+  //   label: "Reports",
+  //   url: "/reports",
+  //   icon: statsChartOutline,
+  //   component: ReportsTab,
+  // },
   {
     label: "New Order",
     url: "/new-order",

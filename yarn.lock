@@ -235,6 +235,11 @@
   resolved "https://registry.yarnpkg.com/@capacitor/app/-/app-5.0.7.tgz#f71e81320bcd504c400c1f503ba43a88ccac96e8"
   integrity sha512-oad0jwQu+vgQDukeS9UV56yG10dlxkAGGl26IQpZlTmg3dTI9qSJtvhmlLfkF0nEtoj5IsVQUPE+NLH1oZkgGQ==
 
+"@capacitor/camera@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@capacitor/camera/-/camera-6.0.2.tgz#353374f83a64b66b8b474a04d5e8167d680490ef"
+  integrity sha512-bC2xxCcNTyfKYuLNLbGIyLlK9fok2MDhF4v8s01jusYAxoBI7LaKWQMQoGBA1MY/Ec6x/2pjIr+7k89Kmdr74g==
+
 "@capacitor/cli@^5.5.1":
   version "5.5.1"
   resolved "https://registry.yarnpkg.com/@capacitor/cli/-/cli-5.5.1.tgz#6da1eadea31963b5be64544b88f3e973fe0b1a31"
@@ -264,6 +269,11 @@
   integrity sha512-VG6Iv8Q7ZAbvjodxpvjcSe0jfxUwZXnvjbi93ehuJ6eYP8U926qLSXyrT/DToZq+F6v/HyGyVgn3mrE/9jW2Tg==
   dependencies:
     tslib "^2.1.0"
+
+"@capacitor/filesystem@^6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@capacitor/filesystem/-/filesystem-6.0.1.tgz#2c8aa67217c628ee3237555148b021e69df7b198"
+  integrity sha512-eHhXm6tzBIQhErzFnfOE6eA1U+15DHc2212/COfzzGGRk/dyGympoVV3ct2YPVzvpTSxMEW3xFocORv/xD9gFg==
 
 "@capacitor/ios@^5.5.1":
   version "5.5.1"
@@ -494,6 +504,11 @@
     "@stencil/core" "^4.12.0"
     ionicons "^7.2.2"
     tslib "^2.1.0"
+
+"@ionic/pwa-elements@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@ionic/pwa-elements/-/pwa-elements-3.3.0.tgz#971c806ebe410c677740f9e4b32bbf26ac29bb93"
+  integrity sha512-vbykpxd2nGRlA67AnqDwsiVf8PUmInLyi6lQdnPDjeiML1WZa0CPe6r632nGDV9PTi+sWNde9Xexg9SD6Pwyqw==
 
 "@ionic/react-router@^7.0.0":
   version "7.7.0"
@@ -1120,6 +1135,11 @@ balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
+
+base64-arraybuffer@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/base64-arraybuffer/-/base64-arraybuffer-1.0.2.tgz#1c37589a7c4b0746e34bd1feb951da2df01c1bdc"
+  integrity sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==
 
 base64-js@^1.5.1:
   version "1.5.1"

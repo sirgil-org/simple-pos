@@ -66,7 +66,7 @@ export default function OrderDetailsModal({
         <IonList inset={true}>
           <IonListHeader>Summary</IonListHeader>
           {selectedOrder?.product_order?.map((order: any) => (
-            <IonItem key={order.sku}>
+            <IonItem key={order.product_id}>
               <IonLabel>
                 {order.quantity} x {order.products.title}
               </IonLabel>

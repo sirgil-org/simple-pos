@@ -22,8 +22,6 @@ import { addOutline } from "ionicons/icons";
 import { IExpense } from "../../../types";
 import { AuthContext } from "../../../contexts";
 
-
-
 export default function ShopsPage(props) {
   const [expenses, setExpenses] = useState<IExpense[]>([]);
   const [, setLoading] = useState(true);
@@ -63,20 +61,20 @@ export default function ShopsPage(props) {
     getOrders();
   }, []);
 
-  useMemo(() => {
-    supabase
-      .channel("todos")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "expenses" },
-        async (data) => {
-          if (data.new.shop_id === props.match.params.id) {
-            setExpenses((prev) => [...prev, data.new]);
-          }
-        }
-      )
-      .subscribe();
-  }, [props.match.params.id]);
+  // useMemo(() => {
+  //   supabase
+  //     .channel("todos")
+  //     .on(
+  //       "postgres_changes",
+  //       { event: "INSERT", schema: "public", table: "expenses" },
+  //       async (data) => {
+  //         if (data.new.shop_id === props.match.params.id) {
+  //           setExpenses((prev) => [...prev, data.new]);
+  //         }
+  //       }
+  //     )
+  //     .subscribe();
+  // }, [props.match.params.id]);
 
   return (
     <IonPage>

@@ -9,9 +9,9 @@ export default function OrderList({
   return (
     <div>
       {Object.keys(order).map((key: any) => {
-        const item = products.find((product: any) => product.sku === key);
+        const item = products.find((product: any) => product.id === key);
         return (
-          <div key={item.sku} className="flex justify-between mb-2">
+          <div key={item.id} className="flex justify-between mb-2">
             <div className="flex space-x-4 items-center">
               <div className="flex items-center justify-center rounded-full h-8 w-8 bg-secondary ">
                 {order[key]}
