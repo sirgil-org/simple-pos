@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { AddShopModal } from "./modals";
 import { toast } from "react-toastify";
 import { supabase } from "../../supabase_client";
@@ -16,11 +16,14 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
+import { IShop } from "../../types";
+import { AuthContext } from "../../contexts";
 
 export default function Expenses() {
-  const [shops, setShops]: any = useState([]);
+  const [shops, setShops] = useState<IShop[]>([]);
   const [, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const currentUser = useContext(AuthContext);
 
   function dismiss() {
     setIsOpen(false);
@@ -30,10 +33,16 @@ export default function Expenses() {
     async function getOrders() {
       setLoading(true);
 
-      const { data, error } = await supabase.from("shops").select(`
-          id,
-          name
-      `);
+      const { data, error } = await supabase
+        .from("vendor_shop")
+        .select(
+          `shops(
+            id,
+            name
+          )
+      `
+        )
+        .eq("vendor_id", currentUser.id);
 
       if (error) {
         toast.warn(error.message || "Could not fetch shops...");
@@ -54,7 +63,7 @@ export default function Expenses() {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "shops" },
         async (data) => {
-          setShops((prev: any) => [...prev, data.new]);
+          setShops((prev) => [...prev, data.new]);
         }
       )
       .subscribe();
@@ -64,7 +73,7 @@ export default function Expenses() {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Expensess</IonTitle>
+          <IonTitle>Expenses</IonTitle>
           <IonButtons collapse={true} slot="end">
             <IonButton
               onClick={() => {
@@ -92,12 +101,11 @@ export default function Expenses() {
           </IonToolbar>
         </IonHeader>
         <IonItemGroup>
-          {shops.map((shop: any, index: any) => (
+          {shops.map((shop, index: number) => (
             <IonItem
               button
               key={index}
               routerLink={`/tabs/expenses/${shop.id}`}
-              // routerDirection="forward"
             >
               <IonLabel>{shop.name}</IonLabel>
             </IonItem>

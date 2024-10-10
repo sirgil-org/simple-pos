@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { AddExpenseModal } from "../modals";
 import { toast } from "react-toastify";
 import { supabase } from "../../../supabase_client";
@@ -19,11 +19,16 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
+import { IExpense } from "../../../types";
+import { AuthContext } from "../../../contexts";
 
-export default function ShopsPage(props: any) {
-  const [expenses, setExpenses]: any = useState([]);
+
+
+export default function ShopsPage(props) {
+  const [expenses, setExpenses] = useState<IExpense[]>([]);
   const [, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const currentUser = useContext(AuthContext);
 
   function dismiss() {
     setIsOpen(false);
@@ -43,6 +48,7 @@ export default function ShopsPage(props: any) {
             created_at
       `
         )
+        .eq("vendor_id", currentUser.id)
         .eq("shop_id", props.match.params.id);
 
       if (error) {
@@ -65,12 +71,12 @@ export default function ShopsPage(props: any) {
         { event: "INSERT", schema: "public", table: "expenses" },
         async (data) => {
           if (data.new.shop_id === props.match.params.id) {
-            setExpenses((prev: any) => [...prev, data.new]);
+            setExpenses((prev) => [...prev, data.new]);
           }
         }
       )
       .subscribe();
-  }, []);
+  }, [props.match.params.id]);
 
   return (
     <IonPage>
@@ -99,7 +105,7 @@ export default function ShopsPage(props: any) {
           </IonToolbar>
         </IonHeader>
         <IonItemGroup>
-          {expenses.map((expense: any, index: any) => (
+          {expenses.map((expense, index: number) => (
             <IonItem button key={index} detail={false}>
               <IonLabel>
                 <div>Invoice #{expense.invoice_number}</div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
 
@@ -29,12 +29,12 @@ import {
   banOutline,
   checkmark,
   checkmarkDoneOutline,
-  ellipsisVerticalSharp,
 } from "ionicons/icons";
 import OrderDetailsModal from "./components/order_details_modal";
 import possibleStatus, {
   possibleStatusWithIcons,
 } from "../../constants/status";
+import { AuthContext } from "../../contexts";
 
 enum Filters {
   ALL = "all",
@@ -53,15 +53,7 @@ export default function OrdersPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState("all");
 
-  const slidingItemRef = useRef<HTMLIonItemSlidingElement>(null);
-
-  /*function getMap() {
-    if (!slidingItemRef.current) {
-      // Initialize the Map on first usage.
-      slidingItemRef.current = new Map();
-    }
-    return slidingItemRef.current;
-  }*/
+  const currentUser = useContext(AuthContext);
 
   const handleChangeStatus = async (status: string, currentOrder: any) => {
     const to_update: any = { status };
@@ -146,6 +138,7 @@ export default function OrdersPage() {
       )
     `
       )
+      .eq("vendor_id", currentUser.id)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -248,7 +241,7 @@ export default function OrdersPage() {
                 <IonChip
                   onClick={() => onFilterChange(filter)}
                   className="capitalize"
-                  color={filter === activeFilter ? "primary": "medium"}
+                  color={filter === activeFilter ? "primary" : "medium"}
                 >
                   {filter}
                 </IonChip>

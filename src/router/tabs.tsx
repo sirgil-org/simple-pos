@@ -10,11 +10,14 @@ import {
 } from "@ionic/react";
 import { tabs } from "./tab_routes";
 import { SplitPaneWrapper } from "./split_pane_wrapper";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../supabase_client";
+import { AuthContext } from "../contexts";
 
 export const Tabs: React.FC = ({ match }) => {
   const router = useIonRouter();
+
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const setup = async () => {
@@ -23,13 +26,17 @@ export const Tabs: React.FC = ({ match }) => {
           console.log(session, " ----- initial session");
           if (session === null) {
             router.push("/login", "root", "replace");
+          } else {
+            setCurrentUser(session.user);
           }
           // handle initial session
           console.log("INITIAL_SESSION");
         } else if (_event === "SIGNED_IN") {
           // handle sign in event
           console.log("SIGNED_IN");
+          setCurrentUser(session.user);
         } else if (_event === "SIGNED_OUT") {
+          setCurrentUser(null);
           // handle sign out event
           console.log("SIGNED_OUT");
           router.push("/login", "root", "replace");
@@ -51,39 +58,49 @@ export const Tabs: React.FC = ({ match }) => {
   }, [router]);
 
   return (
-    <SplitPaneWrapper>
-      <IonTabs>
-        <IonRouterOutlet id="main-content">
-          <Redirect exact path={`${match.url}`} to={`${match.url}/orders`} />
-          {tabs.map((tab, index) => (
-            <Route
-              key={index}
-              exact={tab.is_child ? false: true}
-              path={`${match.url}${tab.url}`}
-              render={(props) => {
-                return <tab.component {...props} />;
-              }}
-            />
-          ))}
-          <Route exact path={`${match.url}`}>
-            <Redirect to={`${match.url}/orders`} />
-          </Route>
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom" translucent className="md:hidden">
-          {tabs
-            .filter((item) => !item.is_child)
-            .map((tab, index) => (
-              <IonTabButton
-                key={index}
-                tab={tab.label.toLocaleLowerCase()}
-                href={`${match.url}${tab.url}`}
-              >
-                <IonIcon icon={tab.icon} />
-                <IonLabel>{tab.label}</IonLabel>
-              </IonTabButton>
-            ))}
-        </IonTabBar>
-      </IonTabs>
-    </SplitPaneWrapper>
+    <>
+      {currentUser && (
+        <AuthContext.Provider value={currentUser}>
+          <SplitPaneWrapper>
+            <IonTabs>
+              <IonRouterOutlet id="main-content">
+                <Redirect
+                  exact
+                  path={`${match.url}`}
+                  to={`${match.url}/orders`}
+                />
+                {tabs.map((tab, index) => (
+                  <Route
+                    key={index}
+                    exact={tab.is_child ? false : true}
+                    path={`${match.url}${tab.url}`}
+                    render={(props) => {
+                      return <tab.component {...props} />;
+                    }}
+                  />
+                ))}
+                <Route exact path={`${match.url}`}>
+                  <Redirect to={`${match.url}/orders`} />
+                </Route>
+              </IonRouterOutlet>
+              <IonTabBar slot="bottom" translucent className="md:hidden">
+                {tabs
+                  .filter((item) => !item.is_child)
+                  .map((tab, index) => (
+                    <IonTabButton
+                      key={index}
+                      tab={tab.label.toLocaleLowerCase()}
+                      href={`${match.url}${tab.url}`}
+                    >
+                      <IonIcon icon={tab.icon} />
+                      <IonLabel>{tab.label}</IonLabel>
+                    </IonTabButton>
+                  ))}
+              </IonTabBar>
+            </IonTabs>
+          </SplitPaneWrapper>
+        </AuthContext.Provider>
+      )}
+    </>
   );
 };

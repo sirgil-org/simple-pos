@@ -7,7 +7,7 @@ import { IonCard, IonCardContent, IonContent, IonPage } from "@ionic/react";
 
 export default function Reports() {
   const [loading, setLoading] = useState(true);
-  const [orders, setOrders]: any = useState([]);
+  const [, setOrders] = useState([]);
 
   const timeUnitInterval = "hour";
   const minRangeDays = 10;

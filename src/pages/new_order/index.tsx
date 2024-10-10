@@ -1,4 +1,4 @@
-import { Key, useEffect, useRef, useState } from "react";
+import { Key, useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { supabase } from "../../supabase_client";
 import { NewOrderSkeletal } from "./components";
@@ -21,6 +21,7 @@ import OrderList from "./components/order_list";
 import OrderSummary from "./components/order_summary";
 import { trash } from "ionicons/icons";
 import { IProduct } from "../../types";
+import { AuthContext } from "../../contexts";
 
 export default function NewOrder() {
   const [loading, setLoading] = useState(true);
@@ -28,6 +29,7 @@ export default function NewOrder() {
   const [products, setProducts] = useState<IProduct[]>([]);
 
   const inputRef = useRef<HTMLIonInputElement>(null);
+  const currentUser = useContext(AuthContext);
 
   const [order, setOrder] = useState({});
   const [inputValue, setInputValue] = useState(0);
@@ -39,7 +41,10 @@ export default function NewOrder() {
   const fetchData = async () => {
     setLoading(true);
 
-    const { data, error } = await supabase.from("products").select();
+    const { data, error } = await supabase
+      .from("products")
+      .select()
+      .eq("vendor_id", currentUser.id);
 
     if (error) {
       console.log(error);

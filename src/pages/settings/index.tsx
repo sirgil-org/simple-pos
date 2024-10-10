@@ -9,13 +9,11 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  useIonRouter,
 } from "@ionic/react";
 import { logOutOutline } from "ionicons/icons";
 import { supabase } from "../../supabase_client";
 
 export default function SettingsPage() {
-  const router = useIonRouter();
 
   return (
     <IonPage>

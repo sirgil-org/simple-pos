@@ -1,10 +1,4 @@
 import {
-  IonSplitPane,
-  IonMenu,
-  IonHeader,
-  IonToolbar,
-  IonContent,
-  IonList,
   IonItem,
   IonIcon,
 } from "@ionic/react";
@@ -15,7 +9,7 @@ export const SplitPaneWrapper = ({ children }) => {
     <div>
       <div className="w-[100px] bg-white h-[100vh] hidden md:flex flex-col justify-center items-center">
         {tabs
-          .filter((item) => !item.isChild)
+          .filter((item) => !item.is_child)
           .map((tab, index) => {
             return (
               <IonItem

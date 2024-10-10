@@ -13,9 +13,17 @@ import ReportsTab from "../pages/reports";
 import ExpensesTab from "../pages/expenses";
 import { ShopsPage } from "../pages/expenses/components";
 
-export const tabs: any = [
+type IRoute = {
+  label: string;
+  url: string;
+  icon?: string;
+  component: () => JSX.Element;
+  is_child?: boolean;
+};
+
+export const tabs: IRoute[] = [
   {
-    label: "Reportss",
+    label: "Reports",
     url: "/reports",
     icon: statsChartOutline,
     component: ReportsTab,

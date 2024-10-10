@@ -29,3 +29,18 @@ export type IVendor = {
     slug: string
     created_at: Date
 }
+
+export type IShop = {
+    id?: string
+    name?: string
+    created_at?: string
+    slug?: string
+}
+
+export type IExpense = {
+    id?: string
+    shop?: IShop
+    invoice_number?: string
+    amount?: number
+    created_at?: Date
+}
