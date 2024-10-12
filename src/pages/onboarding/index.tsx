@@ -96,6 +96,8 @@ export default function ShopSetupPage({showSetup, setShowSetup}) {
     }
   };
 
+  console.log('&&&&&&&&&&&&&&& ', showSetup)
+
   return (
     <IonModal canDismiss={false} isOpen={showSetup}>
       <div style={{ paddingTop: "env(safe-area-inset-top)" }}></div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
 
@@ -142,6 +142,10 @@ export default function OrdersPage() {
 
     setFilteredOrders(orders.filter((o: any) => o.status === value));
   }
+
+  useEffect(()=>{
+    console.log('orders redirect ******* ')
+  }, [])
 
   return (
     <IonPage>
