@@ -13,7 +13,7 @@ const Routes = () => {
     <IonReactRouter>
       <IonRouterOutlet>
         <Route path="/tabs" component={Tabs} />
-        <Route exact path="/welcome" component={OnboardingPage} />
+        <Route path="/welcome" component={OnboardingPage} />
         <Route exact path="/register" component={RegisterPage} />
         <Route exact path="/login" component={LoginPage} />
         <Route exact path="/reset-password" component={ResetPasswordPage} />

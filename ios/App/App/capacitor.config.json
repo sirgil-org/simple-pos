@@ -1,5 +1,5 @@
 {
-	"appId": "com.example.app",
+	"appId": "com.sirgil.app",
 	"appName": "SimplePos",
 	"webDir": "build",
 	"server": {
@@ -13,5 +13,12 @@
 			"style": "DARK",
 			"resizeOnFullScreen": true
 		}
-	}
+	},
+	"packageClassList": [
+		"AppPlugin",
+		"CAPCameraPlugin",
+		"FilesystemPlugin",
+		"KeyboardPlugin",
+		"SplashScreenPlugin"
+	]
 }

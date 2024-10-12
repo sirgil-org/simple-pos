@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 import { KeyboardResize, KeyboardStyle } from '@capacitor/keyboard';
 
 const config: CapacitorConfig = {
-  appId: 'com.example.app',
+  appId: 'com.sirgil.app',
   appName: 'SimplePos',
   webDir: 'build',
   server: {

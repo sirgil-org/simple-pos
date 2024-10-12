@@ -1,80 +1,119 @@
-// Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
+import { usePhotoGallery } from "../../hooks/usePhotoGallery";
+import useMutation from "../../hooks/mutation";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../contexts";
+import { supabase } from "../../supabase_client";
+
 import {
-  IonButton,
-  IonCol,
+  IonPage,
   IonContent,
-  IonFab,
-  IonFabButton,
-  IonGrid,
-  IonIcon,
-  IonImg,
+  IonButton,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
+  IonModal,
   IonNote,
-  IonPage,
-  IonRow,
+  IonFooter,
+  IonToolbar,
+  IonListHeader,
+  IonThumbnail,
+  IonSpinner,
+  useIonToast,
+  useIonRouter,
 } from "@ionic/react";
-import { usePhotoGallery } from "../../hooks/usePhotoGallery";
-import { add } from "ionicons/icons";
-import useMutation from "../../hooks/mutation";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import { useContext, useState } from "react";
-import { AuthContext } from "../../contexts";
-import { supabase } from "../../supabase_client";
-import { decode } from "base64-arraybuffer";
+
+type IAddItem = {
+  title: string;
+  price: number;
+};
 
 export default function OnboardingPage() {
   const currentUser = useContext(AuthContext);
   const { getPhoto, photos } = usePhotoGallery();
   const { loading, insert } = useMutation();
+  const [products, setProducts] = useState([]);
+  const [present] = useIonToast();
+  const router = useIonRouter();
+
+  const presentToast = (
+    position: "top" | "middle" | "bottom",
+    message: string,
+    type: "success" | "warning"
+  ) => {
+    present({
+      message,
+      duration: 1500,
+      position: position,
+      color: type
+    });
+  };
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm();
+  } = useForm<IAddItem>({ defaultValues: { title: "", price: 0 } });
+
+
 
   const uploadImage = async (photo) => {
+    console.log("uploading");
+    const base64Data = await base64FromPath(photo.webPath!);
+    console.log("prep....", base64Data);
     const { data, error } = await supabase.storage
       .from(`product-images`)
       .upload(
         `c0f5bdec-668d-4eb5-9cc5-e06247f2fef2/${photo.filepath}`,
-        decode(photo.webviewPath.split(",")[1]),
+        base64Data,
         {
           contentType: "image/jpeg",
           cacheControl: "3600",
-          upsert: false,
+          upsert: true,
         }
       );
 
     if (error) {
       console.error(error);
     } else {
-      console.log(data);
+      console.log(data, " uploaded");
     }
   };
 
-  const [products, setProducts] = useState([]);
+  async function base64FromPath(path: string): Promise<string> {
+    const response = await fetch(path);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          resolve(reader.result);
+        } else {
+          reject("method did not return a string");
+        }
+      };
+      reader.readAsDataURL(blob);
+    });
+  }
 
   const handleSave = async () => {
-    await Promise.all(
-      photos.map(async (photo) => {
-        await uploadImage(photo);
-      })
-    );
+    //   console.log("in save,...", photos.length);
+    //   await Promise.all(
+    //     photos.map(async (photo) => {
+    //       await uploadImage(photo);
+    //     })
+    //   );
+    const { error } = await insert("products", products);
 
-    // const { error } = await insert("products", products);
-
-    // if (error) {
-    //   toast.error(error.message);
-    // } else {
-    //   toast.success("Item added");
-    // }
+    if (error) {
+      presentToast("top", error.message, "warning");
+    } else {
+      presentToast("top", "Item added!", "success");
+      router.push('/tabs', 'root', 'replace');
+    }
   };
 
   const onSubmit = (formData) => {
@@ -89,106 +128,102 @@ export default function OnboardingPage() {
     reset();
   };
 
-  return (
-    <IonPage>
-      <div style={{ paddingTop: "env(safe-area-inset-top)" }}></div>
-      <IonContent className="ion-padding">
-        <IonList>
-          <Swiper
-            pagination={{
-              dynamicBullets: true,
-            }}
-            modules={[Pagination]}
-            className="mySwiper"
-          >
-            <SwiperSlide>
-              <div className="h-full text-start flex flex-col justify-between">
-                <div>
-                  <div className="font-bold text-4xl mb-3 mt-20">
-                    Simple Pos
-                  </div>
-                  <div className="font-semibold text-3xl">
-                    First we'll need a few things from you to setup your profile
-                  </div>
-                </div>
-                <IonButton>Let's go</IonButton>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="h-full">
-                <IonFab vertical="bottom" horizontal="end" slot="fixed">
-                  <IonFabButton>
-                    <IonIcon icon={add}></IonIcon>
-                  </IonFabButton>
-                </IonFab>
-                <div>First let's setup your inventory. What do you sell?</div>
-                <div>
-                  <IonGrid>
-                    <IonRow>
-                      {photos.length ? (
-                        photos.map((photo) => (
-                          <IonCol size="6" key={photo.filepath}>
-                            <IonImg src={photo.webviewPath} />
-                          </IonCol>
-                        ))
-                      ) : (
-                        <div
-                          onClick={() => getPhoto()}
-                          className="flex items-center justify-center h-[200px] w-full border border-dashed rounded-md text-3xl font-bold"
-                        >
-                          Add a Photo
-                        </div>
-                      )}
-                    </IonRow>
-                  </IonGrid>
-                </div>
-                <div>
-                  <IonList>
-                    {products.map((product, index: number) => (
-                      <IonItem key={index}>
-                        <IonLabel>{product.title}</IonLabel>
-                        <IonNote></IonNote>
-                      </IonItem>
-                    ))}
-                  </IonList>
-                  <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col space-y-2"
-                  >
-                    <IonInput
-                      id="title"
-                      label="Product Name"
-                      fill="outline"
-                      autoFocus
-                      placeholder="Enter product name"
-                      {...register("title", { required: true })}
-                    />
-                    <IonInput
-                      id="price"
-                      label="Product Price"
-                      type="number"
-                      fill="outline"
-                      inputMode="numeric"
-                      autoFocus
-                      placeholder="0.00"
-                      {...register("price", { required: true })}
-                    />
+  async function canDismiss(_: unknown, role?: string) {
+    return role !== "gesture";
+  }
 
-                    <IonButton type="submit">Add To List</IonButton>
-                  </form>
-                  <IonButton
-                    disabled={products.length < 2}
-                    onClick={handleSave}
-                  >
-                    Submit
-                  </IonButton>
-                </div>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>Slide 3</SwiperSlide>
-          </Swiper>
-        </IonList>
-      </IonContent>
-    </IonPage>
+  return (
+    <AuthContext.Provider value={currentUser}>
+      <IonPage>
+        <div style={{ paddingTop: "env(safe-area-inset-top)" }}></div>
+        <IonContent>
+          {/* <IonGrid>
+                <IonRow>
+                  {photos.length ? (
+                    photos.map((photo) => (
+                      <IonCol size="6" key={photo.filepath}>
+                        <IonImg src={photo.webviewPath} />
+                      </IonCol>
+                    ))
+                  ) : (
+                    <div
+                      onClick={() => getPhoto()}
+                      className="flex items-center justify-center h-[200px] w-full border border-dashed rounded-md text-3xl font-bold"
+                    >
+                      Add a Photo
+                    </div>
+                  )}
+                </IonRow>
+              </IonGrid> */}
+          <IonList>
+            <IonListHeader className="mb-5">
+              <IonLabel class="text-4xl font-thin">
+                First, let's setup your shop. What do you sell?
+              </IonLabel>
+            </IonListHeader>
+            {products.map((product, index: number) => (
+              <IonItem key={index}>
+                <IonThumbnail aria-hidden="true" slot="start">
+                  <img
+                    alt=""
+                    src="https://ionicframework.com/docs/img/demos/avatar.svg"
+                  />
+                </IonThumbnail>
+                <IonLabel>{product.title}</IonLabel>
+                <IonNote>N$ 30.00</IonNote>
+              </IonItem>
+            ))}
+          </IonList>
+        </IonContent>
+        <IonFooter>
+          <IonToolbar>
+            <IonButton
+              disabled={products.length < 2 || loading}
+              expand="block"
+              className="m-2"
+              onClick={handleSave}
+            >
+              {loading ? <IonSpinner name="crescent" /> : "Submit"}
+            </IonButton>
+          </IonToolbar>
+        </IonFooter>
+      </IonPage>
+      <IonModal
+        isOpen={products.length < 2}
+        initialBreakpoint={0.25}
+        breakpoints={[0, 0.25, 0.5]}
+        backdropDismiss={false}
+        backdropBreakpoint={0.5}
+        canDismiss={canDismiss}
+      >
+        <IonContent className="ion-padding">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-2">
+              <IonInput
+                id="title"
+                label="Title"
+                fill="outline"
+                autoFocus
+                placeholder="Enter product title"
+                {...register("title", { required: true })}
+              />
+              <IonInput
+                id="price"
+                label="Price"
+                type="number"
+                fill="outline"
+                inputMode="numeric"
+                autoFocus
+                placeholder="0.00"
+                {...register("price", { required: true })}
+              />
+            </div>
+            <IonButton type="submit" expand="block" className="mt-6">
+              Add To List
+            </IonButton>
+          </form>
+        </IonContent>
+      </IonModal>
+    </AuthContext.Provider>
   );
 }

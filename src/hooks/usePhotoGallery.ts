@@ -8,21 +8,29 @@ export function usePhotoGallery() {
 
   const getPhoto = async () => {
     const photo = await Camera.getPhoto({
-      resultType: CameraResultType.Base64,
-      source: CameraSource.Photos,
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Camera,
       quality: 100,
     });
 
+    // console.log("got the image ....... ", photo, ' ********');
+
+    console.log('here again....')
+
     const fileName = crypto.randomUUID() + ".jpeg";
+    console.log('file_name....', fileName)
     const newPhotos = [
       {
         filepath: fileName,
-        webviewPath: `data:image/jpeg;base64,${photo.base64String}`,
+        webviewPath: photo.webPath,
       },
       ...photos,
     ];
+
+    console.log(newPhotos, ' ---- ', newPhotos.length)
     setPhotos(newPhotos);
   };
+
 
   return {
     getPhoto,

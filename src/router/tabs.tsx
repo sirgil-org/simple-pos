@@ -25,7 +25,7 @@ export const Tabs: React.FC = ({ match }) => {
         if (_event === "INITIAL_SESSION") {
           console.log(session, " ----- initial session");
           if (session === null) {
-            router.push("/welcome", "root", "replace");
+            router.push("/login", "root", "replace");
           } else {
             setCurrentUser(session.user);
           }
@@ -39,7 +39,7 @@ export const Tabs: React.FC = ({ match }) => {
           setCurrentUser(null);
           // handle sign out event
           console.log("SIGNED_OUT");
-          router.push("/welcome", "root", "replace");
+          router.push("/login", "root", "replace");
         } else if (_event === "PASSWORD_RECOVERY") {
           // handle password recovery event
           console.log("PASSWORD_RECOVERY");
