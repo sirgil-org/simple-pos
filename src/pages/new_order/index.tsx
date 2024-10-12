@@ -1,4 +1,4 @@
-import { Key, useRef, useState } from "react";
+import { Key, useContext, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { supabase } from "../../supabase_client";
 import { NewOrderSkeletal } from "./components";
@@ -22,8 +22,11 @@ import OrderSummary from "./components/order_summary";
 import { trash } from "ionicons/icons";
 import { IProduct } from "../../types";
 import useQuery from "../../hooks/query";
+import { AuthContext } from "../../contexts";
 
 export default function NewOrder() {
+  const currentUser = useContext(AuthContext);
+
 
   const { data: products, loading } = useQuery<IProduct[]>({
     table: "products",
@@ -63,6 +66,7 @@ export default function NewOrder() {
         phone_number: "in store",
         catalog: "in store",
         status: "waiting",
+        vendor_id: currentUser.id
       })
       .select();
 

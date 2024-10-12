@@ -23,19 +23,38 @@ export const Tabs: React.FC = ({ match }) => {
 
   const [currentUser, setCurrentUser] = useState(null);
 
+  const checkInventory = async (id) => {
+    const { count, error } = await supabase
+      .from("products")
+      .select("*", { count: "exact", head: true })
+      .eq("vendor_id", id);
+
+    console.log(count, " ----0000---___======");
+    if (error) {
+      present({
+        message: error.message,
+        duration: 1500,
+        position: "top",
+        color: "warning",
+      });
+    } else if (count < 2) {
+      setShowSetup(true);
+    }
+  };
+
   useEffect(() => {
-    const setup = async () => {
-      supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
         if (_event === "INITIAL_SESSION" || _event === "SIGNED_IN") {
           if (session === null) {
             router.push("/login", "root", "replace");
             return;
           } else {
             console.log("getting inventory count ........", session.user.id);
-            // //check user has any inventory
+            checkInventory(session.user.id);
 
             setCurrentUser(session.user);
-            router.push("/tabs/orders", "root", "replace");
+            router.push("/tabs", "root", "replace");
             console.log(_event, " headed to tabs");
           }
         } else if (_event === "SIGNED_OUT") {
@@ -43,35 +62,14 @@ export const Tabs: React.FC = ({ match }) => {
           console.log("SIGNED_OUT");
           router.push("/login", "root", "replace");
         }
-      });
-    };
-
-    setup();
-  }, [present, router]);
-
-  useEffect(() => {
-    const checkInventory = async () => {
-      const { count, error } = await supabase
-        .from("products")
-        .select("*", { count: "exact", head: true })
-        .eq("vendor_id", currentUser.id);
-
-      console.log(count, " ----0000---___======");
-      if (error) {
-        present({
-          message: error.message,
-          duration: 1500,
-          position: "top",
-          color: "warning",
-        });
-      } else if (count < 2) {
-        setShowSetup(true);
       }
+    );
+
+    return () => {
+      authListener.subscription?.unsubscribe();
     };
-    if (currentUser) {
-      checkInventory();
-    }
-  }, [currentUser, present]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [present]);
 
   return (
     <>
@@ -84,6 +82,7 @@ export const Tabs: React.FC = ({ match }) => {
                 path={`${match.url}`}
                 to={`${match.url}/orders`}
               />
+
               {tabs.map((tab, index) => (
                 <Route
                   key={index}
@@ -94,9 +93,10 @@ export const Tabs: React.FC = ({ match }) => {
                   }}
                 />
               ))}
+
               <Route exact path={`${match.url}`}>
                 <Redirect to={`${match.url}/orders`} />
-              </Route>
+              </Route> 
             </IonRouterOutlet>
             <IonTabBar slot="bottom" translucent className="md:hidden">
               {tabs

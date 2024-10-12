@@ -143,10 +143,6 @@ export default function OrdersPage() {
     setFilteredOrders(orders.filter((o: any) => o.status === value));
   }
 
-  useEffect(()=>{
-    console.log('orders redirect ******* ')
-  }, [])
-
   return (
     <IonPage>
       <IonHeader translucent>

@@ -38,7 +38,6 @@ export default function useQuery<T>({
           .order(order.column, { ascending: order.ascending });
     setLoading(false);
 
-    console.log('after loading....')
     if (data) {
       setData(data as T);
       setCount(count as number);
