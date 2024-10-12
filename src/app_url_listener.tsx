@@ -20,7 +20,7 @@ const AppUrlListener: React.FC<any> = () => {
       App.addListener('appStateChange', ({ isActive }) => {
         console.log('App state changed. Is active?', isActive);
       });
-    }, []);
+    }, [history]);
   
     return null;
   };

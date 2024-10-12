@@ -1,18 +1,14 @@
 import { usePhotoGallery } from "../../hooks/usePhotoGallery";
 import useMutation from "../../hooks/mutation";
-import { useContext, useState } from "react";
-import { AuthContext } from "../../contexts";
+import { useState } from "react";
 import { supabase } from "../../supabase_client";
 
 import {
-  IonPage,
   IonContent,
   IonButton,
-  IonInput,
   IonItem,
   IonLabel,
   IonList,
-  IonModal,
   IonNote,
   IonFooter,
   IonToolbar,
@@ -20,22 +16,15 @@ import {
   IonThumbnail,
   IonSpinner,
   useIonToast,
-  useIonRouter,
+  IonModal,
 } from "@ionic/react";
-import { useForm } from "react-hook-form";
+import FormModal from "./form_modal";
 
-type IAddItem = {
-  title: string;
-  price: number;
-};
-
-export default function OnboardingPage() {
-  const currentUser = useContext(AuthContext);
+export default function ShopSetupPage({showSetup, setShowSetup}) {
   const { getPhoto, photos } = usePhotoGallery();
   const { loading, insert } = useMutation();
   const [products, setProducts] = useState([]);
   const [present] = useIonToast();
-  const router = useIonRouter();
 
   const presentToast = (
     position: "top" | "middle" | "bottom",
@@ -46,18 +35,9 @@ export default function OnboardingPage() {
       message,
       duration: 1500,
       position: position,
-      color: type
+      color: type,
     });
   };
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<IAddItem>({ defaultValues: { title: "", price: 0 } });
-
-
 
   const uploadImage = async (photo) => {
     console.log("uploading");
@@ -112,32 +92,15 @@ export default function OnboardingPage() {
       presentToast("top", error.message, "warning");
     } else {
       presentToast("top", "Item added!", "success");
-      router.push('/tabs', 'root', 'replace');
+      setShowSetup(false);
     }
   };
 
-  const onSubmit = (formData) => {
-    setProducts([
-      ...products,
-      {
-        ...formData,
-        vendor_id: "c0f5bdec-668d-4eb5-9cc5-e06247f2fef2",
-        image_url: "https://random",
-      },
-    ]);
-    reset();
-  };
-
-  async function canDismiss(_: unknown, role?: string) {
-    return role !== "gesture";
-  }
-
   return (
-    <AuthContext.Provider value={currentUser}>
-      <IonPage>
-        <div style={{ paddingTop: "env(safe-area-inset-top)" }}></div>
-        <IonContent>
-          {/* <IonGrid>
+    <IonModal canDismiss={false} isOpen={showSetup}>
+      <div style={{ paddingTop: "env(safe-area-inset-top)" }}></div>
+      <IonContent>
+        {/* <IonGrid>
                 <IonRow>
                   {photos.length ? (
                     photos.map((photo) => (
@@ -155,75 +118,39 @@ export default function OnboardingPage() {
                   )}
                 </IonRow>
               </IonGrid> */}
-          <IonList>
-            <IonListHeader className="mb-5">
-              <IonLabel class="text-4xl font-thin">
-                First, let's setup your shop. What do you sell?
-              </IonLabel>
-            </IonListHeader>
-            {products.map((product, index: number) => (
-              <IonItem key={index}>
-                <IonThumbnail aria-hidden="true" slot="start">
-                  <img
-                    alt=""
-                    src="https://ionicframework.com/docs/img/demos/avatar.svg"
-                  />
-                </IonThumbnail>
-                <IonLabel>{product.title}</IonLabel>
-                <IonNote>N$ 30.00</IonNote>
-              </IonItem>
-            ))}
-          </IonList>
-        </IonContent>
-        <IonFooter>
-          <IonToolbar>
-            <IonButton
-              disabled={products.length < 2 || loading}
-              expand="block"
-              className="m-2"
-              onClick={handleSave}
-            >
-              {loading ? <IonSpinner name="crescent" /> : "Submit"}
-            </IonButton>
-          </IonToolbar>
-        </IonFooter>
-      </IonPage>
-      <IonModal
-        isOpen={products.length < 2}
-        initialBreakpoint={0.25}
-        breakpoints={[0, 0.25, 0.5]}
-        backdropDismiss={false}
-        backdropBreakpoint={0.5}
-        canDismiss={canDismiss}
-      >
-        <IonContent className="ion-padding">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="space-y-2">
-              <IonInput
-                id="title"
-                label="Title"
-                fill="outline"
-                autoFocus
-                placeholder="Enter product title"
-                {...register("title", { required: true })}
-              />
-              <IonInput
-                id="price"
-                label="Price"
-                type="number"
-                fill="outline"
-                inputMode="numeric"
-                autoFocus
-                placeholder="0.00"
-                {...register("price", { required: true })}
-              />
-            </div>
-            <IonButton type="submit" expand="block" className="mt-6">
-              Add To List
-            </IonButton>
-          </form>
-        </IonContent>
-      </IonModal>
-    </AuthContext.Provider>
+        <IonList>
+          <IonListHeader className="mb-5">
+            <IonLabel class="text-4xl font-thin">
+              First, let's setup your shop. What do you sell?
+            </IonLabel>
+          </IonListHeader>
+          {products.map((product, index: number) => (
+            <IonItem key={index}>
+              <IonThumbnail aria-hidden="true" slot="start">
+                <img
+                  alt=""
+                  src="https://ionicframework.com/docs/img/demos/avatar.svg"
+                />
+              </IonThumbnail>
+              <IonLabel>{product.title}</IonLabel>
+              <IonNote>N$ 30.00</IonNote>
+            </IonItem>
+          ))}
+        </IonList>
+      </IonContent>
+      <IonFooter>
+        <IonToolbar>
+          <IonButton
+            disabled={products.length < 2 || loading}
+            expand="block"
+            className="m-2"
+            onClick={handleSave}
+          >
+            {loading ? <IonSpinner name="crescent" /> : "Submit"}
+          </IonButton>
+        </IonToolbar>
+      </IonFooter>
+      <FormModal products={products} setProducts={setProducts} />
+    </IonModal>
   );
 }

@@ -33,7 +33,7 @@ setupIonicReact();
 export default function App() {
   return (
     <IonApp>
-        <AppUrlListener />
+        {/* <AppUrlListener /> */}
         <PageRouter />
     </IonApp>
   );

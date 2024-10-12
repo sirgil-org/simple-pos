@@ -21,15 +21,6 @@ export default function useQuery<T>({
 } {
   const currentUser = useContext(AuthContext);
 
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [count, setCount] = useState(0);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    getData();
-  }, [from, to]);
-
   const getData = async () => {
     setLoading(true);
     const { data, error, count } = is_single
@@ -37,15 +28,17 @@ export default function useQuery<T>({
           .from(table)
           .select(filter)
           .limit(1)
-          .eq("vendor_id", currentUser.id)
+          .eq("vendor_id", currentUser?.id)
           .single()
       : await supabase
           .from(table)
           .select(filter, { count: "exact" })
           .range(from as number, to as number)
-          .eq("vendor_id", currentUser.id)
+          .eq("vendor_id", currentUser?.id)
           .order(order.column, { ascending: order.ascending });
     setLoading(false);
+
+    console.log('after loading....')
     if (data) {
       setData(data as T);
       setCount(count as number);
@@ -58,6 +51,17 @@ export default function useQuery<T>({
       setError(error.message);
     }
   };
+
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [count, setCount] = useState(0);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    getData();
+  }, [from, to]);
+
+
 
   const search = async (searchText: string) => {
     setLoading(true);

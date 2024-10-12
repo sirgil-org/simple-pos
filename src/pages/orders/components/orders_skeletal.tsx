@@ -2,7 +2,6 @@ import {
   IonList,
   IonSkeletonText,
   IonItem,
-  IonThumbnail,
   IonLabel,
   IonNote,
 } from "@ionic/react";

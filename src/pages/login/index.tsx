@@ -40,8 +40,6 @@ export default function LoginPage() {
         message: error.message,
         duration: 1500,
       });
-    } else {
-      router.push("/tabs", "root", "replace");
     }
 
     await hideLoading();

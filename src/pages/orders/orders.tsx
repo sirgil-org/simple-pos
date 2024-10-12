@@ -1,12 +1,9 @@
-import { useState, useEffect, useMemo, useContext } from "react";
+import { useState } from "react";
 import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
 
 import OrdersSkeletal from "./components/orders_skeletal";
 import {
-  IonBadge,
-  IonButton,
-  IonButtons,
   IonChip,
   IonContent,
   IonHeader,
@@ -19,22 +16,22 @@ import {
   IonList,
   IonNote,
   IonPage,
-  IonSelect,
-  IonSelectOption,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+
 import {
   arrowForward,
   banOutline,
   checkmark,
   checkmarkDoneOutline,
 } from "ionicons/icons";
+
 import OrderDetailsModal from "./components/order_details_modal";
 import possibleStatus, {
   possibleStatusWithIcons,
 } from "../../constants/status";
-import { AuthContext } from "../../contexts";
+
 import useQuery from "../../hooks/query";
 
 enum Filters {
@@ -50,7 +47,6 @@ export default function OrdersPage() {
   const [filteredOrders, setFilteredOrders]: any = useState([]);
   const { data: orders, loading } = useQuery<any[]>({
     table: "orders",
-
     from: 0,
     to: 100,
     filter: `
@@ -107,78 +103,34 @@ export default function OrdersPage() {
       return toast.error(error.message || "Could not update");
     }
 
-    setOrders((prev: any) => {
-      const index = prev.findIndex((p: any) => p.id === currentOrder.id);
-      prev[index] = { ...prev[index], status };
+    // setOrders((prev: any) => {
+    //   const index = prev.findIndex((p: any) => p.id === currentOrder.id);
+    //   prev[index] = { ...prev[index], status };
 
-      // Should only be added to filtered orders if all is selected
-      // since if the status is changed the current filter won't apply
-      if (activeFilter === "all") {
-        setFilteredOrders(prev);
-      } else {
-        setFilteredOrders((prev_filtered: any) => {
-          const new_data = prev_filtered.filter(
-            (item: any) => item.id !== currentOrder.id
-          );
-          return new_data;
-        });
-      }
+    //   // Should only be added to filtered orders if all is selected
+    //   // since if the status is changed the current filter won't apply
+    //   if (activeFilter === "all") {
+    //     setFilteredOrders(prev);
+    //   } else {
+    //     setFilteredOrders((prev_filtered: any) => {
+    //       const new_data = prev_filtered.filter(
+    //         (item: any) => item.id !== currentOrder.id
+    //       );
+    //       return new_data;
+    //     });
+    //   }
 
-      // Only way for the UI to update realtime, if just prev is returned
-      // it won't work as expected. My assumption is that it's memory issue,
-      // probably assigning by memory location.
-      return [...prev];
-    });
+    //   // Only way for the UI to update realtime, if just prev is returned
+    //   // it won't work as expected. My assumption is that it's memory issue,
+    //   // probably assigning by memory location.
+    //   return [...prev];
+    // });
 
     //slidingItemRef.current.get(currentOrder.id).close();
   };
 
   function dismiss() {
     setIsOpen(false);
-  }
-
-  async function getNewOrder(data) {
-    const { data: newOrder, error } = await supabase
-      .from("orders")
-      .select(
-        `
-      id, 
-      order_number, 
-      status,
-      created_at,
-      phone_number,
-      product_order ( 
-        product_id, 
-        quantity, 
-        created_at, 
-        order_id, 
-        price,
-        products (
-          title
-        )
-      )
-    `
-      )
-      .eq("id", data.new.id)
-      .limit(1)
-      .single();
-
-    if (error) {
-      toast.warn(error.message || "Could not fetch new orders...");
-    } else if (newOrder) {
-      setOrders((prev: any) => {
-        return [newOrder, ...prev];
-      });
-
-      // TODO: Fix latest activeFilter value, since it's in useMemo
-      if (activeFilter === "all" || newOrder.status === activeFilter) {
-        setFilteredOrders((prev: any) => {
-          return [newOrder, ...prev];
-        });
-      }
-
-      toast.info("New order received!");
-    }
   }
 
   async function onFilterChange(value: string) {
@@ -190,19 +142,6 @@ export default function OrdersPage() {
 
     setFilteredOrders(orders.filter((o: any) => o.status === value));
   }
-
-  useMemo(() => {
-    supabase
-      .channel("todos")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "orders" },
-        async (data) => {
-          await getNewOrder(data);
-        }
-      )
-      .subscribe();
-  }, []);
 
   return (
     <IonPage>
