@@ -10,7 +10,8 @@ import {
 } from "@ionic/react";
 import { useForm } from "react-hook-form";
 import { supabase } from "../../supabase_client";
-import { useEffect } from "react";
+import { useCurrentUser } from "../../contexts";
+import { Redirect } from "react-router";
 
 type ILoginForm = {
   email: string;
@@ -40,19 +41,16 @@ export default function LoginPage() {
         message: error.message,
         duration: 1500,
       });
+    } else {
+      console.log("pushing routes");
+      router.push("/tabs", "root", "replace");
     }
 
     await hideLoading();
   };
 
-  useEffect(() => {
-    (async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
-        router.push("/tabs", "root", "replace");
-      }
-    })();
-  }, [router]);
+  const { currentUser } = useCurrentUser();
+  if (currentUser) return <Redirect to="/tabs" />;
 
   return (
     <IonPage>

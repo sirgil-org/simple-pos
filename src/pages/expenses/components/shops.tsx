@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { AddExpenseModal } from "../modals";
 import { toast } from "react-toastify";
 import { supabase } from "../../../supabase_client";
@@ -20,13 +20,13 @@ import {
 } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import { IExpense } from "../../../types";
-import { AuthContext } from "../../../contexts";
+import { useCurrentUser } from "../../../contexts";
 
 export default function ShopsPage(props) {
   const [expenses, setExpenses] = useState<IExpense[]>([]);
   const [, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const currentUser = useContext(AuthContext);
+  const { currentUser } = useCurrentUser();
 
   function dismiss() {
     setIsOpen(false);

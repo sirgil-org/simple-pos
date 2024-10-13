@@ -20,7 +20,7 @@ import {
 } from "@ionic/react";
 import FormModal from "./form_modal";
 
-export default function ShopSetupPage({showSetup, setShowSetup}) {
+export default function ShopSetupPage({ showSetup, setShowSetup }) {
   const { getPhoto, photos } = usePhotoGallery();
   const { loading, insert } = useMutation();
   const [products, setProducts] = useState([]);
@@ -96,10 +96,12 @@ export default function ShopSetupPage({showSetup, setShowSetup}) {
     }
   };
 
-  console.log('&&&&&&&&&&&&&&& ', showSetup)
+  async function canDismiss(data?: any, role?: string) {
+    return role !== "gesture";
+  }
 
   return (
-    <IonModal canDismiss={false} isOpen={showSetup}>
+    <IonModal canDismiss={canDismiss} isOpen={showSetup}>
       <div style={{ paddingTop: "env(safe-area-inset-top)" }}></div>
       <IonContent>
         {/* <IonGrid>

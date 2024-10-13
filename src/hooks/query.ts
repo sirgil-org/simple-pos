@@ -1,7 +1,7 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../supabase_client";
 import { QueryProps } from "../types";
-import { AuthContext } from "../contexts";
+import { useCurrentUser } from "../contexts";
 
 export default function useQuery<T>({
   is_single = false,
@@ -19,7 +19,7 @@ export default function useQuery<T>({
   search: (text: string) => any;
   count: number;
 } {
-  const currentUser = useContext(AuthContext);
+  const { currentUser } = useCurrentUser();
 
   const getData = useCallback(async () => {
     setLoading(true);
@@ -49,7 +49,17 @@ export default function useQuery<T>({
     if (error) {
       setError(error.message);
     }
-  }, [cb, currentUser?.id, filter, from, is_single, order.ascending, order.column, table, to]);
+  }, [
+    cb,
+    currentUser?.id,
+    filter,
+    from,
+    is_single,
+    order.ascending,
+    order.column,
+    table,
+    to,
+  ]);
 
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
@@ -59,8 +69,6 @@ export default function useQuery<T>({
   useEffect(() => {
     getData();
   }, [from, getData, to]);
-
-
 
   const search = async (searchText: string) => {
     setLoading(true);
