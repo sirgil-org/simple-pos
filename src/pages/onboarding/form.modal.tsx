@@ -1,4 +1,11 @@
-import { IonModal, IonContent, IonInput, IonButton } from "@ionic/react";
+import {
+  IonModal,
+  IonContent,
+  IonInput,
+  IonButton,
+  IonIcon,
+  IonText,
+} from "@ionic/react";
 import { useForm } from "react-hook-form";
 
 type IAddItem = {
@@ -7,11 +14,9 @@ type IAddItem = {
 };
 
 function FormModal({ products, setProducts }) {
-  const {
-    register,
-    handleSubmit,
-    reset,
-  } = useForm<IAddItem>({ defaultValues: { title: "", price: 0 } });
+  const { register, handleSubmit, reset } = useForm<IAddItem>({
+    // defaultValues: { title: "", price: null },
+  });
 
   const onSubmit = (formData) => {
     setProducts([
@@ -43,17 +48,22 @@ function FormModal({ products, setProducts }) {
             <IonInput
               id="title"
               label="Title"
+              labelPlacement="stacked"
               fill="outline"
               autoFocus
               placeholder="Enter product title"
+              autoCapitalize="on"
+              autofocus
+              maxlength={30}
               {...register("title", { required: true })}
             />
             <IonInput
               id="price"
-              label="Price"
-              type="number"
+              label="Price (N$)"
+              labelPlacement="stacked"
+              type="text"
               fill="outline"
-              inputMode="numeric"
+              inputMode="decimal"
               autoFocus
               placeholder="0.00"
               {...register("price", { required: true })}

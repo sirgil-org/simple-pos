@@ -41,18 +41,18 @@ export const tabs: IRoute[] = [
     component: OrdersTab,
   },
 
-  {
-    label: "Expenses",
-    url: "/expenses",
-    icon: walletOutline,
-    component: ExpensesTab,
-  },
-  {
-    label: "Shops",
-    url: "/expenses/:id",
-    component: ShopsPage,
-    is_child: true,
-  },
+  // {
+  //   label: "Expenses",
+  //   url: "/expenses",
+  //   icon: walletOutline,
+  //   component: ExpensesTab,
+  // },
+  // {
+  //   label: "Shops",
+  //   url: "/expenses/:id",
+  //   component: ShopsPage,
+  //   is_child: true,
+  // },
   {
     label: "Settings",
     url: "/settings",

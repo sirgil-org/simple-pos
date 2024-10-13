@@ -27,7 +27,7 @@ export default function OrderSummary({
         <div>N$ {totalCost}</div>
       </div>
 
-      <div className="mb-6">
+      <div className="my-6">
         <label
           htmlFor="amount"
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -50,9 +50,9 @@ export default function OrderSummary({
         <div
           className={`text-end text-lg font-bold ${
             totalCost > inputValue ? "text-red-600" : "text-green-400"
-          } ${Object.keys(order).length === 0 ? "invisible" : ""}`}
+          } ${Object.keys(order).length === 0 || !inputValue ? "invisible" : ""}`}
         >
-          {inputValue - totalCost}
+          {(inputValue - totalCost).toFixed(2)}
         </div>
       </div>
       <div className="hidden md:grid grid-cols-3 gap-2 mb-5">

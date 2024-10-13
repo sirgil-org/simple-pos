@@ -18,7 +18,7 @@ import {
   useIonToast,
   IonModal,
 } from "@ionic/react";
-import FormModal from "./form_modal";
+import FormModal from "./form.modal";
 
 export default function ShopSetupPage({ showSetup, setShowSetup }) {
   const { getPhoto, photos } = usePhotoGallery();
@@ -134,6 +134,7 @@ export default function ShopSetupPage({ showSetup, setShowSetup }) {
                 <img
                   alt=""
                   src="https://ionicframework.com/docs/img/demos/avatar.svg"
+                  className="rounded-lg"
                 />
               </IonThumbnail>
               <IonLabel>{product.title}</IonLabel>
