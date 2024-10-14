@@ -18,6 +18,7 @@
 		"AppPlugin",
 		"CAPCameraPlugin",
 		"FilesystemPlugin",
+		"HapticsPlugin",
 		"KeyboardPlugin",
 		"SplashScreenPlugin"
 	]

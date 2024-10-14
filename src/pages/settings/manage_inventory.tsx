@@ -42,7 +42,7 @@ function ManageInventory() {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton>Settings</IonBackButton>
+            <IonBackButton defaultHref="/tabs/settings" />
           </IonButtons>
           <IonTitle>Inventory</IonTitle>
         </IonToolbar>

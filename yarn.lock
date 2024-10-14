@@ -244,6 +244,11 @@
   resolved "https://registry.yarnpkg.com/@capacitor/filesystem/-/filesystem-6.0.1.tgz#2c8aa67217c628ee3237555148b021e69df7b198"
   integrity sha512-eHhXm6tzBIQhErzFnfOE6eA1U+15DHc2212/COfzzGGRk/dyGympoVV3ct2YPVzvpTSxMEW3xFocORv/xD9gFg==
 
+"@capacitor/haptics@^6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@capacitor/haptics/-/haptics-6.0.1.tgz#2824abe1e8c71fe57949cd25e8575bafa9593285"
+  integrity sha512-Q8hedLwfwTSWEYc3eoATzkdKHBaIceYe5bd7FjxQCENNH0is5Ft0EjSRPz/xpTn39ebK0ooZBDBCwsyl6tjiTA==
+
 "@capacitor/ios@^6.0.0":
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/@capacitor/ios/-/ios-6.1.2.tgz#568e8b904ad0a6d42fb1b2cc239eab2735ccd5e5"

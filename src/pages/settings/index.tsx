@@ -19,14 +19,20 @@ import {
 } from "@ionic/react";
 import { logOutOutline } from "ionicons/icons";
 import { supabase } from "../../supabase_client";
-import ShopSetupPage from "../onboarding";
 import { useState } from "react";
+import { useHaptic } from "../../contexts/haptic";
+import { NotificationType } from "@capacitor/haptics";
 
 export default function SettingsPage() {
-  const [showSetup, setShowSetup] = useState(false);
+  const {
+    triggerLightFeedback,
+    triggerNotification,
+  } = useHaptic();
   const [selectedCheckbox, setSelectedCheckbox] = useState<number | null>(null);
+  const { isEnabled, setIsEnabled } = useHaptic();
 
-  const handleCheckboxChange = (index: number) => {
+  const handleCheckboxChange = async (index: number) => {
+    await triggerLightFeedback();
     setSelectedCheckbox(index === selectedCheckbox ? null : index); // Toggle the checkbox
   };
 
@@ -66,7 +72,8 @@ export default function SettingsPage() {
         <IonList inset>
           <IonItem button color="light">
             <IonLabel
-              onClick={() => {
+              onClick={async() => {
+                await triggerLightFeedback()
                 router.push("settings/inventory");
               }}
             >
@@ -90,7 +97,12 @@ export default function SettingsPage() {
 
         <IonList inset>
           <IonItem color="light">
-            <IonToggle>Haptic Feedback</IonToggle>
+            <IonToggle
+              checked={isEnabled}
+              onIonChange={(e) => setIsEnabled(e.detail.checked)}
+            >
+              Haptic Feedback
+            </IonToggle>
           </IonItem>
         </IonList>
 
@@ -126,7 +138,14 @@ export default function SettingsPage() {
         </IonList>
 
         <IonList inset>
-          <IonButton expand="block" color="danger" id="logout-action-sheet">
+          <IonButton
+            expand="block"
+            color="danger"
+            onClick={async () => {
+              await triggerNotification(NotificationType.Warning);
+            }}
+            id="logout-action-sheet"
+          >
             <IonIcon aria-hidden="true" icon={logOutOutline} />
             <IonLabel>Logout</IonLabel>
           </IonButton>

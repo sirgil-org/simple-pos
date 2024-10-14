@@ -1,7 +1,3 @@
-import { Key, useRef, useState } from "react";
-import { toast } from "react-toastify";
-import { supabase } from "../../supabase_client";
-import { NewOrderSkeletal } from "./components";
 import {
   IonButton,
   IonContent,
@@ -17,13 +13,17 @@ import {
   IonToolbar,
   useIonToast,
 } from "@ionic/react";
-import { OrderModal } from "./modals";
+import { trash } from "ionicons/icons";
+import { Key, useRef, useState } from "react";
+import { useCurrentUser } from "../../contexts";
+import { useHaptic } from "../../contexts/haptic";
+import useQuery from "../../hooks/query";
+import { supabase } from "../../supabase_client";
+import { IProduct } from "../../types";
+import { NewOrderSkeletal } from "./components";
 import OrderList from "./components/order_list";
 import OrderSummary from "./components/order_summary";
-import { trash } from "ionicons/icons";
-import { IProduct } from "../../types";
-import useQuery from "../../hooks/query";
-import { useCurrentUser } from "../../contexts";
+import { OrderModal } from "./modals";
 
 export default function NewOrder() {
   const { currentUser } = useCurrentUser();
@@ -48,7 +48,6 @@ export default function NewOrder() {
   const onSubmit = async () => {
     setSavingOrder(true);
 
-    console.log("...saving order");
     const { data: existing_orders }: any = await supabase
       .from("orders")
       .select("order_number")
@@ -88,8 +87,6 @@ export default function NewOrder() {
       })
     );
 
-    console.log("done processing waiting for pay");
-
     if (inputValue) {
       await supabase.from("payments").insert({
         order_id: new_order[0].id,
@@ -119,6 +116,8 @@ export default function NewOrder() {
       color: "medium",
     });
   };
+
+  const { triggerHeavyFeedback } = useHaptic();
 
   const calculate_total = (orders: any) => {
     let total_cost = 0;
@@ -167,7 +166,8 @@ export default function NewOrder() {
                         className="cursor-pointer w-max aspect-square rounded-lg"
                         key={product.id}
                         src={product.image_url}
-                        onClick={() => {
+                        onClick={async () => {
+                          await triggerHeavyFeedback();
                           setOrder((prev: any) => {
                             const old_count = order[product.id];
 
@@ -249,7 +249,7 @@ export default function NewOrder() {
                     N$ {totalCost.toFixed(2)}
                   </div>
                 </div>
-                <IonButton id="open-modal" expand="block">
+                <IonButton id="open-modal" expand="block" onClick={triggerHeavyFeedback}>
                   Continue
                 </IonButton>
               </div>
