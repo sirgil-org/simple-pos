@@ -1,17 +1,21 @@
 import {
+  IonBackButton,
   IonButton,
+  IonButtons,
   IonContent,
+  IonHeader,
   IonInput,
   IonPage,
   IonRouterLink,
   IonText,
+  IonToolbar,
   useIonLoading,
   useIonRouter,
-  useIonToast,
+  useIonToast
 } from "@ionic/react";
-import { supabase } from "../../supabase_client";
-import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { supabase } from "../../supabase_client";
 
 type IRegiterForm = {
   name: string;
@@ -66,7 +70,14 @@ export default function RegisterPage() {
 
   return (
     <IonPage>
-      <IonContent className="ion-padding">
+      <IonHeader translucent>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/login">Back</IonBackButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent fullscreen className="ion-padding">
         <div style={{ paddingTop: "env(safe-area-inset-top)" }}></div>
         <div className="mx-auto max-w-lg h-full flex flex-col justify-center space-y-2">
           <IonText>
