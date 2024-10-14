@@ -22,7 +22,7 @@ export default function OrderList({
             </div>
 
             <div className="flex items-center space-x-2">
-              <div>N$ {item.price * order[key]}</div>
+              <div>N$ {(item.price * order[key]).toFixed(2)}</div>
               <IonIcon
                 icon={trashOutline}
                 onClick={() => {

@@ -15,6 +15,7 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  useIonToast,
 } from "@ionic/react";
 import { OrderModal } from "./modals";
 import OrderList from "./components/order_list";
@@ -26,6 +27,7 @@ import { useCurrentUser } from "../../contexts";
 
 export default function NewOrder() {
   const { currentUser } = useCurrentUser();
+  const [present] = useIonToast();
 
   const { data: products, loading } = useQuery<IProduct[]>({
     table: "products",
@@ -45,6 +47,8 @@ export default function NewOrder() {
 
   const onSubmit = async () => {
     setSavingOrder(true);
+
+    console.log("...saving order")
     const { data: existing_orders }: any = await supabase
       .from("orders")
       .select("order_number")
@@ -84,22 +88,36 @@ export default function NewOrder() {
       })
     );
 
-    await supabase.from("payments").insert({
-      order_id: new_order[0].id,
-      amount_paid: inputValue,
-      change: inputValue - total_cost,
-    });
+    console.log('done processing waiting for pay')
+
+    if (inputValue) {
+      await supabase.from("payments").insert({
+        order_id: new_order[0].id,
+        amount_paid: inputValue,
+        change: inputValue - total_cost,
+      });
+    }
 
     reset_order();
     dismiss();
     setSavingOrder(false);
 
     if (error) {
-      toast.error(error.msg || "Could not create order...");
+      present({
+        message: error.message || "Could not create order...",
+        duration: 1500,
+        position: "top",
+        color: "warning",
+      });
       return;
     }
 
-    toast.success("Order created...");
+    present({
+      message: "Order created!",
+      duration: 1500,
+      position: "top",
+      color: "medium",
+    });
   };
 
   const calculate_total = (orders: any) => {
@@ -141,12 +159,12 @@ export default function NewOrder() {
             <NewOrderSkeletal />
           ) : (
             <div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              <div className="grid grid-cols-3 md:grid-cols-4 gap-2 gap-y-4">
                 {products.map((product: any, key: Key) => {
                   return (
                     <div key={key}>
                       <img
-                        className="cursor-pointer w-max"
+                        className="cursor-pointer w-max aspect-square rounded-lg"
                         key={product.id}
                         src={product.image_url}
                         onClick={() => {
@@ -227,7 +245,9 @@ export default function NewOrder() {
                     You've added {Object.keys(order).length} Item
                     {Object.keys(order).length > 1 ? "s" : ""}
                   </div>
-                  <div className="text-2xl font-semibold">N$ {totalCost}</div>
+                  <div className="text-2xl font-semibold">
+                    N$ {totalCost.toFixed(2)}
+                  </div>
                 </div>
                 <IonButton id="open-modal" expand="block">
                   Continue

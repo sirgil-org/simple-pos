@@ -70,7 +70,7 @@ export default function LoginPage() {
                 fill="outline"
                 placeholder="email@domain.com"
                 errorText={errors.email?.message}
-                helperText="Enter valid email"
+                autoFocus
                 className={`${errors.email && "ion-invalid"} ${
                   touchedFields.email && "ion-touched"
                 }`}

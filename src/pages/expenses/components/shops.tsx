@@ -17,6 +17,7 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  useIonToast,
 } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import { IExpense } from "../../../types";
@@ -27,6 +28,7 @@ export default function ShopsPage(props) {
   const [, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const { currentUser } = useCurrentUser();
+  const [present] = useIonToast();
 
   function dismiss() {
     setIsOpen(false);
@@ -50,7 +52,12 @@ export default function ShopsPage(props) {
         .eq("shop_id", props.match.params.id);
 
       if (error) {
-        toast.warn(error.message || "Could not fetch expenses...");
+        present({
+          message: error.message || "Could not create order...",
+          duration: 1500,
+          position: "top",
+          color: "warning",
+        });
       } else if (data) {
         setExpenses(data);
       }

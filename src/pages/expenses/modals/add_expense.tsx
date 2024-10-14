@@ -5,16 +5,17 @@ import {
   IonHeader,
   IonContent,
   IonToolbar,
+  useIonToast,
 } from "@ionic/react";
 import { Spinner } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import { supabase } from "../../../supabase_client";
 
 export default function AddExpenseModal({ dismiss, isOpen }: any) {
   const { register, handleSubmit, reset } = useForm();
   const [loading, setLoading] = useState(false);
+  const [present] = useIonToast();
 
   const [, setLoadingShops] = useState(true);
   const [shops, setShops] = useState([]);
@@ -27,7 +28,13 @@ export default function AddExpenseModal({ dismiss, isOpen }: any) {
     setLoading(false);
 
     if (error) {
-      return toast.error(error.message || "Could not add shop");
+      present({
+        message: error.message || "Could not add shop",
+        duration: 1500,
+        position: "top",
+        color: "warning",
+      });
+      return 
     }
 
     reset();
@@ -40,7 +47,12 @@ export default function AddExpenseModal({ dismiss, isOpen }: any) {
     const { data, error } = await supabase.from("shops").select();
 
     if (error) {
-      toast.warn(error.message || "Could not fetch shops...");
+      present({
+        message: error.message || "Could not fetch shops...",
+        duration: 1500,
+        position: "top",
+        color: "warning",
+      });
     } else if (data.length) {
       setShops(data);
     }

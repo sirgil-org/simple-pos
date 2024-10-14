@@ -18,6 +18,7 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  useIonToast,
 } from "@ionic/react";
 
 import {
@@ -43,7 +44,8 @@ enum Filters {
   READY = "ready",
 }
 
-export default function OrdersPage() {
+export default function OrdersPage() {  
+  const [present] = useIonToast()
   const [filteredOrders, setFilteredOrders]: any = useState([]);
   const { data: orders, loading } = useQuery<any[]>({
     table: "orders",
@@ -64,6 +66,10 @@ export default function OrdersPage() {
         products (
           title
         )
+      ),
+      payments (
+        amount_paid,
+        change
       )
   `,
     order: { column: "created_at", ascending: false },
@@ -100,7 +106,13 @@ export default function OrdersPage() {
       .eq("id", currentOrder.id);
 
     if (error) {
-      return toast.error(error.message || "Could not update");
+      present({
+        message: error.message || "Could not update",
+        duration: 1500,
+        position: "top",
+        color: "warning",
+      });
+      return
     }
 
     // setOrders((prev: any) => {
@@ -208,10 +220,10 @@ export default function OrdersPage() {
                       )}
                       <div>
                         N${" "}
-                        {order.product_order.reduce(
+                        {(order.product_order.reduce(
                           (a, b) => a + b.price * b.quantity,
                           0
-                        )}
+                        )).toFixed(2)}
                       </div>
                     </IonLabel>
                     <IonNote slot="end">#{order.order_number}</IonNote>

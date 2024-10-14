@@ -17,10 +17,22 @@ import {
   IonSpinner,
   useIonToast,
   IonModal,
+  IonButtons,
+  IonHeader,
 } from "@ionic/react";
 import FormModal from "./form.modal";
 
-export default function ShopSetupPage({ showSetup, setShowSetup }) {
+type IShopSetup = {
+  showSetup: boolean;
+  setShowSetup: React.Dispatch<React.SetStateAction<boolean>>;
+  title?: string;
+};
+
+export default function ShopSetupPage({
+  showSetup,
+  setShowSetup,
+  title,
+}: IShopSetup) {
   const { getPhoto, photos } = usePhotoGallery();
   const { loading, insert } = useMutation();
   const [products, setProducts] = useState([]);
@@ -101,7 +113,24 @@ export default function ShopSetupPage({ showSetup, setShowSetup }) {
   }
 
   return (
-    <IonModal canDismiss={canDismiss} isOpen={showSetup}>
+    <IonModal
+      canDismiss={canDismiss}
+      isOpen={showSetup}
+      presentingElement={document.getElementById("main-content")!}
+    >
+      <IonHeader>
+        <IonToolbar>
+          <IonButtons slot="end">
+            <IonButton
+              onClick={() => {
+                setShowSetup(false);
+              }}
+            >
+              Close
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
       <div style={{ paddingTop: "env(safe-area-inset-top)" }}></div>
       <IonContent>
         {/* <IonGrid>
@@ -125,7 +154,7 @@ export default function ShopSetupPage({ showSetup, setShowSetup }) {
         <IonList>
           <IonListHeader className="mb-5">
             <IonLabel class="text-4xl font-thin">
-              First, let's setup your shop. What do you sell?
+              {title ?? "First, let's setup your shop. What do you sell?"}
             </IonLabel>
           </IonListHeader>
           {products.map((product, index: number) => (

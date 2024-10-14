@@ -3,9 +3,10 @@ import { ReportSkeletal } from "./components";
 
 import { supabase } from "../../supabase_client";
 import { toast } from "react-toastify";
-import { IonCard, IonCardContent, IonContent, IonPage } from "@ionic/react";
+import { IonCard, IonCardContent, IonContent, IonPage, useIonToast } from "@ionic/react";
 
 export default function Reports() {
+  const [present] = useIonToast();
   const [loading, setLoading] = useState(true);
   const [, setOrders] = useState([]);
 
@@ -27,7 +28,12 @@ export default function Reports() {
       );
 
       if (error) {
-        toast.warn(error.message || "Could not fetch orders...");
+        present({
+          message: error.message || "Could not fetch orders...",
+          duration: 1500,
+          position: "top",
+          color: "warning",
+        });
       } else if (data) {
         setOrders(data);
       }

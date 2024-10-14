@@ -24,19 +24,13 @@ function OrderModal({
   savingOrder,
   reset_order,
 }: any) {
-  const inputRef = useRef(null);
-  const handleIonViewDidEnter = () => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  };
+
 
   return (
     <IonModal
       ref={modal}
       trigger="open-modal"
       presentingElement={document.getElementById("main-content")!}
-      onIonModalDidPresent={handleIonViewDidEnter}
     >
       <IonHeader>
         <IonToolbar>
@@ -67,7 +61,6 @@ function OrderModal({
             setInputValue={setInputValue}
             onSubmit={onSubmit}
             savingOrder={savingOrder}
-            inputRef={inputRef}
           />
         </div>
       </IonContent>

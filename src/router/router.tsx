@@ -8,8 +8,12 @@ import ResetPasswordPage from "../pages/reset-password";
 import { Tabs } from "./tabs";
 import { AuthContextProvider } from "../contexts";
 import ProtectedRoute from "./protected_route";
+import { useEffect } from "react";
 
 const Routes = () => {
+  useEffect(()=>{
+    console.log("in routes")
+  })
   return (
     <AuthContextProvider>
       <IonReactRouter>

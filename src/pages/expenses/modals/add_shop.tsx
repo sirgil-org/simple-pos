@@ -5,6 +5,7 @@ import {
   IonHeader,
   IonContent,
   IonToolbar,
+  useIonToast,
 } from "@ionic/react";
 import { Spinner } from "flowbite-react";
 import { useState } from "react";
@@ -15,6 +16,8 @@ import { supabase } from "../../../supabase_client";
 export default function AddShopModal({ dismiss, isOpen }: any) {
   const { register, handleSubmit, reset } = useForm();
   const [loading, setLoading] = useState(false);
+  const [present] = useIonToast();
+
 
   const onSubmit = async ({ name }: any) => {
     setLoading(true);
@@ -22,7 +25,13 @@ export default function AddShopModal({ dismiss, isOpen }: any) {
     setLoading(false);
 
     if (error) {
-      return toast.error(error.message || "Could not add shop");
+      present({
+        message: error.message || "Could not add shop",
+        duration: 1500,
+        position: "top",
+        color: "warning",
+      });
+      return
     }
 
     reset();

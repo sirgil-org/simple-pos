@@ -3,8 +3,8 @@ import { IonItem, IonThumbnail, IonSkeletonText, IonLabel } from "@ionic/react";
 export default function NewOrderSkeletal() {
   return (
     <div className="h-full w-full">
-      <div role="status" className="grid grid-cols-2 gap-2">
-        {Array(9)
+      <div role="status" className="grid grid-cols-3 gap-2">
+        {Array(6)
           .fill(1)
           .map((_, index) => (
             <div key={index}>
