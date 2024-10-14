@@ -145,6 +145,7 @@ export default function OrdersPage() {
     //   return [...prev];
     // });
 
+    await refresh();
     //slidingItemRef.current.get(currentOrder.id).close();
   };
 
