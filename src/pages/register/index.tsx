@@ -11,7 +11,7 @@ import {
   IonToolbar,
   useIonLoading,
   useIonRouter,
-  useIonToast
+  useIonToast,
 } from "@ionic/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -26,7 +26,7 @@ type IRegiterForm = {
 
 export default function RegisterPage() {
   const [showLoading, hideLoading] = useIonLoading();
-  const [showToast] = useIonToast();
+  const [present] = useIonToast();
   const router = useIonRouter();
 
   const {
@@ -36,26 +36,51 @@ export default function RegisterPage() {
     formState: { errors, touchedFields },
   } = useForm<IRegiterForm>();
 
-  const onSubmit = async ({ email, password }) => {
+  const onSubmit = async ({ email, password, name }) => {
     await showLoading();
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
     });
 
-    if (error) {
-      await showToast({
-        message: error.message,
-        duration: 1500,
-      });
-    } else {
-      await showToast({
-        message: "Check your email to activate your account",
-      });
-    }
-
     await hideLoading();
+    if (error) {
+      console.log("got error ", error);
+      present({
+        message: error.message,
+        color: "warning",
+        duration: 1500,
+        position: "top",
+      });
+      return;
+    } else {
+      
+      const { error: vendorError } = await supabase.from("vendors").insert({
+        id: data.user.id,
+        name,
+        slug: name.replace(/\s+/g, "-").toLowerCase(),
+      });
+
+      if (vendorError) {
+        present({
+          message: vendorError.message,
+          color: "warning",
+          duration: 1500,
+          position: "top",
+        });
+        return;
+      }
+
+      present({
+        message: "Account created, enjoy!",
+        color: "medium",
+        duration: 1500,
+        position: "top",
+      });
+
+      router.push("/tabs", "root", "replace");
+    }
   };
 
   useEffect(() => {

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SimplePos</string>
+    <string name="title_activity_main">SimplePos</string>
+    <string name="package_name">com.sirgil.app</string>
+    <string name="custom_url_scheme">com.sirgil.app</string>
+</resources>
