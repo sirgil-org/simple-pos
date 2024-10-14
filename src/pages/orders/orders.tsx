@@ -35,6 +35,7 @@ import possibleStatus, {
 
 import useQuery from "../../hooks/query";
 import { useHaptic } from "../../contexts/haptic";
+import { useCurrentUser } from "../../contexts";
 
 enum Filters {
   ALL = "all",
@@ -86,6 +87,7 @@ export default function OrdersPage() {
   const [activeFilter, setActiveFilter] = useState("all");
   const { triggerMediumFeedback } = useHaptic();
   const [statusCounts, setStatusCounts] = useState(null);
+  const { currentUser } = useCurrentUser();
 
   const handleChangeStatus = async (status: string, currentOrder: any) => {
     const to_update: any = { status };
@@ -170,7 +172,10 @@ export default function OrdersPage() {
         .slice(1)
         .map((status) => ({ status, count: 0 }));
 
-      const { data, error } = await supabase.rpc("get_status_counts");
+      const { data, error } = await supabase.rpc("get_status_counts", {
+        input_vendor_id: currentUser.id,
+      });
+
       if (error) {
         console.error("Error fetching status counts:", error);
       } else {
