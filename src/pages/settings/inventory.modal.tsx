@@ -49,7 +49,6 @@ function ManageInventoryModal({
         });
         setIsOpen(false);
         reset();
-        setSelectedProduct(null);
         refresh();
       }
     } else {
@@ -93,6 +92,10 @@ function ManageInventoryModal({
       isOpen={isOpen}
       presentingElement={document.getElementById("manage-inventory")!}
       canDismiss
+      onDidDismiss={() => {
+        setSelectedProduct(null);
+        reset();
+      }}
     >
       <IonHeader>
         <IonToolbar>
@@ -100,7 +103,6 @@ function ManageInventoryModal({
             <IonButton
               onClick={() => {
                 setIsOpen(false);
-                setSelectedProduct(null);
               }}
             >
               Close
