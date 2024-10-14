@@ -19,8 +19,10 @@ import {
   IonModal,
   IonButtons,
   IonHeader,
+  useIonViewDidEnter,
 } from "@ionic/react";
 import FormModal from "./form.modal";
+import { Keyboard, KeyboardResize } from "@capacitor/keyboard";
 
 type IShopSetup = {
   showSetup: boolean;
@@ -57,6 +59,19 @@ export default function ShopSetupPage({ showSetup, setShowSetup }: IShopSetup) {
     }
   };
 
+  useIonViewDidEnter(() => {
+    Keyboard.setResizeMode({ mode: KeyboardResize.Native });
+
+    setTimeout(() => {
+      const emailInput = document.getElementById(
+        "title-input"
+      ) as HTMLIonInputElement;
+      if (emailInput) {
+        emailInput.setFocus();
+      }
+    }, 300);
+  });
+
   async function base64FromPath(path: string): Promise<string> {
     const response = await fetch(path);
     const blob = await response.blob();
@@ -84,9 +99,19 @@ export default function ShopSetupPage({ showSetup, setShowSetup }: IShopSetup) {
     const { error } = await insert("products", products);
 
     if (error) {
-      present({ message: error.message, color: "warning" });
+      present({
+        message: error.message,
+        color: "warning",
+        duration: 1500,
+        position: "top",
+      });
     } else {
-      present({ message: "Item added!", color: "medium" });
+      present({
+        message: "Item added!",
+        color: "medium",
+        duration: 1500,
+        position: "top",
+      });
       setShowSetup(false);
     }
   };
@@ -101,21 +126,8 @@ export default function ShopSetupPage({ showSetup, setShowSetup }: IShopSetup) {
       isOpen={showSetup}
       presentingElement={document.getElementById("main-content")!}
     >
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="end">
-            <IonButton
-              onClick={() => {
-                setShowSetup(false);
-              }}
-            >
-              Close
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
       <div style={{ paddingTop: "env(safe-area-inset-top)" }}></div>
-      <IonContent>
+      <IonContent scroll-y="false">
         {/* <IonGrid>
                 <IonRow>
                   {photos.length ? (
@@ -150,7 +162,7 @@ export default function ShopSetupPage({ showSetup, setShowSetup }: IShopSetup) {
                 />
               </IonThumbnail>
               <IonLabel>{product.title}</IonLabel>
-              <IonNote>N$ {product.price.toFixed(2)}</IonNote>
+              <IonNote>N$ {parseFloat(product.price).toFixed(2)}</IonNote>
             </IonItem>
           ))}
         </IonList>

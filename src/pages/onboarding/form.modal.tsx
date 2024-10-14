@@ -18,7 +18,7 @@ function FormModal({ products, setProducts }) {
         image_url: "https://docs-demo.ionic.io/assets/madison.jpg",
       },
     ]);
-    reset();
+    reset({title: "", price: ""});
   };
 
   async function canDismiss(_: unknown, role?: string) {
@@ -27,23 +27,24 @@ function FormModal({ products, setProducts }) {
   return (
     <IonModal
       isOpen={products.length < 2}
-      initialBreakpoint={0.25}
-      breakpoints={[0, 0.25, 0.5]}
+      initialBreakpoint={0.5}
+      breakpoints={[0, 0.5, 0.75]}
       backdropDismiss={false}
-      backdropBreakpoint={0.5}
+      backdropBreakpoint={0.75}
       canDismiss={canDismiss}
     >
       <IonContent className="ion-padding">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-2">
             <IonInput
-              id="title"
+              id="title-input"
               label="Title"
               labelPlacement="stacked"
               fill="outline"
               autoFocus
               placeholder="Enter product title"
-              autoCapitalize="on"
+              autoCapitalize="words"
+              type="text"
               autofocus
               maxlength={30}
               {...register("title", { required: true })}
@@ -55,7 +56,6 @@ function FormModal({ products, setProducts }) {
               type="text"
               fill="outline"
               inputMode="decimal"
-              autoFocus
               placeholder="0.00"
               {...register("price", { required: true })}
             />

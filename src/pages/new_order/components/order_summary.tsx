@@ -8,7 +8,7 @@ type IOrderSummaryProps = {
   setInputValue: React.Dispatch<React.SetStateAction<number>>;
   onSubmit: () => Promise<void>;
   savingOrder: boolean;
-  // inputRef: React.MutableRefObject<HTMLIonInputElement>;
+  inputRef: React.MutableRefObject<HTMLIonInputElement>;
 };
 
 export default function OrderSummary({
@@ -18,7 +18,7 @@ export default function OrderSummary({
   setInputValue,
   onSubmit,
   savingOrder,
-  // inputRef,
+  inputRef,
 }: IOrderSummaryProps) {
   return (
     <div>
@@ -42,7 +42,7 @@ export default function OrderSummary({
           inputMode="decimal"
           autoFocus
           placeholder="0.00"
-          // ref={inputRef}
+          ref={inputRef}
           autofocus
           onIonInput={(e) =>
             setInputValue(parseFloat(e.target.value.toString()))

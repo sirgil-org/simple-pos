@@ -166,13 +166,32 @@ export default function OrdersPage() {
 
   useIonViewDidEnter(() => {
     (async () => {
+      const defaultStatuses = Object.values(Filters)
+        .slice(1)
+        .map((status) => ({ status, count: 0 }));
+
       const { data, error } = await supabase.rpc("get_status_counts");
       if (error) {
         console.error("Error fetching status counts:", error);
       } else {
-        const totalCount = data.reduce((acc, item) => acc + item.count, 0);
+        const statusMap = Object.fromEntries(
+          data.map(({ status, count }) => [status, count])
+        );
 
-        setStatusCounts([{ status: "all", count: totalCount }].concat(data));
+        // Merge fetched data with default statuses
+        const statusCounts = defaultStatuses.map(({ status }) => ({
+          status,
+          count: statusMap[status] || 0,
+        }));
+
+        const totalCount = statusCounts.reduce(
+          (acc, item) => acc + item.count,
+          0
+        );
+
+        setStatusCounts(
+          [{ status: "all", count: totalCount }].concat(statusCounts)
+        );
       }
     })();
     refresh();
@@ -191,23 +210,25 @@ export default function OrdersPage() {
             <IonTitle size="large">Orders</IonTitle>
           </IonToolbar>
           <IonToolbar>
-            <IonList>
-              {statusCounts &&
-                statusCounts.length &&
-                statusCounts.map(({ status, count }) => (
-                  <IonChip
-                    key={status}
-                    onClick={() => onFilterChange(status)}
-                    className="capitalize relative"
-                    color={status === activeFilter ? "primary" : "medium"}
-                  >
-                    <div className="flex items-center text-white justify-center rounded-full h-6 bg-slate-300 mr-2 ml-[-10px] px-2">
-                      {count}
-                    </div>
-                    {status}
-                  </IonChip>
-                ))}
-            </IonList>
+            <div className="flex overflow-x-auto whitespace-nowrap px-2">
+              <IonList>
+                {statusCounts &&
+                  statusCounts.length &&
+                  statusCounts.map(({ status, count }) => (
+                    <IonChip
+                      key={status}
+                      onClick={() => onFilterChange(status)}
+                      className="capitalize relative"
+                      color={status === activeFilter ? "primary" : "medium"}
+                    >
+                      <div className="flex items-center text-white justify-center rounded-full h-6 bg-slate-300 mr-2 ml-[-10px] px-2">
+                        {count}
+                      </div>
+                      {status}
+                    </IonChip>
+                  ))}
+              </IonList>
+            </div>
           </IonToolbar>
         </IonHeader>
 
