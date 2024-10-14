@@ -1,17 +1,22 @@
 import {
   IonButton,
   IonContent,
+  IonHeader,
   IonInput,
   IonPage,
   IonRouterLink,
+  IonTitle,
+  IonToolbar,
   useIonLoading,
   useIonRouter,
   useIonToast,
+  useIonViewDidEnter,
 } from "@ionic/react";
 import { useForm } from "react-hook-form";
 import { supabase } from "../../supabase_client";
 import { useCurrentUser } from "../../contexts";
 import { Redirect } from "react-router";
+import { Keyboard, KeyboardResize } from "@capacitor/keyboard";
 
 type ILoginForm = {
   email: string;
@@ -28,6 +33,19 @@ export default function LoginPage() {
     handleSubmit,
     formState: { errors, touchedFields },
   } = useForm<ILoginForm>({ mode: "onTouched", reValidateMode: "onChange" });
+
+  useIonViewDidEnter(() => {
+    Keyboard.setResizeMode({ mode: KeyboardResize.Native });
+
+    setTimeout(() => {
+      const emailInput = document.getElementById(
+        "email-input"
+      ) as HTMLIonInputElement;
+      if (emailInput) {
+        emailInput.setFocus();
+      }
+    }, 300);
+  });
 
   const onSubmit = async ({ email, password }) => {
     await showLoading();
@@ -54,9 +72,10 @@ export default function LoginPage() {
 
   return (
     <IonPage>
-      <IonContent className="ion-padding">
+      <IonContent className="ion-padding" scroll-y="false">
         <div style={{ paddingTop: "env(safe-area-inset-top)" }}></div>
-        <div className="mx-auto max-w-lg h-full flex flex-col justify-center space-y-2">
+        <div className="mx-auto max-w-lg space-y-2">
+          <div className="font-bold text-3xl mt-10">Sign In</div>
           <form
             onSubmit={handleSubmit(onSubmit)}
             noValidate
@@ -64,6 +83,7 @@ export default function LoginPage() {
           >
             <div className="space-y-3">
               <IonInput
+                id="email-input"
                 type="email"
                 label="Email"
                 labelPlacement="floating"
@@ -71,11 +91,12 @@ export default function LoginPage() {
                 placeholder="email@domain.com"
                 errorText={errors.email?.message}
                 autoFocus
+                autocomplete="off"
                 className={`${errors.email && "ion-invalid"} ${
                   touchedFields.email && "ion-touched"
                 }`}
                 {...register("email", { required: "Email is required" })}
-              ></IonInput>
+              />
               <IonInput
                 type="password"
                 label="Password"
@@ -92,7 +113,7 @@ export default function LoginPage() {
                 })}
               />
             </div>
-            <IonButton expand="full" type="submit">
+            <IonButton expand="block" type="submit">
               Continue
             </IonButton>
           </form>

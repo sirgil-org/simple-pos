@@ -44,15 +44,10 @@ function ManageInventory() {
           <IonButtons slot="start">
             <IonBackButton>Settings</IonBackButton>
           </IonButtons>
-          <IonTitle>Manage Inventory</IonTitle>
+          <IonTitle>Inventory</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Manage Inventory</IonTitle>
-          </IonToolbar>
-        </IonHeader>
         <IonList inset>
           <IonItem
             button

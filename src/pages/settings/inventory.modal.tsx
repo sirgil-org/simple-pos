@@ -94,6 +94,7 @@ function ManageInventoryModal({
       canDismiss
       onDidDismiss={() => {
         setSelectedProduct(null);
+        setIsOpen(false)
         reset();
       }}
     >
