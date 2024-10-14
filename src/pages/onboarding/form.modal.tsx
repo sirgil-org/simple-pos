@@ -14,6 +14,7 @@ function FormModal({ products, setProducts }) {
       ...products,
       {
         ...formData,
+        slug: formData.title.replace(/\s+/g, "-").toLowerCase(),
         vendor_id: currentUser.id,
         image_url: "https://docs-demo.ionic.io/assets/madison.jpg",
       },

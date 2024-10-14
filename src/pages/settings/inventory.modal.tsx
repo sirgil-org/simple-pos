@@ -31,6 +31,7 @@ function ManageInventoryModal({
     if (selectedProduct) {
       const { error } = await update("products", selectedProduct.id, {
         ...formData,
+        slug: formData.title.replace(/\s+/g, "-").toLowerCase(),
         image_url: "https://docs-demo.ionic.io/assets/madison.jpg",
       });
       if (error) {
@@ -54,6 +55,7 @@ function ManageInventoryModal({
     } else {
       const { error } = await insert("products", {
         ...formData,
+        slug: formData.title.replace(/\s+/g, "-").toLowerCase(),
         vendor_id: currentUser.id,
         image_url: "https://docs-demo.ionic.io/assets/madison.jpg",
       });

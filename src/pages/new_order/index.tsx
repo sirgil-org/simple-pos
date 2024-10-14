@@ -87,7 +87,7 @@ export default function NewOrder() {
       })
     );
 
-    if (inputValue) {
+    if (inputValue > 0) {
       await supabase.from("payments").insert({
         order_id: new_order[0].id,
         amount_paid: inputValue,
@@ -249,7 +249,11 @@ export default function NewOrder() {
                     N$ {totalCost.toFixed(2)}
                   </div>
                 </div>
-                <IonButton id="open-modal" expand="block" onClick={triggerHeavyFeedback}>
+                <IonButton
+                  id="open-modal"
+                  expand="block"
+                  onClick={triggerHeavyFeedback}
+                >
                   Continue
                 </IonButton>
               </div>
