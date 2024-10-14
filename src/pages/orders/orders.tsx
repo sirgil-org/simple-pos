@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { supabase } from "../../supabase_client";
-import { toast } from "react-toastify";
 
 import OrdersSkeletal from "./components/orders_skeletal";
 import {
@@ -19,6 +18,7 @@ import {
   IonTitle,
   IonToolbar,
   useIonToast,
+  useIonViewDidEnter,
 } from "@ionic/react";
 
 import {
@@ -34,6 +34,7 @@ import possibleStatus, {
 } from "../../constants/status";
 
 import useQuery from "../../hooks/query";
+import { useHaptic } from "../../contexts/haptic";
 
 enum Filters {
   ALL = "all",
@@ -44,10 +45,14 @@ enum Filters {
   READY = "ready",
 }
 
-export default function OrdersPage() {  
-  const [present] = useIonToast()
+export default function OrdersPage() {
+  const [present] = useIonToast();
   const [filteredOrders, setFilteredOrders]: any = useState([]);
-  const { data: orders, loading } = useQuery<any[]>({
+  const {
+    data: orders,
+    loading,
+    refresh,
+  } = useQuery<any[]>({
     table: "orders",
     from: 0,
     to: 100,
@@ -79,6 +84,8 @@ export default function OrdersPage() {
   const [selectedOrder, setSelectedOrder]: any = useState({});
   const [isOpen, setIsOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState("all");
+
+  const { triggerMediumFeedback } = useHaptic();
 
   const handleChangeStatus = async (status: string, currentOrder: any) => {
     const to_update: any = { status };
@@ -112,7 +119,7 @@ export default function OrdersPage() {
         position: "top",
         color: "warning",
       });
-      return
+      return;
     }
 
     // setOrders((prev: any) => {
@@ -146,6 +153,7 @@ export default function OrdersPage() {
   }
 
   async function onFilterChange(value: string) {
+    await triggerMediumFeedback();
     setActiveFilter(value);
 
     if (value === Filters.ALL) {
@@ -154,6 +162,10 @@ export default function OrdersPage() {
 
     setFilteredOrders(orders.filter((o: any) => o.status === value));
   }
+
+  useIonViewDidEnter(() => {
+    refresh();
+  });
 
   return (
     <IonPage>
@@ -203,7 +215,8 @@ export default function OrdersPage() {
                   <IonItem
                     button
                     key={index}
-                    onClick={() => {
+                    onClick={async () => {
+                      await triggerMediumFeedback();
                       setSelectedOrder(order);
                       setIsOpen(true);
                     }}
@@ -220,10 +233,9 @@ export default function OrdersPage() {
                       )}
                       <div>
                         N${" "}
-                        {(order.product_order.reduce(
-                          (a, b) => a + b.price * b.quantity,
-                          0
-                        )).toFixed(2)}
+                        {order.product_order
+                          .reduce((a, b) => a + b.price * b.quantity, 0)
+                          .toFixed(2)}
                       </div>
                     </IonLabel>
                     <IonNote slot="end">#{order.order_number}</IonNote>
@@ -295,6 +307,8 @@ export default function OrdersPage() {
               dismiss={dismiss}
               selectedOrder={selectedOrder}
               isOpen={isOpen}
+              handleChangeStatus={handleChangeStatus}
+              refresh={refresh}
             />
           </>
         )}

@@ -17,15 +17,19 @@ import { format } from "date-fns";
 import { Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../../supabase_client";
+import { useHaptic } from "../../../contexts/haptic";
 
 export default function OrderDetailsModal({
   dismiss,
   selectedOrder,
   isOpen,
+  refresh,
+  handleChangeStatus,
 }: any) {
   const [savingOrder, setSavingOrder] = useState(false);
   const [totalCost, setTotalCost] = useState(0);
   const [inputValue, setInputValue] = useState(0);
+  const { triggerMediumFeedback } = useHaptic();
 
   useEffect(() => {
     console.log(selectedOrder);
@@ -40,14 +44,18 @@ export default function OrderDetailsModal({
   }, [selectedOrder]);
 
   const onSubmit = async () => {
-    setSavingOrder(true)
+    await triggerMediumFeedback();
+    setSavingOrder(true);
     await supabase.from("payments").insert({
       order_id: selectedOrder.id,
       amount_paid: inputValue,
       change: inputValue - totalCost,
     });
-    setSavingOrder(false)
-    dismiss()
+
+    dismiss();
+    setSavingOrder(false);
+    await handleChangeStatus("collected", selectedOrder);
+    await refresh();
   };
   return (
     <IonModal
