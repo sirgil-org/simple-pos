@@ -1,22 +1,20 @@
+import { Keyboard, KeyboardResize } from "@capacitor/keyboard";
 import {
   IonButton,
   IonContent,
-  IonHeader,
   IonInput,
   IonPage,
   IonRouterLink,
-  IonTitle,
-  IonToolbar,
-  useIonLoading,
+  IonSpinner,
   useIonRouter,
   useIonToast,
   useIonViewDidEnter,
 } from "@ionic/react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { supabase } from "../../supabase_client";
-import { useCurrentUser } from "../../contexts";
 import { Redirect } from "react-router";
-import { Keyboard, KeyboardResize } from "@capacitor/keyboard";
+import { useCurrentUser } from "../../contexts";
+import { supabase } from "../../supabase_client";
 
 type ILoginForm = {
   email: string;
@@ -24,7 +22,7 @@ type ILoginForm = {
 };
 
 export default function LoginPage() {
-  const [showLoading, hideLoading] = useIonLoading();
+  const [loading, setLoading] = useState(false);
   const [showToast] = useIonToast();
   const router = useIonRouter();
 
@@ -48,7 +46,7 @@ export default function LoginPage() {
   });
 
   const onSubmit = async ({ email, password }) => {
-    await showLoading();
+    setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -64,7 +62,7 @@ export default function LoginPage() {
       router.push("/tabs", "root", "replace");
     }
 
-    await hideLoading();
+    setLoading(false);
   };
 
   const { currentUser } = useCurrentUser();
@@ -114,7 +112,7 @@ export default function LoginPage() {
               />
             </div>
             <IonButton expand="block" type="submit">
-              Continue
+              {loading ? <IonSpinner /> : "Continue"}
             </IonButton>
           </form>
           <div className="flex justify-between">
