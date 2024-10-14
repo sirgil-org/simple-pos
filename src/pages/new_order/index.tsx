@@ -48,7 +48,7 @@ export default function NewOrder() {
   const onSubmit = async () => {
     setSavingOrder(true);
 
-    console.log("...saving order")
+    console.log("...saving order");
     const { data: existing_orders }: any = await supabase
       .from("orders")
       .select("order_number")
@@ -88,7 +88,7 @@ export default function NewOrder() {
       })
     );
 
-    console.log('done processing waiting for pay')
+    console.log("done processing waiting for pay");
 
     if (inputValue) {
       await supabase.from("payments").insert({
@@ -159,7 +159,7 @@ export default function NewOrder() {
             <NewOrderSkeletal />
           ) : (
             <div>
-              <div className="grid grid-cols-3 md:grid-cols-4 gap-2 gap-y-4">
+              <div className="grid grid-cols-3 md:grid-cols-4 gap-2 gap-y-4 pb-[100px]">
                 {products.map((product: any, key: Key) => {
                   return (
                     <div key={key}>
