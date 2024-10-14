@@ -32,7 +32,6 @@ export default function OrderDetailsModal({
   const { triggerMediumFeedback } = useHaptic();
 
   useEffect(() => {
-    console.log(selectedOrder);
     if (selectedOrder) {
       setTotalCost(
         selectedOrder.product_order?.reduce(
