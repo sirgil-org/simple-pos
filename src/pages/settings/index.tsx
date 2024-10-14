@@ -24,7 +24,13 @@ import { useState } from "react";
 
 export default function SettingsPage() {
   const [showSetup, setShowSetup] = useState(false);
-  const router = useIonRouter()
+  const [selectedCheckbox, setSelectedCheckbox] = useState<number | null>(null);
+
+  const handleCheckboxChange = (index: number) => {
+    setSelectedCheckbox(index === selectedCheckbox ? null : index); // Toggle the checkbox
+  };
+
+  const router = useIonRouter();
 
   return (
     <IonPage>
@@ -61,7 +67,7 @@ export default function SettingsPage() {
           <IonItem button color="light">
             <IonLabel
               onClick={() => {
-                router.push('settings/inventory')
+                router.push("settings/inventory");
               }}
             >
               Manage Inventory
@@ -92,15 +98,30 @@ export default function SettingsPage() {
         <IonList inset>
           <IonItem color="light">
             <IonLabel>System</IonLabel>
-            <IonCheckbox slot="end" aria-label="Toggle task completion" />
+            <IonCheckbox
+              slot="end"
+              aria-label="Toggle System Theme"
+              checked={selectedCheckbox === 0}
+              onIonChange={() => handleCheckboxChange(0)}
+            />
           </IonItem>
           <IonItem color="light">
             <IonLabel>Light</IonLabel>
-            <IonCheckbox slot="end" aria-label="Toggle task completion" />
+            <IonCheckbox
+              slot="end"
+              aria-label="Toggle Light Theme"
+              checked={selectedCheckbox === 1}
+              onIonChange={() => handleCheckboxChange(1)}
+            />
           </IonItem>
           <IonItem color="light">
             <IonLabel>Dark</IonLabel>
-            <IonCheckbox slot="end" aria-label="Toggle task completion" />
+            <IonCheckbox
+              slot="end"
+              aria-label="Toggle Dark Theme"
+              checked={selectedCheckbox === 2}
+              onIonChange={() => handleCheckboxChange(2)}
+            />
           </IonItem>
         </IonList>
 
