@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../../supabase_client";
 
 import OrdersSkeletal from "./components/orders_skeletal";
@@ -84,8 +84,8 @@ export default function OrdersPage() {
   const [selectedOrder, setSelectedOrder]: any = useState({});
   const [isOpen, setIsOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState("all");
-
   const { triggerMediumFeedback } = useHaptic();
+  const [statusCounts, setStatusCounts] = useState(null);
 
   const handleChangeStatus = async (status: string, currentOrder: any) => {
     const to_update: any = { status };
@@ -165,6 +165,16 @@ export default function OrdersPage() {
   }
 
   useIonViewDidEnter(() => {
+    (async () => {
+      const { data, error } = await supabase.rpc("get_status_counts");
+      if (error) {
+        console.error("Error fetching status counts:", error);
+      } else {
+        const totalCount = data.reduce((acc, item) => acc + item.count, 0);
+
+        setStatusCounts([{ status: "all", count: totalCount }].concat(data));
+      }
+    })();
     refresh();
   });
 
@@ -182,16 +192,21 @@ export default function OrdersPage() {
           </IonToolbar>
           <IonToolbar>
             <IonList>
-              {Object.values(Filters).map((filter, index: number) => (
-                <IonChip
-                  key={index}
-                  onClick={() => onFilterChange(filter)}
-                  className="capitalize"
-                  color={filter === activeFilter ? "primary" : "medium"}
-                >
-                  {filter}
-                </IonChip>
-              ))}
+              {statusCounts &&
+                statusCounts.length &&
+                statusCounts.map(({ status, count }) => (
+                  <IonChip
+                    key={status}
+                    onClick={() => onFilterChange(status)}
+                    className="capitalize relative"
+                    color={status === activeFilter ? "primary" : "medium"}
+                  >
+                    <div className="flex items-center text-white justify-center rounded-full h-6 bg-slate-300 mr-2 ml-[-10px] px-2">
+                      {count}
+                    </div>
+                    {status}
+                  </IonChip>
+                ))}
             </IonList>
           </IonToolbar>
         </IonHeader>

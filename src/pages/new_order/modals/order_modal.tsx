@@ -8,7 +8,7 @@ import {
 } from "@ionic/react";
 import OrderList from "../components/order_list";
 import OrderSummary from "../components/order_summary";
-import { useRef } from "react";
+// import { useRef } from "react";
 
 function OrderModal({
   modal,
