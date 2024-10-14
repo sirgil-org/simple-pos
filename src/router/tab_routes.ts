@@ -7,6 +7,7 @@ import {
 import SettingsTab from "../pages/settings";
 import OrdersTab from "../pages/orders/orders";
 import NewOrderTab from "../pages/new_order";
+import ManageInventory from "../pages/settings/manage_inventory";
 
 type IRoute = {
   label: string;
@@ -53,5 +54,11 @@ export const tabs: IRoute[] = [
     url: "/settings",
     icon: settingsOutline,
     component: SettingsTab,
+  },
+   {
+    label: "Manage Inventory",
+    url: "/settings/inventory",
+    component: ManageInventory,
+    is_child: true,
   },
 ];

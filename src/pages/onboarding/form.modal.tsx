@@ -1,20 +1,11 @@
-import {
-  IonModal,
-  IonContent,
-  IonInput,
-  IonButton,
-  IonIcon,
-  IonText,
-} from "@ionic/react";
+import { IonModal, IonContent, IonInput, IonButton } from "@ionic/react";
 import { useForm } from "react-hook-form";
-
-type IAddItem = {
-  title: string;
-  price: number;
-};
+import { IAddItemForm } from "../../types";
+import { useCurrentUser } from "../../contexts";
 
 function FormModal({ products, setProducts }) {
-  const { register, handleSubmit, reset } = useForm<IAddItem>({
+  const { currentUser } = useCurrentUser();
+  const { register, handleSubmit, reset } = useForm<IAddItemForm>({
     // defaultValues: { title: "", price: null },
   });
 
@@ -23,7 +14,7 @@ function FormModal({ products, setProducts }) {
       ...products,
       {
         ...formData,
-        vendor_id: "c0f5bdec-668d-4eb5-9cc5-e06247f2fef2",
+        vendor_id: currentUser.id,
         image_url: "https://docs-demo.ionic.io/assets/madison.jpg",
       },
     ]);

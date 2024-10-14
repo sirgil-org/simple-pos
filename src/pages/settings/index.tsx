@@ -15,6 +15,7 @@ import {
   IonTitle,
   IonToggle,
   IonToolbar,
+  useIonRouter,
 } from "@ionic/react";
 import { logOutOutline } from "ionicons/icons";
 import { supabase } from "../../supabase_client";
@@ -23,6 +24,7 @@ import { useState } from "react";
 
 export default function SettingsPage() {
   const [showSetup, setShowSetup] = useState(false);
+  const router = useIonRouter()
 
   return (
     <IonPage>
@@ -59,7 +61,7 @@ export default function SettingsPage() {
           <IonItem button color="light">
             <IonLabel
               onClick={() => {
-                setShowSetup(true);
+                router.push('settings/inventory')
               }}
             >
               Manage Inventory
@@ -126,12 +128,6 @@ export default function SettingsPage() {
           },
         ]}
       ></IonActionSheet>
-
-      <ShopSetupPage
-        title={""}
-        showSetup={showSetup}
-        setShowSetup={setShowSetup}
-      />
     </IonPage>
   );
 }

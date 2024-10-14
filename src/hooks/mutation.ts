@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { supabase } from "../supabase_client";
-import { useCurrentUser } from "../contexts";
 
 export default function useMutation() {
-  const { currentUser } = useCurrentUser();
   const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

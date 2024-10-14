@@ -28,28 +28,11 @@ type IShopSetup = {
   title?: string;
 };
 
-export default function ShopSetupPage({
-  showSetup,
-  setShowSetup,
-  title,
-}: IShopSetup) {
+export default function ShopSetupPage({ showSetup, setShowSetup }: IShopSetup) {
   const { getPhoto, photos } = usePhotoGallery();
   const { loading, insert } = useMutation();
   const [products, setProducts] = useState([]);
   const [present] = useIonToast();
-
-  const presentToast = (
-    position: "top" | "middle" | "bottom",
-    message: string,
-    type: "success" | "warning"
-  ) => {
-    present({
-      message,
-      duration: 1500,
-      position: position,
-      color: type,
-    });
-  };
 
   const uploadImage = async (photo) => {
     console.log("uploading");
@@ -101,9 +84,9 @@ export default function ShopSetupPage({
     const { error } = await insert("products", products);
 
     if (error) {
-      presentToast("top", error.message, "warning");
+      present({ message: error.message, color: "warning" });
     } else {
-      presentToast("top", "Item added!", "success");
+      present({ message: "Item added!", color: "medium" });
       setShowSetup(false);
     }
   };
@@ -154,7 +137,7 @@ export default function ShopSetupPage({
         <IonList>
           <IonListHeader className="mb-5">
             <IonLabel class="text-4xl font-thin">
-              {title ?? "First, let's setup your shop. What do you sell?"}
+              First, let's setup your shop. What do you sell?
             </IonLabel>
           </IonListHeader>
           {products.map((product, index: number) => (
@@ -167,7 +150,7 @@ export default function ShopSetupPage({
                 />
               </IonThumbnail>
               <IonLabel>{product.title}</IonLabel>
-              <IonNote>N$ 30.00</IonNote>
+              <IonNote>N$ {product.price.toFixed(2)}</IonNote>
             </IonItem>
           ))}
         </IonList>

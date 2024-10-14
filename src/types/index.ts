@@ -71,3 +71,9 @@ export interface UserPhoto {
   filepath: string;
   webviewPath?: string;
 }
+
+
+export type IAddItemForm = {
+  title: string;
+  price: number;
+};
