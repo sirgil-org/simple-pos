@@ -4,36 +4,31 @@ import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
 import { UserPhoto } from "../types";
 
 export function usePhotoGallery() {
-  const [photos, setPhotos] = useState<UserPhoto[]>([]);
+  const [photo, setPhoto] = useState<UserPhoto>(null);
 
   const getPhoto = async () => {
     const photo = await Camera.getPhoto({
-      resultType: CameraResultType.Uri,
-      source: CameraSource.Camera,
+      resultType: CameraResultType.Base64,
+      source: CameraSource.Photos,
       quality: 100,
     });
 
-    // console.log("got the image ....... ", photo, ' ********');
-
-    console.log('here again....')
-
     const fileName = crypto.randomUUID() + ".jpeg";
-    console.log('file_name....', fileName)
-    const newPhotos = [
-      {
-        filepath: fileName,
-        webviewPath: photo.webPath,
-      },
-      ...photos,
-    ];
 
-    console.log(newPhotos, ' ---- ', newPhotos.length)
-    setPhotos(newPhotos);
+    setPhoto({
+      filepath: fileName,
+      webviewPath: "data:image/jpeg;base64," + photo.base64String,
+    });
   };
 
+  const removePhoto = () => {
+    console.log("removed photo....");
+    setPhoto(null);
+  };
 
   return {
     getPhoto,
-    photos,
+    photo,
+    removePhoto,
   };
 }

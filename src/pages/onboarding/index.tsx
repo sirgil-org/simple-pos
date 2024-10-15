@@ -17,12 +17,11 @@ import {
   IonSpinner,
   useIonToast,
   IonModal,
-  IonButtons,
-  IonHeader,
   useIonViewDidEnter,
 } from "@ionic/react";
 import FormModal from "./form.modal";
 import { Keyboard, KeyboardResize } from "@capacitor/keyboard";
+import { base64FromPath } from "../../utils";
 
 type IShopSetup = {
   showSetup: boolean;
@@ -31,15 +30,13 @@ type IShopSetup = {
 };
 
 export default function ShopSetupPage({ showSetup, setShowSetup }: IShopSetup) {
-  const { getPhoto, photos } = usePhotoGallery();
+  const { getPhoto, photo } = usePhotoGallery();
   const { loading, insert } = useMutation();
   const [products, setProducts] = useState([]);
   const [present] = useIonToast();
 
   const uploadImage = async (photo) => {
-    console.log("uploading");
     const base64Data = await base64FromPath(photo.webPath!);
-    console.log("prep....", base64Data);
     const { data, error } = await supabase.storage
       .from(`product-images`)
       .upload(
@@ -71,23 +68,6 @@ export default function ShopSetupPage({ showSetup, setShowSetup }: IShopSetup) {
       }
     }, 300);
   });
-
-  async function base64FromPath(path: string): Promise<string> {
-    const response = await fetch(path);
-    const blob = await response.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = reject;
-      reader.onload = () => {
-        if (typeof reader.result === "string") {
-          resolve(reader.result);
-        } else {
-          reject("method did not return a string");
-        }
-      };
-      reader.readAsDataURL(blob);
-    });
-  }
 
   const handleSave = async () => {
     //   console.log("in save,...", photos.length);
