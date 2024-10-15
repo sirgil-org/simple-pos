@@ -1,10 +1,27 @@
-import { IonModal, IonContent, IonInput, IonButton } from "@ionic/react";
+import {
+  IonModal,
+  IonContent,
+  IonInput,
+  IonButton,
+  IonImg,
+  IonIcon,
+} from "@ionic/react";
 import { useForm } from "react-hook-form";
 import { IAddItemForm } from "../../types";
 import { useCurrentUser } from "../../contexts";
+import { camera, trash } from "ionicons/icons";
+import { useState } from "react";
 
-function FormModal({ products, setProducts }) {
+function FormModal({
+  products,
+  setProducts,
+  getPhoto,
+  removePhoto,
+  getLoadedPhoto,
+  photos,
+}) {
   const { currentUser } = useCurrentUser();
+  const [imagePath, setImagePath] = useState("");
   const { register, handleSubmit, reset } = useForm<IAddItemForm>({
     // defaultValues: { title: "", price: null },
   });
@@ -16,10 +33,13 @@ function FormModal({ products, setProducts }) {
         ...formData,
         slug: formData.title.replace(/\s+/g, "-").toLowerCase(),
         vendor_id: currentUser.id,
-        image_url: "https://docs-demo.ionic.io/assets/madison.jpg",
+        image_path: imagePath,
+        image_url: `https://dkbiusybhvgudspqbhxy.supabase.co/storage/v1/object/public/product-images/${currentUser.id}/${imagePath}`,
       },
     ]);
-    reset({title: "", price: ""});
+
+    setImagePath("");
+    reset({ title: "", price: "" });
   };
 
   async function canDismiss(_: unknown, role?: string) {
@@ -35,6 +55,35 @@ function FormModal({ products, setProducts }) {
       canDismiss={canDismiss}
     >
       <IonContent className="ion-padding">
+        <div className="flex justify-center mb-10">
+          {photos.length && imagePath ? (
+            <div className="h-[120px] w-[120px] relative">
+              <div className="h-full w-full rounded-lg overflow-hidden">
+                <IonImg
+                  src={getLoadedPhoto(imagePath).webviewPath}
+                  key={getLoadedPhoto(imagePath).filepath}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+              <div
+                onClick={() => removePhoto(imagePath)}
+                className="flex items-center justify-center rounded-full border-2 border-white bg-blue-500 p-2 absolute bottom-[-10px] right-[-10px]"
+              >
+                <IonIcon icon={trash} className="text-white" />
+              </div>
+            </div>
+          ) : (
+            <div
+              className="bg-blue-500 p-8 h-[120px] w-[120px] rounded-full"
+              onClick={async () => {
+                const path = await getPhoto();
+                setImagePath(path);
+              }}
+            >
+              <IonIcon icon={camera} className="h-full w-full text-white" />
+            </div>
+          )}
+        </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-2">
             <IonInput

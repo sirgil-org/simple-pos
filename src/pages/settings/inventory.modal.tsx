@@ -36,14 +36,14 @@ function ManageInventoryModal({
   const { loading: loadingInsert, insert, update } = useMutation();
   const [loading, setLoading] = useState(false)
   const { register, handleSubmit, reset, setValue } = useForm<IAddItemForm>({});
-  const { getPhoto, photo, removePhoto } = usePhotoGallery();
+  const { getPhoto, photos, clearPhotos } = usePhotoGallery();
 
   const onSubmit = async (formData) => {
     setLoading(true)
-    const base64Data = await base64FromPath(photo.webviewPath!);
+    const base64Data = await base64FromPath(photos[0].webviewPath!);
     const { data, error } = await supabase.storage
       .from(`product-images`)
-      .upload(`${currentUser.id}/${photo.filepath}`, decode(base64Data.split(',')[1]), {
+      .upload(`${currentUser.id}/${photos[0].filepath}`, decode(base64Data.split(',')[1]), {
         contentType: "image/jpeg",
         cacheControl: "3600",
         upsert: false,
@@ -54,7 +54,7 @@ function ManageInventoryModal({
       return
     }
 
-    removePhoto()
+    clearPhotos()
     setLoading(false)
 
     if (selectedProduct) {
@@ -117,7 +117,7 @@ function ManageInventoryModal({
       setValue("title", selectedProduct.title);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedProduct, photo]);
+  }, [selectedProduct, photos]);
 
   return (
     <IonModal
@@ -127,6 +127,7 @@ function ManageInventoryModal({
       onDidDismiss={() => {
         setSelectedProduct(null);
         setIsOpen(false);
+        clearPhotos()
         reset();
       }}
     >
@@ -145,17 +146,17 @@ function ManageInventoryModal({
       </IonHeader>
       <IonContent className="ion-padding">
         <div className="flex justify-center mb-10">
-          {photo ? (
+          {photos.length ? (
             <div className="h-[120px] w-[120px] relative">
               <div className="h-full w-full rounded-lg overflow-hidden">
                 <IonImg
-                  src={photo.webviewPath}
-                  key={photo.filepath}
+                  src={photos[0].webviewPath}
+                  key={photos[0].filepath}
                   className="object-cover w-full h-full"
                 />
               </div>
               <div
-                onClick={removePhoto}
+                onClick={clearPhotos}
                 className="flex items-center justify-center rounded-full border-2 border-white bg-blue-500 p-2 absolute bottom-[-10px] right-[-10px]"
               >
                 <IonIcon icon={trash} className="text-white" />
