@@ -25,6 +25,10 @@ import OrderList from "./components/order_list";
 import OrderSummary from "./components/order_summary";
 import { OrderModal } from "./modals";
 
+type INewOrder = {
+  [product: string]: number;
+};
+
 export default function NewOrder() {
   const { currentUser } = useCurrentUser();
   const [present] = useIonToast();
@@ -38,7 +42,7 @@ export default function NewOrder() {
   const [savingOrder, setSavingOrder] = useState(false);
   const inputRef = useRef<HTMLIonInputElement>(null);
 
-  const [order, setOrder] = useState({});
+  const [order, setOrder] = useState<INewOrder>({});
   const [inputValue, setInputValue] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
 
@@ -242,8 +246,18 @@ export default function NewOrder() {
               <div className="w-full grid grid-cols-2 gap-2 pb-2">
                 <div>
                   <div className="text-sm">
-                    You've added {Object.keys(order).length} Item
-                    {Object.keys(order).length > 1 ? "s" : ""}
+                    You've added{" "}
+                    {Object.values(order).reduce(
+                      (sum, value) => sum + value,
+                      0
+                    )}{" "}
+                    Item
+                    {Object.values(order).reduce(
+                      (sum, value) => sum + value,
+                      0
+                    ) > 1
+                      ? "s"
+                      : ""}
                   </div>
                   <div className="text-2xl font-semibold">
                     N$ {totalCost.toFixed(2)}
