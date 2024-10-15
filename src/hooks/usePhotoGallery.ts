@@ -8,8 +8,8 @@ export function usePhotoGallery() {
 
   const getPhoto = async () => {
     const photo = await Camera.getPhoto({
-      resultType: CameraResultType.Base64,
-      source: CameraSource.Photos,
+      resultType: CameraResultType.DataUrl,
+      source: CameraSource.Prompt,
       quality: 100,
     });
 
@@ -17,7 +17,7 @@ export function usePhotoGallery() {
 
     setPhoto({
       filepath: fileName,
-      webviewPath: "data:image/jpeg;base64," + photo.base64String,
+      webviewPath: photo.dataUrl,
     });
   };
 
