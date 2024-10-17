@@ -55,7 +55,8 @@ export const Tabs: React.FC = () => {
               exact={tab.is_child ? false : true}
               path={`${url}${tab.url}`}
               render={(props) => {
-                return <tab.component {...props} />;
+                const Component = tab.component;
+                return <Component {...props} />;
               }}
             />
           ))}

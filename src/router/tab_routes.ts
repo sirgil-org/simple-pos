@@ -8,12 +8,13 @@ import SettingsTab from "../pages/settings";
 import OrdersTab from "../pages/orders/orders";
 import NewOrderTab from "../pages/new_order";
 import ManageInventory from "../pages/settings/manage_inventory";
+import { RouteComponentProps } from "react-router";
 
 type IRoute = {
   label: string;
   url: string;
   icon?: string;
-  component: () => JSX.Element;
+  component: React.ComponentType<RouteComponentProps> | React.ComponentType;
   is_child?: boolean;
 };
 

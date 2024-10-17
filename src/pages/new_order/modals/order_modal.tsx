@@ -61,7 +61,7 @@ function OrderModal({
             setInputValue={setInputValue}
             onSubmit={onSubmit}
             savingOrder={savingOrder}
-            
+            inputRef={null}
           />
         </div>
       </IonContent>

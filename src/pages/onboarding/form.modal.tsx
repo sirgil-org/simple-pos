@@ -39,7 +39,7 @@ function FormModal({
     ]);
 
     setImagePath("");
-    reset({ title: "", price: "" });
+    reset({ title: "", price: null });
   };
 
   async function canDismiss(_: unknown, role?: string) {
