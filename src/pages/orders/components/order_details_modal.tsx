@@ -43,7 +43,7 @@ export default function OrderDetailsModal({
   }, [selectedOrder]);
 
   const onSubmit = async () => {
-    await triggerMediumFeedback();
+    void triggerMediumFeedback();
     setSavingOrder(true);
     await supabase.from("payments").insert({
       order_id: selectedOrder.id,

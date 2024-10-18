@@ -32,8 +32,8 @@ export default function SettingsPage() {
   const [selectedCheckbox, setSelectedCheckbox] = useState<number | null>(null);
   const { isEnabled, setIsEnabled } = useHaptic();
 
-  const handleCheckboxChange = async (index: number) => {
-    await triggerLightFeedback();
+  const handleCheckboxChange = (index: number) => {
+    void triggerLightFeedback();
     setSelectedCheckbox(index === selectedCheckbox ? null : index); // Toggle the checkbox
   };
 
@@ -59,8 +59,8 @@ export default function SettingsPage() {
         <IonList inset>
           <IonItem button color="light">
             <IonLabel
-              onClick={async() => {
-                await triggerLightFeedback()
+              onClick={() => {
+                void triggerLightFeedback()
                 router.push("settings/inventory");
               }}
             >
@@ -128,8 +128,8 @@ export default function SettingsPage() {
           <IonButton
             expand="block"
             color="danger"
-            onClick={async () => {
-              await triggerNotification(NotificationType.Warning);
+            onClick={() => {
+              void triggerNotification(NotificationType.Warning);
             }}
             id="logout-action-sheet"
           >

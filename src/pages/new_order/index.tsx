@@ -170,8 +170,8 @@ export default function NewOrder() {
                         className="cursor-pointer w-max aspect-square rounded-lg"
                         key={product.id}
                         src={product.image_url}
-                        onClick={async () => {
-                          await triggerHeavyFeedback();
+                        onClick={() => {
+                          void triggerHeavyFeedback();
                           setOrder((prev: any) => {
                             const old_count = order[product.id];
 

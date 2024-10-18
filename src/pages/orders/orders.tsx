@@ -155,8 +155,8 @@ export default function OrdersPage() {
     setIsOpen(false);
   }
 
-  async function onFilterChange(value: string) {
-    await triggerMediumFeedback();
+  function onFilterChange(value: string) {
+    void triggerMediumFeedback();
     setActiveFilter(value);
 
     if (value === Filters.ALL) {
@@ -257,8 +257,8 @@ export default function OrdersPage() {
                   <IonItem
                     button
                     key={index}
-                    onClick={async () => {
-                      await triggerMediumFeedback();
+                    onClick={() => {
+                      void triggerMediumFeedback();
                       setSelectedOrder(order);
                       setIsOpen(true);
                     }}
