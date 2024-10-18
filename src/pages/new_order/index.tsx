@@ -162,7 +162,7 @@ export default function NewOrder() {
             <NewOrderSkeletal />
           ) : (
             <div>
-              <div className="grid grid-cols-3 md:grid-cols-4 gap-2 gap-y-4 pb-[200px]">
+              <div className="grid grid-cols-3 md:grid-cols-4 gap-2 gap-y-4 pb-[200px] w-full">
                 {products.map((product: any, key: Key) => {
                   return (
                     <div key={key}>
