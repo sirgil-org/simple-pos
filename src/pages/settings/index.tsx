@@ -22,6 +22,7 @@ import { supabase } from "../../supabase_client";
 import { useState } from "react";
 import { useHaptic } from "../../contexts/haptic";
 import { NotificationType } from "@capacitor/haptics";
+import ProfileComponent from "./profile_item";
 
 export default function SettingsPage() {
   const {
@@ -52,21 +53,7 @@ export default function SettingsPage() {
           </IonToolbar>
         </IonHeader>
 
-        <IonList inset>
-          <IonItem lines="none" color="light">
-            <IonAvatar aria-hidden="true" slot="start">
-              <img
-                alt=""
-                src="https://ionicframework.com/docs/img/demos/avatar.svg"
-              />
-            </IonAvatar>
-            <IonLabel>
-              <strong>Huey</strong>
-              <br />
-              <IonText slot="bottom">abpalema@gmail.com</IonText>
-            </IonLabel>
-          </IonItem>
-        </IonList>
+        <ProfileComponent />
 
         <IonNote class="ion-padding">My Shop</IonNote>
         <IonList inset>

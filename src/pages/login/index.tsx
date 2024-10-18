@@ -25,6 +25,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [showToast] = useIonToast();
   const router = useIonRouter();
+  const { getProfile } = useCurrentUser();
 
   const {
     register,
@@ -47,7 +48,7 @@ export default function LoginPage() {
 
   const onSubmit = async ({ email, password }) => {
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -60,6 +61,7 @@ export default function LoginPage() {
     } else {
       console.log("pushing routes");
       router.push("/tabs", "root", "replace");
+      getProfile(data.user.id)
     }
 
     setLoading(false);
