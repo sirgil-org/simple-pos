@@ -2,6 +2,7 @@ import { Keyboard, KeyboardResize } from "@capacitor/keyboard";
 import {
   IonButton,
   IonContent,
+  IonIcon,
   IonInput,
   IonPage,
   IonRouterLink,
@@ -15,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { Redirect } from "react-router";
 import { useCurrentUser } from "../../contexts";
 import { supabase } from "../../supabase_client";
+import { eye, eyeOff } from "ionicons/icons";
 
 type ILoginForm = {
   email: string;
@@ -26,6 +28,7 @@ export default function LoginPage() {
   const [showToast] = useIonToast();
   const router = useIonRouter();
   const { getProfile } = useCurrentUser();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -61,7 +64,7 @@ export default function LoginPage() {
     } else {
       console.log("pushing routes");
       router.push("/tabs", "root", "replace");
-      getProfile(data.user.id)
+      getProfile(data.user.id);
     }
 
     setLoading(false);
@@ -98,7 +101,7 @@ export default function LoginPage() {
                 {...register("email", { required: "Email is required" })}
               />
               <IonInput
-                type="password"
+                type={showPassword ? "text" : "password"}
                 label="Password"
                 labelPlacement="floating"
                 fill="outline"
@@ -111,7 +114,22 @@ export default function LoginPage() {
                   required: "Password is required",
                   maxLength: { value: 40, message: "Password too long" },
                 })}
-              />
+              >
+                <IonButton
+                  fill="clear"
+                  slot="end"
+                  aria-label="Show/hide"
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                  }}
+                >
+                  <IonIcon
+                    slot="icon-only"
+                    icon={showPassword ? eyeOff : eye}
+                    aria-hidden="true"
+                  ></IonIcon>
+                </IonButton>
+              </IonInput>
             </div>
             <IonButton expand="block" type="submit">
               {loading ? <IonSpinner /> : "Continue"}
