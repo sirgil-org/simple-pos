@@ -17,12 +17,11 @@ import { useCurrentUser } from "../../contexts";
 import useMutation from "../../hooks/mutation";
 import { useEffect, useState } from "react";
 
-import { camera, trash } from "ionicons/icons";
+import { imageOutline, trash } from "ionicons/icons";
 import { usePhotoGallery } from "../../hooks/usePhotoGallery";
 import { base64FromPath } from "../../utils";
 import { supabase } from "../../supabase_client";
-import { decode } from 'base64-arraybuffer';
-
+import { decode } from "base64-arraybuffer";
 
 function ManageInventoryModal({
   isOpen,
@@ -34,28 +33,32 @@ function ManageInventoryModal({
   const { currentUser } = useCurrentUser();
   const [present] = useIonToast();
   const { loading: loadingInsert, insert, update } = useMutation();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const { register, handleSubmit, reset, setValue } = useForm<IAddItemForm>({});
   const { getPhoto, photos, clearPhotos } = usePhotoGallery();
 
   const onSubmit = async (formData) => {
-    setLoading(true)
+    setLoading(true);
     const base64Data = await base64FromPath(photos[0].webviewPath!);
     const { data, error } = await supabase.storage
       .from(`product-images`)
-      .upload(`${currentUser.id}/${photos[0].filepath}`, decode(base64Data.split(',')[1]), {
-        contentType: "image/jpeg",
-        cacheControl: "3600",
-        upsert: false,
-      });
+      .upload(
+        `${currentUser.id}/${photos[0].filepath}`,
+        decode(base64Data.split(",")[1]),
+        {
+          contentType: "image/jpeg",
+          cacheControl: "3600",
+          upsert: false,
+        }
+      );
 
     if (error) {
-      setLoading(false)
-      return
+      setLoading(false);
+      return;
     }
 
-    clearPhotos()
-    setLoading(false)
+    clearPhotos();
+    setLoading(false);
 
     if (selectedProduct) {
       const { error } = await update("products", selectedProduct.id, {
@@ -127,7 +130,7 @@ function ManageInventoryModal({
       onDidDismiss={() => {
         setSelectedProduct(null);
         setIsOpen(false);
-        clearPhotos()
+        clearPhotos();
         reset();
       }}
     >
@@ -147,7 +150,7 @@ function ManageInventoryModal({
       <IonContent className="ion-padding">
         <div className="flex justify-center mb-10">
           {photos.length ? (
-            <div className="h-[120px] w-[120px] relative">
+            <div className="h-[200px] relative">
               <div className="h-full w-full rounded-lg overflow-hidden">
                 <IonImg
                   src={photos[0].webviewPath}
@@ -157,17 +160,20 @@ function ManageInventoryModal({
               </div>
               <div
                 onClick={clearPhotos}
-                className="flex items-center justify-center rounded-full border-2 border-white bg-blue-500 p-2 absolute bottom-[-10px] right-[-10px]"
+                className="flex items-center justify-center rounded-full bg-blue-500 p-2 absolute bottom-[-10px] right-[-10px]"
               >
                 <IonIcon icon={trash} className="text-white" />
               </div>
             </div>
           ) : (
             <div
-              className="bg-blue-500 p-8 h-[120px] w-[120px] rounded-full"
+              className="border-2 border-gray-400 border-dashed p-12 px-36 h-[200px] w-full rounded-lg"
               onClick={() => getPhoto()}
             >
-              <IonIcon icon={camera} className="h-full w-full text-white" />
+              <IonIcon
+                icon={imageOutline}
+                className="h-full w-full text-gray-500"
+              />
             </div>
           )}
         </div>
