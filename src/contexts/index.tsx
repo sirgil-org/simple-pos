@@ -31,9 +31,7 @@ export const AuthContextProvider = (props) => {
       .eq("id", id)
       .maybeSingle();
     if (data) {
-      console.log("getting data. ********");
       setUserData(data);
-      console.log("data from frist... ", data);
     }
   };
 
@@ -56,7 +54,7 @@ export const AuthContextProvider = (props) => {
     );
 
     return () => {
-      authListener.subscription;
+      authListener.subscription.unsubscribe;
     };
   }, []);
 
