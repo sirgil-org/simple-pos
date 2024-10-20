@@ -10,16 +10,23 @@ import {
 import { Spinner } from "flowbite-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import { supabase } from "../../../supabase_client";
 
-export default function AddShopModal({ dismiss, isOpen }: any) {
-  const { register, handleSubmit, reset } = useForm();
+interface IAddShopModalProps {
+  dismiss: () => void;
+  isOpen: boolean;
+}
+
+interface IAddShopForm {
+  name: string;
+}
+
+export default function AddShopModal({ dismiss, isOpen }: IAddShopModalProps) {
+  const { register, handleSubmit, reset } = useForm<IAddShopForm>();
   const [loading, setLoading] = useState(false);
   const [present] = useIonToast();
 
-
-  const onSubmit = async ({ name }: any) => {
+  const onSubmit = async ({ name }: IAddShopForm) => {
     setLoading(true);
     const { error } = await supabase.from("shops").insert({ name });
     setLoading(false);
@@ -31,7 +38,7 @@ export default function AddShopModal({ dismiss, isOpen }: any) {
         position: "top",
         color: "warning",
       });
-      return
+      return;
     }
 
     reset();
@@ -54,10 +61,7 @@ export default function AddShopModal({ dismiss, isOpen }: any) {
       <IonContent className="ion-padding">
         <form id="change-status-form" onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-6">
-            <label
-              htmlFor="name"
-              className="block mb-2 text-sm font-medium"
-            >
+            <label htmlFor="name" className="block mb-2 text-sm font-medium">
               Shop name
             </label>
             <input

@@ -77,3 +77,7 @@ export type IAddItemForm = {
   title: string;
   price: number;
 };
+
+export type INewOrder = {
+  [product: string]: number;
+};

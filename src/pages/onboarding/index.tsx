@@ -89,7 +89,7 @@ export default function ShopSetupPage({ showSetup, setShowSetup }: IShopSetup) {
     }
   };
 
-  async function canDismiss(data?: any, role?: string) {
+  async function canDismiss(_, role?: string) {
     return role !== "gesture";
   }
 

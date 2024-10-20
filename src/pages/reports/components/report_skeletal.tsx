@@ -1,11 +1,6 @@
 import {
   IonContent,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonListHeader,
-  IonSkeletonText,
-  IonThumbnail,
+  IonSkeletonText
 } from "@ionic/react";
 
 export default function ReportSkeletal() {

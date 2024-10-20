@@ -11,16 +11,31 @@ import { Spinner } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { supabase } from "../../../supabase_client";
+import { IShop } from "../../../types";
 
-export default function AddExpenseModal({ dismiss, isOpen }: any) {
-  const { register, handleSubmit, reset } = useForm();
+interface IAddExpenseModalProps {
+  dismiss: () => void;
+  isOpen: boolean;
+}
+
+interface IAddExpensesForm {
+  invoice_number: string;
+  shop: string;
+  amount: number;
+}
+
+export default function AddExpenseModal({
+  dismiss,
+  isOpen,
+}: IAddExpenseModalProps) {
+  const { register, handleSubmit, reset } = useForm<IAddExpensesForm>();
   const [loading, setLoading] = useState(false);
   const [present] = useIonToast();
 
   const [, setLoadingShops] = useState(true);
-  const [shops, setShops] = useState([]);
+  const [shops, setShops] = useState<IShop[]>([]);
 
-  const onSubmit = async ({ invoice_number, shop, amount }: any) => {
+  const onSubmit = async ({ invoice_number, shop, amount }) => {
     setLoading(true);
     const { error } = await supabase
       .from("expenses")
@@ -34,7 +49,7 @@ export default function AddExpenseModal({ dismiss, isOpen }: any) {
         position: "top",
         color: "warning",
       });
-      return 
+      return;
     }
 
     reset();
@@ -94,10 +109,7 @@ export default function AddExpenseModal({ dismiss, isOpen }: any) {
           </div>
 
           <div className="mb-6">
-            <label
-              htmlFor="shops"
-              className="block mb-2 text-sm font-medium"
-            >
+            <label htmlFor="shops" className="block mb-2 text-sm font-medium">
               Shops
             </label>
             <select
@@ -106,16 +118,15 @@ export default function AddExpenseModal({ dismiss, isOpen }: any) {
               className="input input-lg w-full border border-gray-300"
             >
               <option selected>Choose a shop</option>
-              {shops.map((shop: any) => (
-                <option key={shop.id} value={shop.id}>{shop.name}</option>
+              {shops.map((shop) => (
+                <option key={shop.id} value={shop.id}>
+                  {shop.name}
+                </option>
               ))}
             </select>
           </div>
           <div className="mb-6">
-            <label
-              htmlFor="amount"
-              className="block mb-2 text-sm font-medium"
-            >
+            <label htmlFor="amount" className="block mb-2 text-sm font-medium">
               Amount
             </label>
             <input

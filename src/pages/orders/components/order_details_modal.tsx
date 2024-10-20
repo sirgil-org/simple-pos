@@ -19,13 +19,21 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../../supabase_client";
 import { useHaptic } from "../../../contexts/haptic";
 
+interface IOrderDetailsModalProps {
+  dismiss: () => void;
+  selectedOrder: any;
+  isOpen: boolean;
+  refresh: () => void;
+  handleChangeStatus: (status: string, currentOrder: any) => Promise<void>;
+}
+
 export default function OrderDetailsModal({
   dismiss,
   selectedOrder,
   isOpen,
   refresh,
   handleChangeStatus,
-}: any) {
+}: IOrderDetailsModalProps) {
   const [savingOrder, setSavingOrder] = useState(false);
   const [totalCost, setTotalCost] = useState(0);
   const [inputValue, setInputValue] = useState(0);

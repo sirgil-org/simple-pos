@@ -1,7 +1,6 @@
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { AddExpenseModal } from "../modals";
-import { toast } from "react-toastify";
 import { supabase } from "../../../supabase_client";
 import {
   IonBackButton,

@@ -19,15 +19,11 @@ import { useCurrentUser } from "../../contexts";
 import { useHaptic } from "../../contexts/haptic";
 import useQuery from "../../hooks/query";
 import { supabase } from "../../supabase_client";
-import { IProduct } from "../../types";
+import { INewOrder, IProduct } from "../../types";
 import { NewOrderSkeletal } from "./components";
 import OrderList from "./components/order_list";
 import OrderSummary from "./components/order_summary";
 import { OrderModal } from "./modals";
-
-type INewOrder = {
-  [product: string]: number;
-};
 
 export default function NewOrder() {
   const { currentUser } = useCurrentUser();
@@ -78,8 +74,8 @@ export default function NewOrder() {
     let total_cost = 0;
 
     const { error }: any = await supabase.from("product_order").insert(
-      Object.keys(order).map((key: any) => {
-        const item = products.find((product: any) => product.id === key);
+      Object.keys(order).map((key) => {
+        const item = products.find((product) => product.id === key);
         total_cost += item.price * order[key];
 
         return {
@@ -125,8 +121,8 @@ export default function NewOrder() {
 
   const calculate_total = (orders: any) => {
     let total_cost = 0;
-    Object.keys(orders).forEach((key: any) => {
-      const item = products.find((product: any) => product.id === key);
+    Object.keys(orders).forEach((key) => {
+      const item = products.find((product) => product.id === key);
       total_cost += item.price * orders[key];
     });
 
@@ -163,7 +159,7 @@ export default function NewOrder() {
           ) : (
             <div>
               <div className="grid grid-cols-3 md:grid-cols-4 gap-2 gap-y-4 pb-[200px] w-full">
-                {products.map((product: any, key: Key) => {
+                {products.map((product, key: Key) => {
                   return (
                     <div key={key}>
                       <img
@@ -172,7 +168,7 @@ export default function NewOrder() {
                         src={product.image_url}
                         onClick={() => {
                           void triggerHeavyFeedback();
-                          setOrder((prev: any) => {
+                          setOrder((prev) => {
                             const old_count = order[product.id];
 
                             const new_data = {

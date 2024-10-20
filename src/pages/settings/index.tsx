@@ -1,6 +1,6 @@
+import { NotificationType } from "@capacitor/haptics";
 import {
   IonActionSheet,
-  IonAvatar,
   IonButton,
   IonCheckbox,
   IonContent,
@@ -11,17 +11,15 @@ import {
   IonList,
   IonNote,
   IonPage,
-  IonText,
   IonTitle,
   IonToggle,
   IonToolbar,
-  useIonRouter,
+  useIonRouter
 } from "@ionic/react";
 import { logOutOutline } from "ionicons/icons";
-import { supabase } from "../../supabase_client";
 import { useState } from "react";
 import { useHaptic } from "../../contexts/haptic";
-import { NotificationType } from "@capacitor/haptics";
+import { supabase } from "../../supabase_client";
 import ProfileComponent from "./profile_item";
 
 export default function SettingsPage() {

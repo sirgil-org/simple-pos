@@ -8,7 +8,23 @@ import {
 } from "@ionic/react";
 import OrderList from "../components/order_list";
 import OrderSummary from "../components/order_summary";
+import { INewOrder, IProduct } from "../../../types";
 // import { useRef } from "react";
+
+interface IOrderModalProps {
+  modal: React.MutableRefObject<HTMLIonModalElement>;
+  dismiss: () => void;
+  products: IProduct[];
+  order: INewOrder;
+  calculate_total: (orders: any) => void;
+  setOrder: React.Dispatch<React.SetStateAction<INewOrder>>;
+  totalCost: number;
+  inputValue: number;
+  setInputValue: React.Dispatch<React.SetStateAction<number>>;
+  onSubmit: () => Promise<void>;
+  savingOrder: boolean;
+  reset_order: () => void;
+}
 
 function OrderModal({
   modal,
@@ -23,9 +39,7 @@ function OrderModal({
   onSubmit,
   savingOrder,
   reset_order,
-}: any) {
-
-
+}: IOrderModalProps) {
   return (
     <IonModal
       ref={modal}

@@ -1,4 +1,4 @@
-import { IonItem, IonThumbnail, IonSkeletonText, IonLabel } from "@ionic/react";
+import { IonSkeletonText } from "@ionic/react";
 
 export default function NewOrderSkeletal() {
   return (

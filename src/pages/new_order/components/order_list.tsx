@@ -1,17 +1,24 @@
 import { IonIcon } from "@ionic/react";
 import { trashOutline } from "ionicons/icons";
-import { LuTrash } from "react-icons/lu";
+import { INewOrder, IProduct } from "../../../types";
+
+interface IOrderListProps {
+  products: IProduct[];
+  order: INewOrder;
+  calculate_total: (orders: any) => void;
+  setOrder: React.Dispatch<React.SetStateAction<INewOrder>>;
+}
 
 export default function OrderList({
   products,
   order,
   calculate_total,
   setOrder,
-}: any) {
+}: IOrderListProps) {
   return (
     <div>
-      {Object.keys(order).map((key: any) => {
-        const item = products.find((product: any) => product.id === key);
+      {Object.keys(order).map((key) => {
+        const item = products.find((product) => product.id === key);
         return (
           <div key={item.id} className="flex justify-between mb-2">
             <div className="flex space-x-4 items-center">
@@ -26,7 +33,7 @@ export default function OrderList({
               <IonIcon
                 icon={trashOutline}
                 onClick={() => {
-                  setOrder((prev: any) => {
+                  setOrder((prev) => {
                     delete prev[key];
 
                     calculate_total({ ...prev });

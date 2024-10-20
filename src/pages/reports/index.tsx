@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { ReportSkeletal } from "./components";
 
-import { supabase } from "../../supabase_client";
-import { toast } from "react-toastify";
 import { IonCard, IonCardContent, IonContent, IonPage, useIonToast } from "@ionic/react";
+import { supabase } from "../../supabase_client";
 
 export default function Reports() {
   const [present] = useIonToast();

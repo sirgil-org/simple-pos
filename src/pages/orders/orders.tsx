@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { supabase } from "../../supabase_client";
 
-import OrdersSkeletal from "./components/orders_skeletal";
 import {
   IonChip,
   IonContent,
@@ -20,6 +19,7 @@ import {
   useIonToast,
   useIonViewDidEnter,
 } from "@ionic/react";
+import OrdersSkeletal from "./components/orders_skeletal";
 
 import {
   arrowForward,
@@ -28,14 +28,14 @@ import {
   checkmarkDoneOutline,
 } from "ionicons/icons";
 
-import OrderDetailsModal from "./components/order_details_modal";
 import possibleStatus, {
   possibleStatusWithIcons,
 } from "../../constants/status";
+import OrderDetailsModal from "./components/order_details_modal";
 
-import useQuery from "../../hooks/query";
-import { useHaptic } from "../../contexts/haptic";
 import { useCurrentUser } from "../../contexts";
+import { useHaptic } from "../../contexts/haptic";
+import useQuery from "../../hooks/query";
 
 enum Filters {
   ALL = "all",
