@@ -125,7 +125,7 @@ export default function LoginPage() {
                 >
                   <IonIcon
                     slot="icon-only"
-                    icon={showPassword ? eyeOff : eye}
+                    icon={showPassword ? eye : eyeOff}
                     aria-hidden="true"
                   ></IonIcon>
                 </IonButton>
