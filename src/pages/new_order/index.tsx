@@ -231,6 +231,7 @@ export default function NewOrder() {
           onSubmit={onSubmit}
           savingOrder={savingOrder}
           reset_order={reset_order}
+          input_ref={inputRef}
         />
         <IonItemGroup
           className={`${

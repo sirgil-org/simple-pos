@@ -65,7 +65,7 @@ export const Tabs: React.FC = () => {
             <Redirect to={`${url}/orders`} />
           </Route>
         </IonRouterOutlet>
-        <IonTabBar slot="bottom" translucent className="md:hidden">
+        <IonTabBar slot="bottom" translucent>
           {tabs
             .filter((item) => !item.is_child)
             .map((tab, index) => (

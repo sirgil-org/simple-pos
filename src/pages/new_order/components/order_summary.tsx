@@ -70,13 +70,16 @@ export default function OrderSummary({
                   return setInputValue(parseInt(item));
                 }
 
-                // if (
-                //   item === "." &&
-                //   Array.from(inputValue).indexOf(".") !== -1
-                // ) {
-                //   return;
-                // }
-                setInputValue(inputValue + parseInt(item));
+                if (
+                  item === "." &&
+                  Array.from(inputValue.toString()).indexOf(".") !== -1
+                ) {
+                  return;
+                }
+
+                const value = parseInt('' + inputValue + item)
+                inputRef.current.value = value
+                setInputValue(value);
               }}
               className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >

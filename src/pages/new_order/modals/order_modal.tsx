@@ -24,6 +24,7 @@ interface IOrderModalProps {
   onSubmit: () => Promise<void>;
   savingOrder: boolean;
   reset_order: () => void;
+  input_ref: React.MutableRefObject<HTMLIonInputElement>;
 }
 
 function OrderModal({
@@ -39,6 +40,7 @@ function OrderModal({
   onSubmit,
   savingOrder,
   reset_order,
+  input_ref,
 }: IOrderModalProps) {
   return (
     <IonModal
@@ -75,7 +77,7 @@ function OrderModal({
             setInputValue={setInputValue}
             onSubmit={onSubmit}
             savingOrder={savingOrder}
-            inputRef={null}
+            inputRef={input_ref}
           />
         </div>
       </IonContent>
