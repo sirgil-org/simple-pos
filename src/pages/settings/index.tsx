@@ -65,11 +65,11 @@ export default function SettingsPage() {
               Manage Inventory
             </IonLabel>
           </IonItem>
-          <IonItem button color="light">
+          {/* <IonItem button color="light">
             <IonLabel>Manage Expenses</IonLabel>
-          </IonItem>
+          </IonItem> */}
         </IonList>
-
+{/* 
         <IonNote class="ion-padding">Security</IonNote>
         <IonList inset>
           <IonItem button color="light">
@@ -78,7 +78,7 @@ export default function SettingsPage() {
           <IonItem button color="light">
             <IonLabel>Mobile Verification</IonLabel>
           </IonItem>
-        </IonList>
+        </IonList> */}
 
         <IonList inset>
           <IonItem color="light">
@@ -91,7 +91,7 @@ export default function SettingsPage() {
           </IonItem>
         </IonList>
 
-        <IonNote class="ion-padding">Theme</IonNote>
+        {/* <IonNote class="ion-padding">Theme</IonNote>
         <IonList inset>
           <IonItem color="light">
             <IonLabel>System</IonLabel>
@@ -120,7 +120,7 @@ export default function SettingsPage() {
               onIonChange={() => handleCheckboxChange(2)}
             />
           </IonItem>
-        </IonList>
+        </IonList> */}
 
         <IonList inset>
           <IonButton
